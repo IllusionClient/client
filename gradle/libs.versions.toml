@@ -2,6 +2,7 @@
 minecraft = "1.8.9"
 feather = "1.8.9+build.2"
 loader = "0.19.5"
+osl = "0.22.1"
 
 radbus = "1.0.0"
 

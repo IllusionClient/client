@@ -20,9 +20,6 @@ repositories {
     maven {
 		url 'https://jitpack.io/'
 	}
-    maven {
-		url 'https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1'
-	}
 }
 
 dependencies {
@@ -32,6 +29,8 @@ dependencies {
 
 	implementation libs.radbus
     include libs.radbus
+
+	ploceus.dependOsl(libs.versions.osl.get())
 }
 
 processResources {
