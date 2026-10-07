@@ -5,6 +5,8 @@ import org.example.illusion.IllusionClient;
 import org.example.illusion.event.HitDelayEvent;
 import org.example.illusion.event.KeyPressEvent;
 import org.example.illusion.event.PlayerTickEvent;
+import org.example.illusion.event.UseDelayEvent;
+import org.example.illusion.event.UseItemEvent;
 import org.example.illusion.event.WorldLoadEvent;
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,6 +28,20 @@ public class MinecraftMixin {
         HitDelayEvent event = new HitDelayEvent();
         IllusionClient.BUS.publish(event);
         return event.delay;
+    }
+
+    @ModifyConstant(method = "doUse", constant = @Constant(intValue = 4))
+    private int illusion$useDelay(int delay) {
+        UseDelayEvent event = new UseDelayEvent();
+        IllusionClient.BUS.publish(event);
+        return event.delay;
+    }
+
+    @Inject(method = "doUse", at = @At("HEAD"), cancellable = true)
+    private void illusion$useItem(CallbackInfo ci) {
+        UseItemEvent event = new UseItemEvent();
+        IllusionClient.BUS.publish(event);
+        if (event.cancelled) ci.cancel();
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;handleGuiKeyBindings()V"))

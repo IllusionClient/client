@@ -9,6 +9,8 @@ import org.example.illusion.feature.module.client.ClickGuiModule;
 import org.example.illusion.feature.module.client.Teams;
 import org.example.illusion.feature.module.combat.AimAssist;
 import org.example.illusion.feature.module.combat.Weapons;
+import org.example.illusion.feature.module.player.BridgeAssist;
+import org.example.illusion.feature.module.player.FastPlace;
 import org.example.illusion.feature.module.visual.Esp;
 
 import java.util.Arrays;
@@ -21,6 +23,8 @@ public final class ModuleManager {
             new Teams(),
             new AimAssist(),
             new Esp(),
+            new BridgeAssist(),
+            new FastPlace(),
             new Weapons()
     );
 
