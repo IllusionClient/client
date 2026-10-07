@@ -151,6 +151,7 @@ public class Esp extends Module {
                 outline(left + 0.5F, top + 0.5F, right - 0.5F, bottom - 0.5F, 0.5F, boxColor.getRGB());
             }
         }
+        Draw.flush();
 
         GlStateManager.depthMask(true);
         GlStateManager.enableBlend();

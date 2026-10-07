@@ -6,7 +6,7 @@ plugins {
 base {
     archivesName = project.archives_base_name
 }
-version = "${project.version}+mc${project.minecraft_version}"
+version = "${project.version}+mc${libs.versions.minecraft.get()}"
 group = project.maven_group
 
 sourceSets {

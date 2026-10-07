@@ -28,6 +28,7 @@ public class ClickGui extends Screen {
 
         for (Frame frame : frames) {
             frame.render(mouseX, mouseY);
+            Draw.flush();
         }
     }
 
