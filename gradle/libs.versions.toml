@@ -1,20 +1,19 @@
 [versions]
-loader = "0.19.5"
 minecraft = "1.8.9"
-osl = "0.22.1"
-radbus = "1.0.0"
+feather = "1.8.9+build.2"
+loader = "0.19.5"
 
-feather_build = "2"
+radbus = "1.0.0"
 
 loom = "1.18.2"
 ploceus = "1.18.1"
-devauth = "1.2.2"
 
 [libraries]
-loader = { module = "net.fabricmc:fabric-loader", version.ref = "loader" }
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+feather = { module = "net.ornithemc:feather-gen2", version.ref = "feather" }
+loader = { module = "net.fabricmc:fabric-loader", version.ref = "loader" }
+
 radbus = { module = "io.github.nevalackin:radbus", version.ref = "radbus" }
-devauth = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "devauth" }
 
 [plugins]
 ploceus = { id = "ploceus", version.ref = "ploceus" }

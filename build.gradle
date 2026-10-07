@@ -14,26 +14,24 @@ sourceSets {
 }
 
 repositories {
+	maven {
+		url "https://maven.ornithemc.net/releases"
+	}
     maven {
-        url = 'https://jitpack.io/'
-    }
+		url 'https://jitpack.io/'
+	}
     maven {
-        url = 'https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1'
-    }
+		url 'https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1'
+	}
 }
 
 dependencies {
     minecraft libs.minecraft
-    modImplementation libs.loader
+	mappings libs.feather
+	modImplementation libs.loader
 
-    implementation libs.radbus
+	implementation libs.radbus
     include libs.radbus
-
-    modImplementation libs.devauth
-
-    mappings ploceus.featherMappings(libs.versions.feather.build.get())
-
-    ploceus.dependOsl(libs.versions.osl.get())
 }
 
 processResources {
