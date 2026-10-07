@@ -95,6 +95,8 @@ public class AimAssist extends Module {
     private long lastFrame;
     private long lastMouseMove;
     private long nextNoise;
+    private float yawRemainder;
+    private float pitchRemainder;
 
     @Override
     public void onDisable() {
@@ -115,19 +117,33 @@ public class AimAssist extends Module {
         if (minecraft.mouse.x != 0 || minecraft.mouse.y != 0) lastMouseMove = System.currentTimeMillis();
 
         LocalClientPlayerEntity player = minecraft.player;
-        if (player == null || findTarget(player.yaw, player.pitch) == null) return;
+        if (player == null || findTarget(player.yaw, player.pitch) == null) {
+            yawRemainder = pitchRemainder = 0.0F;
+            return;
+        }
 
         float[] goal = rotationTo(aimPoint(event.partialTicks, delta));
         float yawDiff = MathHelper.wrapDegrees(goal[0] - player.yaw);
         float pitchDiff = goal[1] - player.pitch;
         if (Math.hypot(yawDiff, pitchDiff) * 2.0D < fov[0]) return;
 
-        float yawStep = step(yawDiff, horizontalSpeed, delta, mode);
-        float pitchStep = MathHelper.clamp(player.pitch + step(pitchDiff, verticalSpeed, delta, mode), -90.0F, 90.0F) - player.pitch;
-        player.yaw += yawStep;
-        player.lastYaw += yawStep;
-        player.pitch += pitchStep;
-        player.lastPitch += pitchStep;
+        float sensitivity = minecraft.options.mouseSensitivity * 0.6F + 0.2F;
+        float scale = sensitivity * sensitivity * sensitivity * 8.0F;
+        float gcd = scale * 0.15F;
+
+        float yawTotal = step(yawDiff, horizontalSpeed, delta, mode) + yawRemainder;
+        float pitchTotal = step(pitchDiff, verticalSpeed, delta, mode) + pitchRemainder;
+        yawRemainder = yawTotal % gcd;
+        pitchRemainder = pitchTotal % gcd;
+
+        int yawCounts = mouseCounts(yawTotal, yawDiff, gcd);
+        int pitchCounts = mouseCounts(pitchTotal, pitchDiff, gcd);
+        if (yawCounts != 0 || pitchCounts != 0) player.updateLocalPlayerCamera(yawCounts * scale, -pitchCounts * scale);
+    }
+
+    private static int mouseCounts(float total, float diff, float gcd) {
+        int limit = (int) (diff / gcd);
+        return MathHelper.clamp((int) (total / gcd), Math.min(limit, 0), Math.max(limit, 0));
     }
 
     private static float step(float diff, float speed, float delta, String mode) {
