@@ -1,7 +1,6 @@
 package org.example.illusion.feature.module.api;
 
 import org.example.illusion.IllusionClient;
-import org.example.illusion.event.ModuleToggleEvent;
 import org.example.illusion.feature.config.api.Option;
 
 import java.lang.reflect.Field;
@@ -52,7 +51,6 @@ public abstract class Module {
 	public final void setEnabled(boolean enabled) {
 		if (this.enabled == enabled) return;
 		this.enabled = enabled;
-		IllusionClient.BUS.publish(new ModuleToggleEvent(this, enabled));
 
 		if (enabled) {
 			IllusionClient.BUS.subscribe(this);
