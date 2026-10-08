@@ -13,6 +13,7 @@ import org.example.illusion.feature.module.combat.Weapons;
 import org.example.illusion.feature.module.player.BridgeAssist;
 import org.example.illusion.feature.module.player.FastPlace;
 import org.example.illusion.feature.module.visual.Esp;
+import org.example.illusion.feature.module.visual.ModOverlay;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +26,7 @@ public final class ModuleManager {
             new AimAssist(),
             new AutoClicker(),
             new Esp(),
+            new ModOverlay(),
             new BridgeAssist(),
             new FastPlace(),
             new Weapons()

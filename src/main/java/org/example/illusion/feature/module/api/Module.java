@@ -62,6 +62,14 @@ public abstract class Module {
         setEnabled(!enabled);
     }
 
+    public String details() {
+        return null;
+    }
+
+    protected static String number(float value) {
+        return value == (int) value ? String.valueOf((int) value) : String.valueOf(value);
+    }
+
     public void onEnable() {
     }
 

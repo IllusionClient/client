@@ -80,6 +80,11 @@ public class AutoClicker extends Module {
     private float exhaust;
 
     @Override
+    public String details() {
+        return clickPattern + " " + number(targetCps) + "cps";
+    }
+
+    @Override
     public void onDisable() {
         clicking = false;
     }

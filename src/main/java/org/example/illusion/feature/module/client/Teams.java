@@ -27,6 +27,11 @@ public class Teams extends Module {
     })
     public String colors = "None";
 
+    @Override
+    public String details() {
+        return colors.equals("None") ? null : colors;
+    }
+
     public static boolean isTeammate(PlayerEntity player) {
         Teams teams = IllusionClient.MODULES.get(Teams.class);
         if (!teams.isEnabled()) return false;

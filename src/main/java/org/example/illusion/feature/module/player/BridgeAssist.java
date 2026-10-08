@@ -70,6 +70,11 @@ public class BridgeAssist extends Module {
     private int blockSlot = -1;
 
     @Override
+    public String details() {
+        return number(unsneakDelay) + "ms";
+    }
+
+    @Override
     public void onDisable() {
         edge = sneaking = placed = false;
         unsneakTicks = 0;

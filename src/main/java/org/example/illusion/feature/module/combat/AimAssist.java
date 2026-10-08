@@ -99,6 +99,11 @@ public class AimAssist extends Module {
     private float pitchRemainder;
 
     @Override
+    public String details() {
+        return mode;
+    }
+
+    @Override
     public void onDisable() {
         target = null;
     }

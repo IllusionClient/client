@@ -27,6 +27,11 @@ public class FastPlace extends Module {
     private float remainder;
 
     @Override
+    public String details() {
+        return number(maximumCps) + "cps";
+    }
+
+    @Override
     public void onDisable() {
         heldTicks = 0;
         remainder = 0.0F;
