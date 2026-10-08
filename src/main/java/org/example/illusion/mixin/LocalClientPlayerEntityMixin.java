@@ -24,7 +24,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 			opcode = Opcodes.GETFIELD)
 	)
 	private void illusion$updateSprint(CallbackInfo ci) {
-		UpdateSprintEvent event = new UpdateSprintEvent(isSprinting());
+		UpdateSprintEvent event = UpdateSprintEvent.of(isSprinting());
 		IllusionClient.BUS.publish(event);
 		if (event.sprinting != isSprinting()) setSprinting(event.sprinting);
 	}

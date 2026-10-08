@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
 	@Inject(method = "render(IFJ)V", at = @At(value = "CONSTANT", args = "stringValue=hand"))
 	private void illusion$render3D(int pass, float tickDelta, long renderTimeLimit, CallbackInfo ci) {
-		IllusionClient.BUS.publish(new Render3DEvent(tickDelta));
+		IllusionClient.BUS.publish(Render3DEvent.of(tickDelta));
 	}
 }

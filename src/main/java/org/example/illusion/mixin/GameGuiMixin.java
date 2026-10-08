@@ -22,6 +22,6 @@ public class GameGuiMixin {
 		)
 	)
 	private void illusion$render2D(float tickDelta, CallbackInfo ci, @Local Window window) {
-		IllusionClient.BUS.publish(new Render2DEvent(tickDelta, window));
+		IllusionClient.BUS.publish(Render2DEvent.of(tickDelta, window));
 	}
 }

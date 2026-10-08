@@ -16,7 +16,7 @@ public class LivingEntityMixin {
 	private int illusion$jumpDelay(int ticks) {
 		if (!PlayerUtils.isLocalPlayer(this)) return ticks;
 
-		JumpDelayEvent event = new JumpDelayEvent(ticks);
+		JumpDelayEvent event = JumpDelayEvent.of(ticks);
 		IllusionClient.BUS.publish(event);
 		return event.ticks;
 	}
@@ -25,7 +25,7 @@ public class LivingEntityMixin {
 	private float illusion$jumpYaw(float yaw) {
 		if (!PlayerUtils.isLocalPlayer(this)) return yaw;
 
-		JumpYawEvent event = new JumpYawEvent(yaw);
+		JumpYawEvent event = JumpYawEvent.of(yaw);
 		IllusionClient.BUS.publish(event);
 		return event.yaw;
 	}

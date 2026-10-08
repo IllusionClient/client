@@ -26,7 +26,6 @@
 		}
 	],
 	"license": "GPL-3.0",
-	"icon": "assets/illusion/icon.png",
 	"environment": "client",
 	"mixins": [
 		{

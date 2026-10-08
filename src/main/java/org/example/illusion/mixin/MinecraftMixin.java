@@ -26,7 +26,7 @@ public class MinecraftMixin {
 
 	@Inject(method = "doAttack", at = @At("HEAD"))
 	private void illusion$attack(CallbackInfo ci) {
-		AttackEvent event = new AttackEvent();
+		AttackEvent event = AttackEvent.of();
 		IllusionClient.BUS.publish(event);
 		if (event.resetCooldown) attackCooldown = 0;
 	}
@@ -36,38 +36,38 @@ public class MinecraftMixin {
 		at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;attackCooldown:I", opcode = Opcodes.GETFIELD)
 	)
 	private int illusion$miningCooldown(int cooldown) {
-		MiningCooldownEvent event = new MiningCooldownEvent(cooldown);
+		MiningCooldownEvent event = MiningCooldownEvent.of(cooldown);
 		IllusionClient.BUS.publish(event);
 		return event.cooldown;
 	}
 
 	@ModifyExpressionValue(method = "doUse", at = @At(value = "CONSTANT", args = "intValue=4"))
 	private int illusion$useDelay(int delay) {
-		UseDelayEvent event = new UseDelayEvent(delay);
+		UseDelayEvent event = UseDelayEvent.of(delay);
 		IllusionClient.BUS.publish(event);
 		return event.delay;
 	}
 
 	@WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;doUse()V"))
 	private boolean illusion$useItem(Minecraft minecraft) {
-		UseItemEvent event = new UseItemEvent();
+		UseItemEvent event = UseItemEvent.of();
 		IllusionClient.BUS.publish(event);
 		return !event.cancelled;
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;handleGuiKeyBindings()V"))
 	private void illusion$keyPress(CallbackInfo ci) {
-		IllusionClient.BUS.publish(new KeyPressEvent(Keyboard.getEventKey(), Keyboard.getEventKeyState()));
+		IllusionClient.BUS.publish(KeyPressEvent.of(Keyboard.getEventKey(), Keyboard.getEventKeyState()));
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;handleInputs()V"))
 	private void illusion$screenInput(CallbackInfo ci) {
-		IllusionClient.BUS.publish(new ScreenInputEvent());
+		IllusionClient.BUS.publish(ScreenInputEvent.INSTANCE);
 	}
 
 	@Inject(method = "tick", at = @At("RETURN"))
 	private void illusion$tick(CallbackInfo ci) {
-		IllusionClient.BUS.publish(new PlayerTickEvent());
+		IllusionClient.BUS.publish(PlayerTickEvent.INSTANCE);
 	}
 
 	@Inject(
@@ -79,6 +79,6 @@ public class MinecraftMixin {
 		)
 	)
 	private void illusion$worldLoad(CallbackInfo ci) {
-		IllusionClient.BUS.publish(new WorldLoadEvent());
+		IllusionClient.BUS.publish(WorldLoadEvent.INSTANCE);
 	}
 }

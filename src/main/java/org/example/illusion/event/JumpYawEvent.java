@@ -1,9 +1,14 @@
 package org.example.illusion.event;
 
 public final class JumpYawEvent implements Event {
+	private static final JumpYawEvent INSTANCE = new JumpYawEvent();
 	public float yaw;
 
-	public JumpYawEvent(float yaw) {
-		this.yaw = yaw;
+	private JumpYawEvent() {
+	}
+
+	public static JumpYawEvent of(float yaw) {
+		INSTANCE.yaw = yaw;
+		return INSTANCE;
 	}
 }

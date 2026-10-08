@@ -22,7 +22,7 @@ public class KeyboardInputMixin extends Input {
 		)
 	)
 	private void illusion$moveInput(CallbackInfo ci) {
-		MoveInputEvent event = new MoveInputEvent(movementForward, movementSideways);
+		MoveInputEvent event = MoveInputEvent.of(movementForward, movementSideways);
 		IllusionClient.BUS.publish(event);
 		movementForward = event.forward;
 		movementSideways = event.sideways;
@@ -30,7 +30,7 @@ public class KeyboardInputMixin extends Input {
 
 	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/options/KeyBinding;isPressed()Z", ordinal = 5))
 	private boolean illusion$sneak(boolean sneaking) {
-		SneakEvent event = new SneakEvent(sneaking);
+		SneakEvent event = SneakEvent.of(sneaking);
 		IllusionClient.BUS.publish(event);
 		return event.sneaking;
 	}

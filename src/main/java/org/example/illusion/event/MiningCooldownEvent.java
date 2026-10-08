@@ -1,9 +1,14 @@
 package org.example.illusion.event;
 
 public final class MiningCooldownEvent implements Event {
+	private static final MiningCooldownEvent INSTANCE = new MiningCooldownEvent();
 	public int cooldown;
 
-	public MiningCooldownEvent(int cooldown) {
-		this.cooldown = cooldown;
+	private MiningCooldownEvent() {
+	}
+
+	public static MiningCooldownEvent of(int cooldown) {
+		INSTANCE.cooldown = cooldown;
+		return INSTANCE;
 	}
 }

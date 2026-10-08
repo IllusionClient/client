@@ -1,9 +1,14 @@
 package org.example.illusion.event;
 
 public final class UseDelayEvent implements Event {
+	private static final UseDelayEvent INSTANCE = new UseDelayEvent();
 	public int delay;
 
-	public UseDelayEvent(int delay) {
-		this.delay = delay;
+	private UseDelayEvent() {
+	}
+
+	public static UseDelayEvent of(int delay) {
+		INSTANCE.delay = delay;
+		return INSTANCE;
 	}
 }
