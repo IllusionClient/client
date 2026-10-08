@@ -6,9 +6,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Screen.class)
 public interface ScreenInvoker {
-    @Invoker("mouseClicked")
-    void illusion$mouseClicked(int mouseX, int mouseY, int button);
+	@Invoker("mouseClicked")
+	void illusion$mouseClicked(int mouseX, int mouseY, int button);
 
-    @Invoker("mouseReleased")
-    void illusion$mouseReleased(int mouseX, int mouseY, int button);
+	@Invoker("mouseReleased")
+	void illusion$mouseReleased(int mouseX, int mouseY, int button);
 }

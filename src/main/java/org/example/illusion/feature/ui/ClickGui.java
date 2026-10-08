@@ -11,72 +11,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClickGui extends Screen {
-    private final List<Frame> frames = new ArrayList<>();
+	private final List<Frame> frames = new ArrayList<>();
 
-    public ClickGui() {
-        int x = Component.PADDING;
-        for (Category category : Category.values()) {
-            frames.add(new Frame(category, x, Component.PADDING));
-            x += Component.WIDTH + Component.PADDING;
-        }
-    }
+	public ClickGui() {
+		int x = Component.PADDING;
+		for (Category category : Category.values()) {
+			frames.add(new Frame(category, x, Component.PADDING));
+			x += Component.WIDTH + Component.PADDING;
+		}
+	}
 
-    @Override
-    public void render(int mouseX, int mouseY, float tickDelta) {
-        int accent = Draw.accent().getRGB() & 0xFFFFFF | 80 << 24;
-        Draw.gradient(0, 0, width, height, accent, accent, 0x50000000, 0x50000000);
+	@Override
+	public void render(int mouseX, int mouseY, float tickDelta) {
+		int accent = Draw.accent().getRGB() & 0xFFFFFF | 80 << 24;
+		Draw.gradient(0, 0, width, height, accent, accent, 0x50000000, 0x50000000);
 
-        for (Frame frame : frames) {
-            frame.render(mouseX, mouseY);
-            Draw.flush();
-        }
-    }
+		for (Frame frame : frames) {
+			frame.render(mouseX, mouseY);
+			Draw.flush();
+		}
+	}
 
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
-        for (Frame frame : frames) {
-            frame.mouseClicked(mouseX, mouseY, button);
-        }
-    }
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int button) {
+		for (Frame frame : frames) {
+			frame.mouseClicked(mouseX, mouseY, button);
+		}
+	}
 
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int button) {
-        for (Frame frame : frames) {
-            frame.mouseReleased();
-        }
-    }
+	@Override
+	protected void mouseReleased(int mouseX, int mouseY, int button) {
+		for (Frame frame : frames) {
+			frame.mouseReleased();
+		}
+	}
 
-    @Override
-    public void handleMouse() {
-        super.handleMouse();
+	@Override
+	public void handleMouse() {
+		super.handleMouse();
 
-        int wheel = Mouse.getEventDWheel();
-        if (wheel == 0) return;
+		int wheel = Mouse.getEventDWheel();
+		if (wheel == 0) return;
 
-        int mouseX = Mouse.getEventX() * width / minecraft.width;
-        for (Frame frame : frames) {
-            frame.scroll(mouseX, Integer.signum(wheel) * Component.HEIGHT);
-        }
-    }
+		int mouseX = Mouse.getEventX() * width / minecraft.width;
+		for (Frame frame : frames) {
+			frame.scroll(mouseX, Integer.signum(wheel) * Component.HEIGHT);
+		}
+	}
 
-    @Override
-    protected void keyPressed(char chr, int key) {
-        for (Frame frame : frames) {
-            if (frame.keyPressed(key)) return;
-        }
-        super.keyPressed(chr, key);
-    }
+	@Override
+	protected void keyPressed(char chr, int key) {
+		for (Frame frame : frames) {
+			if (frame.keyPressed(key)) return;
+		}
+		super.keyPressed(chr, key);
+	}
 
-    @Override
-    public void removed() {
-        for (Frame frame : frames) {
-            frame.mouseReleased();
-        }
-        IllusionClient.CONFIG.save();
-    }
+	@Override
+	public void removed() {
+		for (Frame frame : frames) {
+			frame.mouseReleased();
+		}
+		IllusionClient.CONFIG.save();
+	}
 
-    @Override
-    public boolean shouldPauseGame() {
-        return false;
-    }
+	@Override
+	public boolean shouldPauseGame() {
+		return false;
+	}
 }

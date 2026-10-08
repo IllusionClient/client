@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModuleInfo {
-    String name();
+	String name();
 
-    Category category();
+	Category category();
 
-    int bind() default 0;
+	int bind() default 0;
 }

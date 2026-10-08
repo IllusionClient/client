@@ -19,78 +19,72 @@ import java.util.WeakHashMap;
 @Description("Defines which players are considered bots.")
 @ModuleInfo(name = "Anti Bot", category = Category.CLIENT)
 public class AntiBot extends Module {
-    private static final int MIN_AGE_TICKS = 20;
+	private static final int MIN_AGE_TICKS = 20;
+	private final Set<PlayerEntity> seenVisible = Collections.newSetFromMap(new WeakHashMap<>());
+	private final Set<PlayerEntity> seenMoving = Collections.newSetFromMap(new WeakHashMap<>());
+	/**
+	 * Filter players with an invalid UUID.
+	 */
+	@Check("Invalid UUID")
+	public boolean invalidUuid = true;
+	/**
+	 * Filter players that have been invisible from the moment they first spawned in.
+	 */
+	@Check("Always Invisible")
+	public boolean alwaysInvisible = true;
+	/**
+	 * Filter players who have never moved (horizontally) at all.
+	 */
+	@Check("Always stationary")
+	public boolean alwaysStationary = true;
+	/**
+	 * Filter players who are sleeping.
+	 */
+	@Check("Sleeping")
+	public boolean sleeping = true;
+	/**
+	 * Filter players that spawned recently.
+	 */
+	@Check("Entity age")
+	public boolean entityAge = true;
 
-    /**
-     * Filter players with an invalid UUID.
-     */
-    @Check("Invalid UUID")
-    public boolean invalidUuid = true;
+	public static boolean isBot(PlayerEntity player) {
+		AntiBot antiBot = IllusionClient.MODULES.get(AntiBot.class);
+		if (!antiBot.isEnabled() || player == Minecraft.getInstance().player) return false;
 
-    /**
-     * Filter players that have been invisible from the moment they first spawned in.
-     */
-    @Check("Always Invisible")
-    public boolean alwaysInvisible = true;
+		if (antiBot.invalidUuid && !hasPlayerUuid(player)) return true;
+		if (antiBot.alwaysInvisible && !antiBot.seenVisible.contains(player)) return true;
+		if (antiBot.alwaysStationary && !antiBot.seenMoving.contains(player)) return true;
+		if (antiBot.sleeping && player.isSleeping()) return true;
 
-    /**
-     * Filter players who have never moved (horizontally) at all.
-     */
-    @Check("Always stationary")
-    public boolean alwaysStationary = true;
+		return antiBot.entityAge && player.ticks < MIN_AGE_TICKS;
+	}
 
-    /**
-     * Filter players who are sleeping.
-     */
-    @Check("Sleeping")
-    public boolean sleeping = true;
+	private static boolean hasPlayerUuid(PlayerEntity player) {
+		int version = player.getUuid().version();
+		return version == 4 || version == 3;
+	}
 
-    /**
-     * Filter players that spawned recently.
-     */
-    @Check("Entity age")
-    public boolean entityAge = true;
+	@Override
+	public void onDisable() {
+		seenVisible.clear();
+		seenMoving.clear();
+	}
 
-    private final Set<PlayerEntity> seenVisible = Collections.newSetFromMap(new WeakHashMap<>());
-    private final Set<PlayerEntity> seenMoving = Collections.newSetFromMap(new WeakHashMap<>());
+	@Listen
+	public void onWorldLoad(WorldLoadEvent event) {
+		seenVisible.clear();
+		seenMoving.clear();
+	}
 
-    public static boolean isBot(PlayerEntity player) {
-        AntiBot antiBot = IllusionClient.MODULES.get(AntiBot.class);
-        if (!antiBot.isEnabled() || player == Minecraft.getInstance().player) return false;
+	@Listen
+	public void onPlayerTick(PlayerTickEvent event) {
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.world == null) return;
 
-        if (antiBot.invalidUuid && !hasPlayerUuid(player)) return true;
-        if (antiBot.alwaysInvisible && !antiBot.seenVisible.contains(player)) return true;
-        if (antiBot.alwaysStationary && !antiBot.seenMoving.contains(player)) return true;
-        if (antiBot.sleeping && player.isSleeping()) return true;
-
-        return antiBot.entityAge && player.ticks < MIN_AGE_TICKS;
-    }
-
-    private static boolean hasPlayerUuid(PlayerEntity player) {
-        int version = player.getUuid().version();
-        return version == 4 || version == 3;
-    }
-
-    @Override
-    public void onDisable() {
-        seenVisible.clear();
-        seenMoving.clear();
-    }
-
-    @Listen
-    public void onWorldLoad(WorldLoadEvent event) {
-        seenVisible.clear();
-        seenMoving.clear();
-    }
-
-    @Listen
-    public void onPlayerTick(PlayerTickEvent event) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.world == null) return;
-
-        for (PlayerEntity player : minecraft.world.players) {
-            if (!player.isInvisible()) seenVisible.add(player);
-            if (player.x != player.prevX || player.z != player.prevZ) seenMoving.add(player);
-        }
-    }
+		for (PlayerEntity player : minecraft.world.players) {
+			if (!player.isInvisible()) seenVisible.add(player);
+			if (player.x != player.prevX || player.z != player.prevZ) seenMoving.add(player);
+		}
+	}
 }

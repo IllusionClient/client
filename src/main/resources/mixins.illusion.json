@@ -1,16 +1,16 @@
 {
-    "compatibilityLevel": "JAVA_8",
-    "minVersion": "0.8",
-    "package": "org.example.illusion.mixin",
-    "mixins": [
-        "LivingEntityMixin"
-    ],
-    "client": [
-        "GameGuiMixin",
-        "GameRendererMixin",
-        "KeyboardInputMixin",
-        "LocalClientPlayerEntityMixin",
-        "MinecraftMixin",
-        "ScreenInvoker"
-    ]
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.8",
+  "package": "org.example.illusion.mixin",
+  "mixins": [
+    "LivingEntityMixin"
+  ],
+  "client": [
+    "GameGuiMixin",
+    "GameRendererMixin",
+    "KeyboardInputMixin",
+    "LocalClientPlayerEntityMixin",
+    "MinecraftMixin",
+    "ScreenInvoker"
+  ]
 }

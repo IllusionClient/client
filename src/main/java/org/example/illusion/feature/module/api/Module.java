@@ -9,70 +9,70 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Module {
-    public final String name;
-    public final Category category;
-    public final Description description;
-    public final List<Option> options = new ArrayList<>();
+	public final String name;
+	public final Category category;
+	public final Description description;
+	public final List<Option> options = new ArrayList<>();
 
-    private int bind;
-    private boolean enabled;
+	private int bind;
+	private boolean enabled;
 
-    public Module() {
-        ModuleInfo info = getClass().getAnnotation(ModuleInfo.class);
-        if (info == null) throw new IllegalStateException(getClass().getName() + " is missing @ModuleInfo");
+	public Module() {
+		ModuleInfo info = getClass().getAnnotation(ModuleInfo.class);
+		if (info == null) throw new IllegalStateException(getClass().getName() + " is missing @ModuleInfo");
 
-        this.name = info.name();
-        this.category = info.category();
-        this.description = getClass().getAnnotation(Description.class);
-        this.bind = info.bind();
+		this.name = info.name();
+		this.category = info.category();
+		this.description = getClass().getAnnotation(Description.class);
+		this.bind = info.bind();
 
-        for (Field field : getClass().getDeclaredFields()) {
-            Option option = Option.of(this, field);
-            if (option != null) options.add(option);
-        }
-    }
+		for (Field field : getClass().getDeclaredFields()) {
+			Option option = Option.of(this, field);
+			if (option != null) options.add(option);
+		}
+	}
 
-    public final int getBind() {
-        return bind;
-    }
+	protected static String number(float value) {
+		return value == (int) value ? String.valueOf((int) value) : String.valueOf(value);
+	}
 
-    public void setBind(int bind) {
-        this.bind = bind;
-    }
+	public final int getBind() {
+		return bind;
+	}
 
-    public final boolean isEnabled() {
-        return enabled;
-    }
+	public void setBind(int bind) {
+		this.bind = bind;
+	}
 
-    public final void setEnabled(boolean enabled) {
-        if (this.enabled == enabled) return;
-        this.enabled = enabled;
-        IllusionClient.BUS.publish(new ModuleToggleEvent(this, enabled));
+	public final boolean isEnabled() {
+		return enabled;
+	}
 
-        if (enabled) {
-            IllusionClient.BUS.subscribe(this);
-            onEnable();
-        } else {
-            IllusionClient.BUS.unsubscribe(this);
-            onDisable();
-        }
-    }
+	public final void setEnabled(boolean enabled) {
+		if (this.enabled == enabled) return;
+		this.enabled = enabled;
+		IllusionClient.BUS.publish(new ModuleToggleEvent(this, enabled));
 
-    public final void toggle() {
-        setEnabled(!enabled);
-    }
+		if (enabled) {
+			IllusionClient.BUS.subscribe(this);
+			onEnable();
+		} else {
+			IllusionClient.BUS.unsubscribe(this);
+			onDisable();
+		}
+	}
 
-    public String details() {
-        return null;
-    }
+	public final void toggle() {
+		setEnabled(!enabled);
+	}
 
-    protected static String number(float value) {
-        return value == (int) value ? String.valueOf((int) value) : String.valueOf(value);
-    }
+	public String details() {
+		return null;
+	}
 
-    public void onEnable() {
-    }
+	public void onEnable() {
+	}
 
-    public void onDisable() {
-    }
+	public void onDisable() {
+	}
 }

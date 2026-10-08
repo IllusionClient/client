@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RangeSlider {
-    String value();
+	String value();
 
-    float min();
+	float min();
 
-    float max();
+	float max();
 }

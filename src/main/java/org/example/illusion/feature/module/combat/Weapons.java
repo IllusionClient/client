@@ -2,11 +2,7 @@ package org.example.illusion.feature.module.combat;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.SwordItem;
+import net.minecraft.item.*;
 import org.example.illusion.IllusionClient;
 import org.example.illusion.feature.config.api.Check;
 import org.example.illusion.feature.module.api.Category;
@@ -15,38 +11,38 @@ import org.example.illusion.feature.module.api.ModuleInfo;
 
 @ModuleInfo(name = "Weapons", category = Category.COMBAT)
 public class Weapons extends Module {
-    @Check("Swords")
-    public boolean swords = true;
+	@Check("Swords")
+	public boolean swords = true;
 
-    @Check("Axes")
-    public boolean axes = true;
+	@Check("Axes")
+	public boolean axes = true;
 
-    @Check("Sticks")
-    public boolean sticks = false;
+	@Check("Sticks")
+	public boolean sticks = false;
 
-    @Check("Fists")
-    public boolean fists = false;
+	@Check("Fists")
+	public boolean fists = false;
 
-    @Check("Sharpness")
-    public boolean sharpness = true;
+	@Check("Sharpness")
+	public boolean sharpness = true;
 
-    @Check("Knockback")
-    public boolean knockback = true;
+	@Check("Knockback")
+	public boolean knockback = true;
 
-    @Check("Fire Aspect")
-    public boolean fireAspect = true;
+	@Check("Fire Aspect")
+	public boolean fireAspect = true;
 
-    public static boolean isWeapons(ItemStack stack) {
-        Weapons weapons = IllusionClient.MODULES.get(Weapons.class);
-        if (stack == null) return weapons.fists;
+	public static boolean isWeapons(ItemStack stack) {
+		Weapons weapons = IllusionClient.MODULES.get(Weapons.class);
+		if (stack == null) return weapons.fists;
 
-        Item item = stack.getItem();
-        if (weapons.swords && item instanceof SwordItem) return true;
-        if (weapons.axes && item instanceof AxeItem) return true;
-        if (weapons.sticks && item == Items.STICK) return true;
+		Item item = stack.getItem();
+		if (weapons.swords && item instanceof SwordItem) return true;
+		if (weapons.axes && item instanceof AxeItem) return true;
+		if (weapons.sticks && item == Items.STICK) return true;
 
-        return weapons.sharpness && EnchantmentHelper.getLevel(Enchantment.SHARPNESS.id, stack) > 0
-                || weapons.knockback && EnchantmentHelper.getLevel(Enchantment.KNOCKBACK.id, stack) > 0
-                || weapons.fireAspect && EnchantmentHelper.getLevel(Enchantment.FIRE_ASPECT.id, stack) > 0;
-    }
+		return weapons.sharpness && EnchantmentHelper.getLevel(Enchantment.SHARPNESS.id, stack) > 0
+			|| weapons.knockback && EnchantmentHelper.getLevel(Enchantment.KNOCKBACK.id, stack) > 0
+			|| weapons.fireAspect && EnchantmentHelper.getLevel(Enchantment.FIRE_ASPECT.id, stack) > 0;
+	}
 }

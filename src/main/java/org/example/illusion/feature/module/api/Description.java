@@ -8,18 +8,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Description {
-    String value();
+	String value();
 
-    Type type() default Type.INFO;
+	Type type() default Type.INFO;
 
-    enum Type {
-        INFO(0xFFAAAAAA),
-        WARNING(0xFFFFC107);
+	enum Type {
+		INFO(0xFFAAAAAA),
+		WARNING(0xFFFFC107);
 
-        public final int color;
+		public final int color;
 
-        Type(int color) {
-            this.color = color;
-        }
-    }
+		Type(int color) {
+			this.color = color;
+		}
+	}
 }

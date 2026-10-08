@@ -6,9 +6,9 @@ import org.example.illusion.feature.module.client.AntiBot;
 import org.example.illusion.feature.module.client.Teams;
 
 public class CombatUtils {
-    public static boolean isTarget(Entity entity) {
-        if (!(entity instanceof PlayerEntity player)) return false;
+	public static boolean isTarget(Entity entity) {
+		if (!(entity instanceof PlayerEntity player)) return false;
 
-        return !Teams.isTeammate(player) && !AntiBot.isBot(player);
-    }
+		return !Teams.isTeammate(player) && !AntiBot.isBot(player);
+	}
 }

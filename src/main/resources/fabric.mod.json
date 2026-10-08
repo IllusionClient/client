@@ -1,42 +1,42 @@
 {
-    "schemaVersion": 1,
-    "id": "illusion",
-    "version": "${version}",
-    "name": "Illusion",
-    "description": "A libre utility mod",
-    "contact": {
-        "homepage": "https://codeberg.org/awruff/Illusion/",
-        "issues": "https://codeberg.org/awruff/Illusion/issues",
-        "sources": "https://codeberg.org/awruff/Illusion/"
-    },
-    "authors": [
-        {
-            "name": "awruff",
-            "contact": {
-                "homepage": "https://awruff.dog/",
-                "sources": "https://codeberg.org/awruff"
-            }
-        },
-        {
-            "name": "Syz",
-            "contact": {
-                "homepage": "https://github.com/Sophia2605",
-                "sources": "https://codeberg.org/Zircta"
-            }
-        }
-    ],
-    "license": "GPL-3.0",
-    "icon": "assets/illusion/icon.png",
-    "environment": "client",
-    "mixins": [
-        {
-            "config": "mixins.illusion.json",
-            "environment": "client"
-        }
-    ],
-    "depends": {
-        "fabricloader": ">=0.19.5",
-        "minecraft": "1.8.9",
-        "java": ">=25"
-    }
+	"schemaVersion": 1,
+	"id": "illusion",
+	"version": "${version}",
+	"name": "Illusion",
+	"description": "A libre utility mod",
+	"contact": {
+		"homepage": "https://codeberg.org/awruff/Illusion/",
+		"issues": "https://codeberg.org/awruff/Illusion/issues",
+		"sources": "https://codeberg.org/awruff/Illusion/"
+	},
+	"authors": [
+		{
+			"name": "awruff",
+			"contact": {
+				"homepage": "https://awruff.dog/",
+				"sources": "https://codeberg.org/awruff"
+			}
+		},
+		{
+			"name": "Syz",
+			"contact": {
+				"homepage": "https://github.com/Sophia2605",
+				"sources": "https://codeberg.org/Zircta"
+			}
+		}
+	],
+	"license": "GPL-3.0",
+	"icon": "assets/illusion/icon.png",
+	"environment": "client",
+	"mixins": [
+		{
+			"config": "mixins.illusion.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "1.8.9",
+		"java": ">=25"
+	}
 }

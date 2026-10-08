@@ -12,16 +12,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameGui.class)
 public class GameGuiMixin {
-    @Inject(
-            method = "render",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/platform/GlStateManager;enableBlend()V",
-                    shift = At.Shift.AFTER,
-                    ordinal = 0
-            )
-    )
-    private void illusion$render2D(float tickDelta, CallbackInfo ci, @Local Window window) {
-        IllusionClient.BUS.publish(new Render2DEvent(tickDelta, window));
-    }
+	@Inject(
+		method = "render",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/render/platform/GlStateManager;enableBlend()V",
+			shift = At.Shift.AFTER,
+			ordinal = 0
+		)
+	)
+	private void illusion$render2D(float tickDelta, CallbackInfo ci, @Local Window window) {
+		IllusionClient.BUS.publish(new Render2DEvent(tickDelta, window));
+	}
 }
