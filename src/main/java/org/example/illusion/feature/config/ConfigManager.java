@@ -2,8 +2,8 @@ package org.example.illusion.feature.config;
 
 import com.google.gson.*;
 import net.fabricmc.loader.api.FabricLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.example.illusion.IllusionClient;
 import org.example.illusion.feature.config.api.*;
 import org.example.illusion.feature.module.api.Module;
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public final class ConfigManager {
-	private static final Logger LOGGER = LogManager.getLogger(ConfigManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigManager.class);
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	private static final String VERSION_KEY = "configVersion";

@@ -5,8 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.Input;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.entity.living.player.PlayerInventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Box;
 import org.example.illusion.event.SneakEvent;
 import org.example.illusion.event.UseItemEvent;
@@ -17,6 +15,8 @@ import org.example.illusion.feature.module.api.Category;
 import org.example.illusion.feature.module.api.Description;
 import org.example.illusion.feature.module.api.Module;
 import org.example.illusion.feature.module.api.ModuleInfo;
+import org.example.illusion.util.ItemUtils;
+import org.example.illusion.util.MoveUtils;
 
 import java.util.Random;
 
@@ -57,10 +57,6 @@ public class BridgeAssist extends Module {
 	private float jitter;
 	private int blockSlot = -1;
 
-	private static boolean isBlock(ItemStack stack) {
-		return stack != null && stack.getItem() instanceof BlockItem;
-	}
-
 	@Override
 	public String details() {
 		return number(unsneakDelay) + "ms";
@@ -80,16 +76,16 @@ public class BridgeAssist extends Module {
 		boolean active = active(player, event.sneaking);
 
 		boolean depleted = inventory.getSelectedItem() == null && inventory.selectedSlot == blockSlot;
-		if (active && !isBlock(inventory.getSelectedItem())
+		if (active && !ItemUtils.isBlock(inventory.getSelectedItem())
 			&& (selectBlocks.equals("Always") || depleted && selectBlocks.equals("On depletion"))) {
 			for (int slot = 0; slot < PlayerInventory.getHotbarSize(); slot++) {
-				if (!isBlock(inventory.items[slot])) continue;
+				if (!ItemUtils.isBlock(inventory.items[slot])) continue;
 				inventory.selectedSlot = slot;
 				break;
 			}
 		}
 
-		boolean holding = isBlock(inventory.getSelectedItem());
+		boolean holding = ItemUtils.isBlock(inventory.getSelectedItem());
 		blockSlot = holding ? inventory.selectedSlot : -1;
 		if (!active || holdingBlocks && !holding) {
 			edge = sneaking = placed = false;
@@ -115,10 +111,9 @@ public class BridgeAssist extends Module {
 		if (!avoidDoubleSneaking || !edge || placed) return;
 
 		LocalClientPlayerEntity player = minecraft.player;
-		Input input = player.input;
-		double yaw = Math.toRadians(player.yaw);
-		double x = input.movementSideways * Math.cos(yaw) - input.movementForward * Math.sin(yaw);
-		double z = input.movementForward * Math.cos(yaw) + input.movementSideways * Math.sin(yaw);
+		double[] direction = MoveUtils.inputDirection(player);
+		double x = direction[0];
+		double z = direction[1];
 
 		double backX = -Math.signum(x) * player.width;
 		double backZ = -Math.signum(z) * player.width;
@@ -143,12 +138,8 @@ public class BridgeAssist extends Module {
 	private boolean overEdge(LocalClientPlayerEntity player) {
 		Input input = player.input;
 		double acceleration = player.getSpeed() / Math.max(1.0D, Math.hypot(input.movementForward, input.movementSideways));
-		double yaw = Math.toRadians(player.yaw);
-		double sin = Math.sin(yaw);
-		double cos = Math.cos(yaw);
-		double x = player.velocityX + (input.movementSideways * cos - input.movementForward * sin) * acceleration;
-		double z = player.velocityZ + (input.movementForward * cos + input.movementSideways * sin) * acceleration;
-		return unsupported(player, x, z);
+		double[] direction = MoveUtils.inputDirection(player);
+		return unsupported(player, player.velocityX + direction[0] * acceleration, player.velocityZ + direction[1] * acceleration);
 	}
 
 	private boolean unsupported(LocalClientPlayerEntity player, double x, double z) {

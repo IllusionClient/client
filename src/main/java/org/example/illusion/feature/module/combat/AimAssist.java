@@ -18,6 +18,7 @@ import org.example.illusion.feature.module.api.Description;
 import org.example.illusion.feature.module.api.Module;
 import org.example.illusion.feature.module.api.ModuleInfo;
 import org.example.illusion.util.CombatUtils;
+import org.example.illusion.util.RotationUtils;
 import org.lwjgl.input.Mouse;
 
 import java.util.Random;
@@ -129,7 +130,7 @@ public class AimAssist extends Module {
 			return;
 		}
 
-		float[] goal = rotationTo(aimPoint(event.partialTicks(), delta));
+		float[] goal = RotationUtils.rotationTo(aimPoint(event.partialTicks(), delta));
 		float yawDiff = MathHelper.wrapDegrees(goal[0] - player.yaw);
 		float pitchDiff = goal[1] - player.pitch;
 		if (Math.hypot(yawDiff, pitchDiff) * 2.0D < fov[0]) return;
@@ -184,9 +185,9 @@ public class AimAssist extends Module {
 		if (player == self || !player.isAlive() || !CombatUtils.isTarget(player)) return false;
 		if (ignoreInvisibles && player.isInvisible()) return false;
 
-		double distance = distance(player);
+		double distance = CombatUtils.distanceTo(player);
 		if (distance < range[0] || distance > range[1]) return false;
-		if (!anyFov && angle(player, yaw, pitch) * 2.0D > fov[1]) return false;
+		if (!anyFov && RotationUtils.angleTo(player, yaw, pitch) * 2.0D > fov[1]) return false;
 		return !notBehindBlocks || self.canSee(player);
 	}
 
@@ -194,35 +195,8 @@ public class AimAssist extends Module {
 		return switch (sort) {
 			case "Health" -> player.getHealth();
 			case "Hurt time" -> player.damagedTimer;
-			case "Aim angle" -> angle(player, yaw, pitch);
-			default -> distance(player);
-		};
-	}
-
-	private double distance(PlayerEntity player) {
-		Vec3d eye = minecraft.player.getEyePosition(1.0F);
-		Box box = player.getShape();
-		double x = eye.x - MathHelper.clamp(eye.x, box.minX, box.maxX);
-		double y = eye.y - MathHelper.clamp(eye.y, box.minY, box.maxY);
-		double z = eye.z - MathHelper.clamp(eye.z, box.minZ, box.maxZ);
-		return Math.sqrt(x * x + y * y + z * z);
-	}
-
-	private double angle(PlayerEntity player, float yaw, float pitch) {
-		Box box = player.getShape();
-		float[] rotation = rotationTo(new Vec3d(
-			(box.minX + box.maxX) / 2.0D, (box.minY + box.maxY) / 2.0D, (box.minZ + box.maxZ) / 2.0D));
-		return Math.hypot(MathHelper.wrapDegrees(rotation[0] - yaw), rotation[1] - pitch);
-	}
-
-	private float[] rotationTo(Vec3d point) {
-		Vec3d eye = minecraft.player.getEyePosition(1.0F);
-		double x = point.x - eye.x;
-		double y = point.y - eye.y;
-		double z = point.z - eye.z;
-		return new float[]{
-			(float) Math.toDegrees(Math.atan2(z, x)) - 90.0F,
-			(float) -Math.toDegrees(Math.atan2(y, Math.sqrt(x * x + z * z)))
+			case "Aim angle" -> RotationUtils.angleTo(player, yaw, pitch);
+			default -> CombatUtils.distanceTo(player);
 		};
 	}
 

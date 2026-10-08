@@ -6,7 +6,6 @@ import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.game.inventory.InventoryMenuScreen;
 import net.minecraft.client.options.KeyBinding;
-import net.minecraft.world.HitResult;
 import org.example.illusion.event.PlayerTickEvent;
 import org.example.illusion.event.Render3DEvent;
 import org.example.illusion.event.ScreenInputEvent;
@@ -18,6 +17,7 @@ import org.example.illusion.feature.module.api.Description;
 import org.example.illusion.feature.module.api.Module;
 import org.example.illusion.feature.module.api.ModuleInfo;
 import org.example.illusion.mixin.ScreenInvoker;
+import org.example.illusion.util.PlayerUtils;
 import org.lwjgl.input.Mouse;
 
 import java.util.Random;
@@ -126,17 +126,12 @@ public class AutoClicker extends Module {
 		if (!minecraft.options.attackKey.isPressed() || !player.isAlive()) return false;
 		if (holdingWeapon && !Weapons.isWeapons(player.getItemInHand())) return false;
 		if (notUsingItem && player.getItemInUse() != null) return false;
-		return !allowBreakingBlocks || !aimingAtBlock();
+		return !allowBreakingBlocks || !PlayerUtils.aimingAtBlock();
 	}
 
 	private boolean activeInInventory() {
 		return inventory && minecraft.screen instanceof InventoryMenuScreen
 			&& Mouse.isButtonDown(0) && Screen.isShiftDown();
-	}
-
-	private boolean aimingAtBlock() {
-		HitResult target = minecraft.crosshairTarget;
-		return target != null && target.type == HitResult.Type.BLOCK;
 	}
 
 	private void click() {

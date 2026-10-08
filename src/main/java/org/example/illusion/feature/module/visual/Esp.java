@@ -18,6 +18,7 @@ import org.example.illusion.feature.module.api.Category;
 import org.example.illusion.feature.module.api.Module;
 import org.example.illusion.feature.module.api.ModuleInfo;
 import org.example.illusion.feature.ui.Draw;
+import org.example.illusion.util.ColorUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -211,12 +212,6 @@ public class Esp extends Module {
 	}
 
 	private int pulse(int color) {
-		float factor = pulseFactor;
-		if (factor == 1.0F) return color;
-
-		return color & 0xFF000000
-			| (int) ((color >> 16 & 255) * factor) << 16
-			| (int) ((color >> 8 & 255) * factor) << 8
-			| (int) ((color & 255) * factor);
+		return ColorUtils.darken(color, pulseFactor);
 	}
 }
