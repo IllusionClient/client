@@ -7,7 +7,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.game.inventory.InventoryMenuScreen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.world.HitResult;
-import org.example.illusion.event.HitDelayEvent;
 import org.example.illusion.event.PlayerTickEvent;
 import org.example.illusion.event.Render3DEvent;
 import org.example.illusion.event.ScreenInputEvent;
@@ -92,11 +91,6 @@ public class AutoClicker extends Module {
     @Listen
     public void onPlayerTick(PlayerTickEvent event) {
         updateRhythm();
-    }
-
-    @Listen
-    public void onHitDelay(HitDelayEvent event) {
-        if (clicking) event.delay = 0;
     }
 
     @Listen

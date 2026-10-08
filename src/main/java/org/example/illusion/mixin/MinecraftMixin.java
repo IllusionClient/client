@@ -2,33 +2,50 @@ package org.example.illusion.mixin;
 
 import net.minecraft.client.Minecraft;
 import org.example.illusion.IllusionClient;
-import org.example.illusion.event.HitDelayEvent;
+import org.example.illusion.event.AttackEvent;
 import org.example.illusion.event.KeyPressEvent;
+import org.example.illusion.event.MiningCooldownEvent;
 import org.example.illusion.event.PlayerTickEvent;
 import org.example.illusion.event.ScreenInputEvent;
 import org.example.illusion.event.UseDelayEvent;
 import org.example.illusion.event.UseItemEvent;
 import org.example.illusion.event.WorldLoadEvent;
 import org.lwjgl.input.Keyboard;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
+    @Shadow
+    private int attackCooldown;
+
     @Inject(method = "init", at = @At("TAIL"))
     private void illusion$init(CallbackInfo ci) {
         IllusionClient.init();
     }
 
-    @ModifyConstant(method = "doAttack", constant = @Constant(intValue = 10))
-    private int illusion$hitDelay(int delay) {
-        HitDelayEvent event = new HitDelayEvent();
+    @Inject(method = "doAttack", at = @At("HEAD"))
+    private void illusion$attack(CallbackInfo ci) {
+        AttackEvent event = new AttackEvent();
         IllusionClient.BUS.publish(event);
-        return event.delay;
+        if (event.resetCooldown) attackCooldown = 0;
+    }
+
+    @Redirect(
+            method = "handleMouseDown",
+            at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;attackCooldown:I", opcode = Opcodes.GETFIELD)
+    )
+    private int illusion$miningCooldown(Minecraft minecraft) {
+        MiningCooldownEvent event = new MiningCooldownEvent(attackCooldown);
+        IllusionClient.BUS.publish(event);
+        return event.cooldown;
     }
 
     @ModifyConstant(method = "doUse", constant = @Constant(intValue = 4))
