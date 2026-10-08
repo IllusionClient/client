@@ -23,19 +23,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class ModuleManager {
-    public final List<Module> modules = Arrays.asList(
-            new AntiBot(),
-            new ClickGuiModule(),
-            new Teams(),
-            new AimAssist(),
-            new AutoClicker(),
-            new NoHitDelay(),
-            new Esp(),
-            new ModOverlay(),
-            new BridgeAssist(),
-            new FastPlace(),
-            new Weapons()
-    );
+	public final List<Module> modules = Arrays.asList(
+		new AntiBot(),
+		new ClickGuiModule(),
+		new Teams(),
+		new AimAssist(),
+		new AutoClicker(),
+		new NoHitDelay(),
+		new Weapons(),
+		new NoJumpDelay(),
+		new NullMove(),
+		new Sprint(),
+		new BridgeAssist(),
+		new FastPlace(),
+		new Esp(),
+		new ModOverlay()
+	);
 
 	public ModuleManager() {
 		IllusionClient.BUS.subscribe(this);
