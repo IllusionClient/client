@@ -6,7 +6,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class RotationUtils {
+public final class RotationUtils {
 	public static float[] rotationTo(Vec3d point) {
 		Vec3d eye = Minecraft.getInstance().player.getEyePosition(1.0F);
 		double x = point.x - eye.x;

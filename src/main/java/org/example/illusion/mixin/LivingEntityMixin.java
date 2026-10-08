@@ -1,33 +1,31 @@
 package org.example.illusion.mixin;
 
-import net.minecraft.client.Minecraft;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.entity.living.LivingEntity;
 import org.example.illusion.IllusionClient;
 import org.example.illusion.event.JumpDelayEvent;
 import org.example.illusion.event.JumpYawEvent;
+import org.example.illusion.util.PlayerUtils;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
-	@ModifyConstant(method = "mobTick", constant = @Constant(intValue = 10))
+	@ModifyExpressionValue(method = "mobTick", at = @At(value = "CONSTANT", args = "intValue=10"))
 	private int illusion$jumpDelay(int ticks) {
-		if ((Object) this != Minecraft.getInstance().player) return ticks;
+		if (!PlayerUtils.isLocalPlayer(this)) return ticks;
 
-		JumpDelayEvent event = new JumpDelayEvent();
+		JumpDelayEvent event = new JumpDelayEvent(ticks);
 		IllusionClient.BUS.publish(event);
 		return event.ticks;
 	}
 
-	@Redirect(method = "jump", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/living/LivingEntity;yaw:F", opcode = Opcodes.GETFIELD))
-	private float illusion$jumpYaw(LivingEntity entity) {
-		if (entity != Minecraft.getInstance().player) return entity.yaw;
+	@ModifyExpressionValue(method = "jump", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/living/LivingEntity;yaw:F", opcode = Opcodes.GETFIELD))
+	private float illusion$jumpYaw(float yaw) {
+		if (!PlayerUtils.isLocalPlayer(this)) return yaw;
 
-		JumpYawEvent event = new JumpYawEvent(entity.yaw);
+		JumpYawEvent event = new JumpYawEvent(yaw);
 		IllusionClient.BUS.publish(event);
 		return event.yaw;
 	}

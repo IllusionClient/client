@@ -1,6 +1,6 @@
 package org.example.illusion.util;
 
-public class ColorUtils {
+public final class ColorUtils {
 	public static int darken(int color, float factor) {
 		if (factor == 1.0F) return color;
 

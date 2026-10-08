@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import org.example.illusion.feature.module.client.AntiBot;
 import org.example.illusion.feature.module.client.Teams;
 
-public class CombatUtils {
+public final class CombatUtils {
 	public static boolean isTarget(Entity entity) {
 		if (!(entity instanceof PlayerEntity player)) return false;
 

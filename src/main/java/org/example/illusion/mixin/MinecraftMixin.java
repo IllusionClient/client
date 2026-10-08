@@ -1,5 +1,7 @@
 package org.example.illusion.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.client.Minecraft;
 import org.example.illusion.IllusionClient;
 import org.example.illusion.event.*;
@@ -7,11 +9,13 @@ import org.lwjgl.input.Keyboard;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
+
 	@Shadow
 	private int attackCooldown;
 
@@ -27,28 +31,28 @@ public class MinecraftMixin {
 		if (event.resetCooldown) attackCooldown = 0;
 	}
 
-	@Redirect(
+	@ModifyExpressionValue(
 		method = "handleMouseDown",
 		at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;attackCooldown:I", opcode = Opcodes.GETFIELD)
 	)
-	private int illusion$miningCooldown(Minecraft minecraft) {
-		MiningCooldownEvent event = new MiningCooldownEvent(attackCooldown);
+	private int illusion$miningCooldown(int cooldown) {
+		MiningCooldownEvent event = new MiningCooldownEvent(cooldown);
 		IllusionClient.BUS.publish(event);
 		return event.cooldown;
 	}
 
-	@ModifyConstant(method = "doUse", constant = @Constant(intValue = 4))
+	@ModifyExpressionValue(method = "doUse", at = @At(value = "CONSTANT", args = "intValue=4"))
 	private int illusion$useDelay(int delay) {
-		UseDelayEvent event = new UseDelayEvent();
+		UseDelayEvent event = new UseDelayEvent(delay);
 		IllusionClient.BUS.publish(event);
 		return event.delay;
 	}
 
-	@Inject(method = "doUse", at = @At("HEAD"), cancellable = true)
-	private void illusion$useItem(CallbackInfo ci) {
+	@WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;doUse()V"))
+	private boolean illusion$useItem(Minecraft minecraft) {
 		UseItemEvent event = new UseItemEvent();
 		IllusionClient.BUS.publish(event);
-		if (event.cancelled) ci.cancel();
+		return !event.cancelled;
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;handleGuiKeyBindings()V"))

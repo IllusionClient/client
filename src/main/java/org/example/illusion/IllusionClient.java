@@ -17,9 +17,6 @@ public final class IllusionClient {
 	public static ModuleManager MODULES;
 	public static ConfigManager CONFIG;
 
-	private IllusionClient() {
-	}
-
 	public static void init() {
 		MODULES = new ModuleManager();
 		CONFIG = new ConfigManager();
