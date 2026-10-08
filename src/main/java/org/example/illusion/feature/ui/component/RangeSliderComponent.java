@@ -11,6 +11,8 @@ public class RangeSliderComponent extends Component {
 
 	private final Option option;
 	private int dragging = -1;
+	private float shownLow = Float.NaN, shownHigh = Float.NaN;
+	private String text;
 
 	public RangeSliderComponent(Option option) {
 		this.option = option;
@@ -35,9 +37,15 @@ public class RangeSliderComponent extends Component {
 		float[] range = option.get();
 
 		if (dragging != -1) {
-			float progress = Math.min(1.0F, Math.max(0.0F, (mouseX - left()) / (float) width));
+			float progress = Math.clamp((mouseX - left()) / (float) width, 0.0F, 1.0F);
 			float value = Math.round((min + progress * (max - min)) * 10.0F) / 10.0F;
 			range[dragging] = dragging == 0 ? Math.min(value, range[1]) : Math.max(value, range[0]);
+		}
+
+		if (range[0] != shownLow || range[1] != shownHigh) {
+			shownLow = range[0];
+			shownHigh = range[1];
+			text = shownLow + " - " + shownHigh;
 		}
 
 		int low = offset(range[0]);
@@ -46,7 +54,7 @@ public class RangeSliderComponent extends Component {
 		int knobY = trackY - (KNOB - TRACK_HEIGHT) / 2;
 
 		row(option.name, mouseX, mouseY);
-		value(range[0] + " - " + range[1]);
+		value(text);
 		Draw.rounded(left(), trackY, width, TRACK_HEIGHT, 2.0F, Draw.TRACK);
 		Draw.rounded(left() + low, trackY, high - low, TRACK_HEIGHT, 2.0F, Draw.accent().getRGB());
 		Draw.rounded(left() + low - KNOB / 2, knobY, KNOB, KNOB, KNOB / 2.0F, -1);

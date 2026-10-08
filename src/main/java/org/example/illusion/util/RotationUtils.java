@@ -12,16 +12,23 @@ public final class RotationUtils {
 		double x = point.x - eye.x;
 		double y = point.y - eye.y;
 		double z = point.z - eye.z;
-		return new float[]{
-			(float) Math.toDegrees(Math.atan2(z, x)) - 90.0F,
-			(float) -Math.toDegrees(Math.atan2(y, Math.sqrt(x * x + z * z)))
-		};
+		return new float[]{yaw(x, z), pitch(x, y, z)};
 	}
 
 	public static double angleTo(Entity entity, float yaw, float pitch) {
+		Vec3d eye = Minecraft.getInstance().player.getEyePosition(1.0F);
 		Box box = entity.getShape();
-		float[] rotation = rotationTo(new Vec3d(
-			(box.minX + box.maxX) / 2.0D, (box.minY + box.maxY) / 2.0D, (box.minZ + box.maxZ) / 2.0D));
-		return Math.hypot(MathHelper.wrapDegrees(rotation[0] - yaw), rotation[1] - pitch);
+		double x = (box.minX + box.maxX) / 2.0D - eye.x;
+		double y = (box.minY + box.maxY) / 2.0D - eye.y;
+		double z = (box.minZ + box.maxZ) / 2.0D - eye.z;
+		return Math.hypot(MathHelper.wrapDegrees(yaw(x, z) - yaw), pitch(x, y, z) - pitch);
+	}
+
+	private static float yaw(double x, double z) {
+		return (float) Math.toDegrees(Math.atan2(z, x)) - 90.0F;
+	}
+
+	private static float pitch(double x, double y, double z) {
+		return (float) -Math.toDegrees(Math.atan2(y, Math.sqrt(x * x + z * z)));
 	}
 }

@@ -56,10 +56,16 @@ public class BridgeAssist extends Module {
 	private int unsneakTicks;
 	private float jitter;
 	private int blockSlot = -1;
+	private String details;
+	private float detailsDelay;
 
 	@Override
 	public String details() {
-		return number(unsneakDelay) + "ms";
+		if (details == null || unsneakDelay != detailsDelay) {
+			detailsDelay = unsneakDelay;
+			details = number(unsneakDelay) + "ms";
+		}
+		return details;
 	}
 
 	@Override

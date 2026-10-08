@@ -54,6 +54,22 @@ public final class Option {
 		}
 	}
 
+	public boolean getBoolean() {
+		try {
+			return field.getBoolean(owner);
+		} catch (IllegalAccessException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	public float getFloat() {
+		try {
+			return field.getFloat(owner);
+		} catch (IllegalAccessException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
 	public void set(Object value) {
 		try {
 			field.set(owner, value);

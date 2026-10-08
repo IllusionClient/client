@@ -1,6 +1,8 @@
 package org.example.illusion.feature.module;
 
 import io.github.nevalackin.radbus.Listen;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import org.example.illusion.IllusionClient;
 import org.example.illusion.event.KeyPressEvent;
 import org.example.illusion.feature.module.api.Module;
@@ -39,16 +41,17 @@ public final class ModuleManager {
 		new Esp(),
 		new ModOverlay()
 	);
+	private final Reference2ObjectMap<Class<?>, Module> byType = new Reference2ObjectOpenHashMap<>(modules.size());
 
 	public ModuleManager() {
+		for (Module module : modules) byType.put(module.getClass(), module);
 		IllusionClient.BUS.subscribe(this);
 	}
 
 	public <T extends Module> T get(Class<T> type) {
-		for (Module module : modules) {
-			if (type.isInstance(module)) return type.cast(module);
-		}
-		throw new IllegalArgumentException("Unregistered module " + type.getName());
+		Module module = byType.get(type);
+		if (module == null) throw new IllegalArgumentException("Unregistered module " + type.getName());
+		return type.cast(module);
 	}
 
 	@Listen

@@ -1,5 +1,6 @@
 package org.example.illusion.feature.ui;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.gui.screen.Screen;
 import org.example.illusion.IllusionClient;
 import org.example.illusion.feature.module.api.Category;
@@ -7,11 +8,10 @@ import org.example.illusion.feature.ui.component.Component;
 import org.example.illusion.feature.ui.component.Frame;
 import org.lwjgl.input.Mouse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClickGui extends Screen {
-	private final List<Frame> frames = new ArrayList<>();
+	private final List<Frame> frames = new ObjectArrayList<>();
 
 	public ClickGui() {
 		int x = Component.PADDING;

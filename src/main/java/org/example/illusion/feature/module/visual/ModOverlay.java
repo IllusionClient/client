@@ -1,6 +1,7 @@
 package org.example.illusion.feature.module.visual;
 
 import io.github.nevalackin.radbus.Listen;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.client.render.platform.GlStateManager;
@@ -16,14 +17,15 @@ import org.example.illusion.feature.module.api.ModuleInfo;
 import org.example.illusion.feature.ui.Draw;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @ModuleInfo(name = "Mod Overlay", category = Category.VISUAL)
 @Description("Lists the enabled modules in the corner of the screen.")
 public class ModOverlay extends Module {
-	private final List<Row> rows = new ArrayList<>();
+	private final List<Row> rows = new ObjectArrayList<>();
+	private Row[] all;
 	@Slider(value = "Text Size", min = 0.5F, max = 3.0F)
 	public float textSize = 1.0F;
 	@Slider(value = "Padding X", min = 0.0F, max = 10.0F)
@@ -48,14 +50,22 @@ public class ModOverlay extends Module {
 		TextRenderer renderer = Minecraft.getInstance().textRenderer;
 		int gap = renderer.getWidth(' ');
 
+		if (all == null) {
+			List<Module> modules = IllusionClient.MODULES.modules;
+			all = new Row[modules.size() - 1];
+			int count = 0;
+			for (Module module : modules) {
+				if (module != this) all[count++] = new Row(module);
+			}
+		}
+
 		rows.clear();
-		for (Module module : IllusionClient.MODULES.modules) {
-			if (module == this || !module.isEnabled()) continue;
+		for (Row row : all) {
+			Module module = row.module;
+			if (!module.isEnabled()) continue;
 			if (onlyBoundModules && module.getBind() == 0) continue;
 
-			Row row = new Row();
-			row.name = format(module.name);
-			row.details = showDetails ? format(module.details()) : null;
+			row.update(lowercase, showDetails ? module.details() : null);
 			row.nameWidth = renderer.getWidth(row.name);
 			float textWidth = row.nameWidth + (row.details == null ? 0 : gap + renderer.getWidth(row.details));
 			row.width = Math.round(textWidth * textSize + paddingX * 2.0F);
@@ -91,14 +101,31 @@ public class ModOverlay extends Module {
 		GlStateManager.enableBlend();
 	}
 
-	private String format(String text) {
-		return text != null && lowercase ? text.toLowerCase(Locale.ROOT) : text;
-	}
-
 	private static final class Row {
+		final Module module;
 		String name;
 		String details;
 		int nameWidth;
 		int width;
+		private String detailsSource;
+		private boolean lowercase;
+
+		Row(Module module) {
+			this.module = module;
+		}
+
+		void update(boolean lowercase, String source) {
+			boolean restyle = name == null || lowercase != this.lowercase;
+			this.lowercase = lowercase;
+			if (restyle) name = style(module.name);
+			if (restyle || !Objects.equals(source, detailsSource)) {
+				detailsSource = source;
+				details = source == null ? null : style(source);
+			}
+		}
+
+		private String style(String text) {
+			return lowercase ? text.toLowerCase(Locale.ROOT) : text;
+		}
 	}
 }

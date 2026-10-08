@@ -11,6 +11,8 @@ public class SliderComponent extends Component {
 
 	private final Option option;
 	private boolean dragging;
+	private float shown = Float.NaN;
+	private String text;
 
 	public SliderComponent(Option option) {
 		this.option = option;
@@ -34,16 +36,20 @@ public class SliderComponent extends Component {
 		int width = right() - left();
 
 		if (dragging) {
-			float progress = Math.min(1.0F, Math.max(0.0F, (mouseX - left()) / (float) width));
+			float progress = Math.clamp((mouseX - left()) / (float) width, 0.0F, 1.0F);
 			option.set(Math.round((min + progress * (max - min)) * 10.0F) / 10.0F);
 		}
 
-		float value = option.get();
+		float value = option.getFloat();
+		if (value != shown) {
+			shown = value;
+			text = String.valueOf(value);
+		}
 		int filled = (int) (width * (value - min) / (max - min));
 		int trackY = y + TRACK_Y;
 
 		row(option.name, mouseX, mouseY);
-		value(String.valueOf(value));
+		value(text);
 		Draw.rounded(left(), trackY, width, TRACK_HEIGHT, 2.0F, Draw.TRACK);
 		Draw.rounded(left(), trackY, filled, TRACK_HEIGHT, 2.0F, Draw.accent().getRGB());
 		Draw.rounded(left() + filled - KNOB / 2, trackY - (KNOB - TRACK_HEIGHT) / 2, KNOB, KNOB, KNOB / 2.0F, -1);

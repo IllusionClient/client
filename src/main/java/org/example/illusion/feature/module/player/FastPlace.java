@@ -21,10 +21,16 @@ public class FastPlace extends Module {
 	public float activateDelay = 0.0F;
 	private int heldTicks;
 	private float remainder;
+	private String details;
+	private float detailsCps;
 
 	@Override
 	public String details() {
-		return number(maximumCps) + "cps";
+		if (details == null || maximumCps != detailsCps) {
+			detailsCps = maximumCps;
+			details = number(maximumCps) + "cps";
+		}
+		return details;
 	}
 
 	@Override

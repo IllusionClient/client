@@ -66,10 +66,18 @@ public class AutoClicker extends Module {
 	private float pauseChance;
 	private int exhaustTicks;
 	private float exhaust;
+	private String details;
+	private String detailsPattern;
+	private float detailsCps;
 
 	@Override
 	public String details() {
-		return clickPattern + " " + number(targetCps) + "cps";
+		if (details == null || targetCps != detailsCps || !clickPattern.equals(detailsPattern)) {
+			detailsPattern = clickPattern;
+			detailsCps = targetCps;
+			details = clickPattern + " " + number(targetCps) + "cps";
+		}
+		return details;
 	}
 
 	@Override

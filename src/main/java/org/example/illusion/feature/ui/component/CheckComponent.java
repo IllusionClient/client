@@ -18,7 +18,7 @@ public class CheckComponent extends Component {
 	public void render(int mouseX, int mouseY) {
 		row(option.name, mouseX, mouseY);
 
-		boolean checked = option.get();
+		boolean checked = option.getBoolean();
 		int switchX = right() - SWITCH_WIDTH;
 		int switchY = y + (HEIGHT - SWITCH_HEIGHT) / 2;
 		int knobX = checked ? switchX + SWITCH_WIDTH - KNOB - 2 : switchX + 2;
@@ -29,6 +29,6 @@ public class CheckComponent extends Component {
 
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int button) {
-		if (button == 0 && hovered(mouseX, mouseY)) option.set(!option.<Boolean>get());
+		if (button == 0 && hovered(mouseX, mouseY)) option.set(!option.getBoolean());
 	}
 }

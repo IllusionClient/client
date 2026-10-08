@@ -1,6 +1,7 @@
 package org.example.illusion.feature.module.visual;
 
 import io.github.nevalackin.radbus.Listen;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.FrustumCuller;
@@ -21,14 +22,13 @@ import org.example.illusion.feature.ui.Draw;
 import org.example.illusion.util.ColorUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @ModuleInfo(name = "ESP", category = Category.VISUAL)
 public class Esp extends Module {
 	private static final int OUTLINE = 0x96000000;
-	private final List<PlayerEntity> players = new ArrayList<>();
+	private final List<PlayerEntity> players = new ObjectArrayList<>();
 	private float[] bounds = new float[64];
 	private float pulseFactor;
 	@Check("Box")

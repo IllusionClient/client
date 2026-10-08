@@ -1,10 +1,10 @@
 package org.example.illusion.feature.module.api;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.example.illusion.IllusionClient;
 import org.example.illusion.feature.config.api.Option;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Module {
@@ -12,7 +12,7 @@ public abstract class Module {
 	public final String key = getClass().getSimpleName();
 	public final Category category;
 	public final Description description;
-	public final List<Option> options = new ArrayList<>();
+	public final List<Option> options = new ObjectArrayList<>();
 
 	private int bind;
 	private boolean enabled;

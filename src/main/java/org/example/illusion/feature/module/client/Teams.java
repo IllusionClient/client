@@ -26,16 +26,29 @@ public class Teams extends Module {
 		"White", "None"
 	})
 	public String colors = "None";
+	private String teamColorName;
+	private Formatting teamColor;
 
 	public static boolean isTeammate(PlayerEntity player) {
 		Teams teams = IllusionClient.MODULES.get(Teams.class);
 		if (!teams.isEnabled()) return false;
 
+		Formatting teamColor = teams.teamColor();
+		if (teamColor == null && !teams.matchOwnNametag) return false;
+
 		Formatting color = nametagColor(player);
 		if (color == null) return false;
 		if (teams.matchOwnNametag && color == nametagColor(Minecraft.getInstance().player)) return true;
 
-		return color == Formatting.byName(teams.colors);
+		return color == teamColor;
+	}
+
+	private Formatting teamColor() {
+		if (!colors.equals(teamColorName)) {
+			teamColorName = colors;
+			teamColor = Formatting.byName(colors);
+		}
+		return teamColor;
 	}
 
 	private static Formatting nametagColor(PlayerEntity player) {

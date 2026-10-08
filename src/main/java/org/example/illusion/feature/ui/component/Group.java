@@ -1,10 +1,11 @@
 package org.example.illusion.feature.ui.component;
 
-import java.util.ArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import java.util.List;
 
 public abstract class Group extends Component {
-	protected final List<Component> children = new ArrayList<>();
+	protected final List<Component> children = new ObjectArrayList<>();
 	protected boolean open;
 
 	protected abstract void renderHeader(int mouseX, int mouseY);
