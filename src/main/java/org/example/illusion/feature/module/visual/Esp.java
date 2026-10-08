@@ -2,7 +2,9 @@ package org.example.illusion.feature.module.visual;
 
 import io.github.nevalackin.radbus.Listen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.FrustumCuller;
+import net.minecraft.client.render.FrustumData;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.platform.GlStateManager;
 import net.minecraft.entity.living.player.PlayerEntity;
@@ -16,24 +18,18 @@ import org.example.illusion.feature.module.api.Category;
 import org.example.illusion.feature.module.api.Module;
 import org.example.illusion.feature.module.api.ModuleInfo;
 import org.example.illusion.feature.ui.Draw;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 
 import java.awt.*;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @ModuleInfo(name = "ESP", category = Category.VISUAL)
 public class Esp extends Module {
 	private static final int OUTLINE = 0x96000000;
-	private final Map<PlayerEntity, float[]> bounds = new HashMap<>();
-	private final FloatBuffer modelView = BufferUtils.createFloatBuffer(16);
-	private final FloatBuffer projection = BufferUtils.createFloatBuffer(16);
-	private final IntBuffer viewport = BufferUtils.createIntBuffer(16);
-	private final FloatBuffer projected = BufferUtils.createFloatBuffer(4);
+	private final List<PlayerEntity> players = new ArrayList<>();
+	private float[] bounds = new float[64];
+	private float pulseFactor;
 	@Check("Box")
 	public boolean box = true;
 	@ColorPicker("Box Color")
@@ -60,6 +56,8 @@ public class Esp extends Module {
 	public boolean self = true;
 
 	private static void outline(float left, float top, float right, float bottom, float thickness, int color) {
+		thickness = Math.min(thickness, Math.min(right - left, bottom - top) / 2.0F);
+
 		Draw.fill(left, top, left + thickness, bottom, color);
 		Draw.fill(right - thickness, top, right, bottom, color);
 		Draw.fill(left + thickness, top, right - thickness, top + thickness, color);
@@ -68,28 +66,29 @@ public class Esp extends Module {
 
 	@Override
 	public void onDisable() {
-		bounds.clear();
+		players.clear();
 	}
 
 	@Listen
 	public void onWorldLoad(WorldLoadEvent event) {
-		bounds.clear();
+		players.clear();
 	}
 
 	@Listen
 	public void onRender3D(Render3DEvent event) {
-		bounds.clear();
+		players.clear();
 
 		Minecraft minecraft = Minecraft.getInstance();
 		if (minecraft.world == null || minecraft.player == null) return;
 
 		EntityRenderDispatcher dispatcher = minecraft.getEntityRenderDispatcher();
-		FrustumCuller frustum = new FrustumCuller();
+		FrustumData data = Frustum.getInstance();
+		FrustumCuller frustum = new FrustumCuller(data);
 		frustum.prepare(dispatcher.cameraX, dispatcher.cameraY, dispatcher.cameraZ);
 
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelView);
-		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, projection);
-		GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
+		float[] clip = data.clipMatrix;
+		float halfWidth = minecraft.width / 2.0F;
+		float halfHeight = minecraft.height / 2.0F;
 
 		float tickDelta = event.partialTicks();
 		for (PlayerEntity player : minecraft.world.players) {
@@ -98,78 +97,95 @@ public class Esp extends Module {
 			double x = player.prevX + (player.x - player.prevX) * tickDelta - dispatcher.cameraX;
 			double y = player.prevY + (player.y - player.prevY) * tickDelta - dispatcher.cameraY;
 			double z = player.prevZ + (player.z - player.prevZ) * tickDelta - dispatcher.cameraZ;
-			double halfWidth = player.width / 2.0D + 0.1D;
+			double radius = player.width / 2.0D + 0.1D;
 			double bottom = y - 0.1D;
 			double top = y + player.height + (player.isSneaking() ? -0.2D : 0.1D) + 0.1D;
 
-			float[] rect = {Float.MAX_VALUE, Float.MAX_VALUE, -1.0F, -1.0F};
+			float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, maxX = -1.0F, maxY = -1.0F;
 			for (int corner = 0; corner < 8; corner++) {
-				float cornerX = (float) (x + ((corner & 1) == 0 ? -halfWidth : halfWidth));
+				float cornerX = (float) (x + ((corner & 1) == 0 ? -radius : radius));
 				float cornerY = (float) ((corner & 2) == 0 ? bottom : top);
-				float cornerZ = (float) (z + ((corner & 4) == 0 ? -halfWidth : halfWidth));
+				float cornerZ = (float) (z + ((corner & 4) == 0 ? -radius : radius));
 
-				if (!GLU.gluProject(cornerX, cornerY, cornerZ, modelView, projection, viewport, projected)) continue;
-				if (projected.get(2) < 0.0F || projected.get(2) >= 1.0F) continue;
+				float w = clip[3] * cornerX + clip[7] * cornerY + clip[11] * cornerZ + clip[15];
+				if (w == 0.0F) continue;
 
-				float screenX = projected.get(0);
-				float screenY = minecraft.height - projected.get(1);
-				rect[0] = Math.min(rect[0], screenX);
-				rect[1] = Math.min(rect[1], screenY);
-				rect[2] = Math.max(rect[2], screenX);
-				rect[3] = Math.max(rect[3], screenY);
+				float depth = (clip[2] * cornerX + clip[6] * cornerY + clip[10] * cornerZ + clip[14]) / w;
+				if (depth < -1.0F || depth >= 1.0F) continue;
+
+				float screenX = ((clip[0] * cornerX + clip[4] * cornerY + clip[8] * cornerZ + clip[12]) / w + 1.0F) * halfWidth;
+				float screenY = (1.0F - (clip[1] * cornerX + clip[5] * cornerY + clip[9] * cornerZ + clip[13]) / w) * halfHeight;
+				minX = Math.min(minX, screenX);
+				minY = Math.min(minY, screenY);
+				maxX = Math.max(maxX, screenX);
+				maxY = Math.max(maxY, screenY);
 			}
+			if (maxX < minX) continue;
 
-			if (rect[2] >= rect[0]) bounds.put(player, rect);
+			int index = players.size() * 4;
+			if (index == bounds.length) bounds = Arrays.copyOf(bounds, index * 2);
+			bounds[index] = minX;
+			bounds[index + 1] = minY;
+			bounds[index + 2] = maxX;
+			bounds[index + 3] = maxY;
+			players.add(player);
 		}
 	}
 
 	@Listen
 	public void onRender2D(Render2DEvent event) {
-		if (bounds.isEmpty()) return;
+		if (players.isEmpty()) return;
+
+		float progress = System.currentTimeMillis() % 2000L / 1000.0F;
+		pulseFactor = pulsing ? 1.0F - 0.4F * (progress > 1.0F ? 2.0F - progress : progress) : 1.0F;
+		int boxRgb = boxColor.getRGB();
 
 		GlStateManager.depthMask(false);
+		GlStateManager.pushMatrix();
+		double pixel = 1.0D / event.window().getScale();
+		GlStateManager.scaled(pixel, pixel, 1.0D);
 
-		float scale = event.window().getScale();
-		for (Map.Entry<PlayerEntity, float[]> entry : bounds.entrySet()) {
-			PlayerEntity player = entry.getKey();
-			float left = entry.getValue()[0] / scale;
-			float top = entry.getValue()[1] / scale;
-			float right = entry.getValue()[2] / scale;
-			float bottom = entry.getValue()[3] / scale;
+		for (int i = 0; i < players.size(); i++) {
+			PlayerEntity player = players.get(i);
+			int left = Math.round(bounds[i * 4]);
+			int top = Math.round(bounds[i * 4 + 1]);
+			int right = Math.round(bounds[i * 4 + 2]);
+			int bottom = Math.round(bounds[i * 4 + 3]);
 
 			if (armorBar) renderArmorBar(player, left, right, bottom);
 			if (healthBar) renderHealthBar(player, left, top, bottom);
 
 			if (box) {
-				outline(left, top, right, bottom, 1.5F, OUTLINE);
-				outline(left + 0.5F, top + 0.5F, right - 0.5F, bottom - 0.5F, 0.5F, boxColor.getRGB());
+				outline(left, top, right, bottom, 3.0F, OUTLINE);
+				outline(left + 1, top + 1, right - 1, bottom - 1, 1.0F, boxRgb);
 			}
 		}
 		Draw.flush();
 
+		GlStateManager.popMatrix();
 		GlStateManager.depthMask(true);
 		GlStateManager.enableBlend();
 	}
 
-	private void renderArmorBar(PlayerEntity player, float left, float right, float bottom) {
+	private void renderArmorBar(PlayerEntity player, int left, int right, int bottom) {
 		float armor = Math.min(1.0F, player.getArmorProtection() / 20.0F);
 
-		Draw.fill(left, bottom + 0.5F, right, bottom + 2.5F, OUTLINE);
-		if (armor > 0.0F) {
-			Draw.fill(left + 0.5F, bottom + 1.0F, left + (right - left) * armor - 0.5F, bottom + 2.0F, armorColor.getRGB());
-		}
+		Draw.fill(left, bottom + 1, right, bottom + 5, OUTLINE);
+
+		int fillRight = left + Math.round((right - left) * armor) - 1;
+		if (fillRight > left + 1) Draw.fill(left + 1, bottom + 2, fillRight, bottom + 4, armorColor.getRGB());
 	}
 
-	private void renderHealthBar(PlayerEntity player, float boxLeft, float top, float bottom) {
-		float left = boxLeft - 2.0F;
-		float right = boxLeft - 1.0F;
-		float barBottom = bottom - 0.5F;
-		float height = bottom - top;
+	private void renderHealthBar(PlayerEntity player, int boxLeft, int top, int bottom) {
+		int left = boxLeft - 4;
+		int right = boxLeft - 2;
+		int barBottom = bottom - 1;
+		int height = bottom - top;
 		float health = Math.clamp(player.getHealth() / player.getMaxHealth(), 0.0F, 1.0F);
 
-		Draw.fill(left - 0.5F, top, right + 0.5F, bottom, OUTLINE);
+		Draw.fill(left - 1, top, right + 1, bottom, OUTLINE);
 
-		float healthTop = bottom + 0.5F - height * health;
+		int healthTop = bottom + 1 - Math.round(height * health);
 		if (healthTop < barBottom) {
 			if (healthMode.equals("Gradient")) {
 				Draw.fill(left, healthTop, right, barBottom, pulse(healthColor.getRGB()), pulse(healthEndColor.getRGB()));
@@ -180,7 +196,7 @@ public class Esp extends Module {
 		}
 
 		float absorption = Math.min(1.0F, player.getAbsorption() / 20.0F);
-		float absorptionTop = bottom + 0.5F - height * absorption;
+		int absorptionTop = bottom + 1 - Math.round(height * absorption);
 		if (absorptionTop < barBottom)
 			Draw.fill(left, absorptionTop, right, barBottom, pulse(absorptionColor.getRGB()));
 	}
@@ -195,10 +211,9 @@ public class Esp extends Module {
 	}
 
 	private int pulse(int color) {
-		if (!pulsing) return color;
+		float factor = pulseFactor;
+		if (factor == 1.0F) return color;
 
-		float progress = System.currentTimeMillis() % 2000L / 1000.0F;
-		float factor = 1.0F - 0.4F * (progress > 1.0F ? 2.0F - progress : progress);
 		return color & 0xFF000000
 			| (int) ((color >> 16 & 255) * factor) << 16
 			| (int) ((color >> 8 & 255) * factor) << 8
