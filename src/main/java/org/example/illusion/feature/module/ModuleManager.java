@@ -8,6 +8,7 @@ import org.example.illusion.feature.module.client.AntiBot;
 import org.example.illusion.feature.module.client.ClickGuiModule;
 import org.example.illusion.feature.module.client.Teams;
 import org.example.illusion.feature.module.combat.AimAssist;
+import org.example.illusion.feature.module.combat.AutoClicker;
 import org.example.illusion.feature.module.combat.Weapons;
 import org.example.illusion.feature.module.player.BridgeAssist;
 import org.example.illusion.feature.module.player.FastPlace;
@@ -22,6 +23,7 @@ public final class ModuleManager {
             new ClickGuiModule(),
             new Teams(),
             new AimAssist(),
+            new AutoClicker(),
             new Esp(),
             new BridgeAssist(),
             new FastPlace(),

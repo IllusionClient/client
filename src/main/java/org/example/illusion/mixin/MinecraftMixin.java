@@ -5,6 +5,7 @@ import org.example.illusion.IllusionClient;
 import org.example.illusion.event.HitDelayEvent;
 import org.example.illusion.event.KeyPressEvent;
 import org.example.illusion.event.PlayerTickEvent;
+import org.example.illusion.event.ScreenInputEvent;
 import org.example.illusion.event.UseDelayEvent;
 import org.example.illusion.event.UseItemEvent;
 import org.example.illusion.event.WorldLoadEvent;
@@ -47,6 +48,11 @@ public class MinecraftMixin {
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;handleGuiKeyBindings()V"))
     private void illusion$keyPress(CallbackInfo ci) {
         IllusionClient.BUS.publish(new KeyPressEvent(Keyboard.getEventKey(), Keyboard.getEventKeyState()));
+    }
+
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;handleInputs()V"))
+    private void illusion$screenInput(CallbackInfo ci) {
+        IllusionClient.BUS.publish(new ScreenInputEvent());
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
