@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "illusion",
 	"version": "${version}",
-	"name": "Illusion",
-	"description": "A libre utility mod",
+	"name": "Illusion Client",
+	"description": "Minecraft 1.8.9 libre ghost client built for Ornithe.",
 	"contact": {
 		"homepage": "https://codeberg.org/awruff/Illusion/",
 		"issues": "https://codeberg.org/awruff/Illusion/issues",
