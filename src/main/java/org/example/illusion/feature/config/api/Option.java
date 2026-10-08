@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 
 public final class Option {
 	public final String name;
+	public final String key;
 	public final Annotation info;
 	private final Object owner;
 	private final Field field;
@@ -18,6 +19,7 @@ public final class Option {
 		}
 
 		this.name = name;
+		this.key = field.getName();
 		this.info = info;
 		this.owner = owner;
 		this.field = field;

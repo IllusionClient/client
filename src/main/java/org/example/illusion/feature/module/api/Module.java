@@ -10,6 +10,7 @@ import java.util.List;
 
 public abstract class Module {
 	public final String name;
+	public final String key = getClass().getSimpleName();
 	public final Category category;
 	public final Description description;
 	public final List<Option> options = new ArrayList<>();

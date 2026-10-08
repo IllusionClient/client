@@ -40,7 +40,7 @@ public class AutoClicker extends Module {
 	public boolean allowBreakingBlocks = true;
 	@Check("Inventory")
 	public boolean inventory = false;
-	@Check("Randomize Inventory Speed")
+	@Check("Randomize Inventory")
 	public boolean randomizeInventorySpeed = true;
 	@Check("Holding Weapon")
 	public boolean holdingWeapon = false;
