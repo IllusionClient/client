@@ -34,7 +34,7 @@ public class Weapons extends Module {
 
 	public static boolean isWeapons(ItemStack stack) {
 		Weapons weapons = IllusionClient.MODULES.get(Weapons.class);
-		if (!weapons.isEnabled()) return false;
+		if (!weapons.isEnabled()) return true;
 		if (stack == null) return weapons.fists;
 
 		Item item = stack.getItem();

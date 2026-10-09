@@ -65,8 +65,6 @@ public class AimAssist extends Module {
 	public boolean mouseMoved = false;
 	@Check("Disable While Breaking Blocks")
 	public boolean breakingBlocks = true;
-	@Check("Holding Weapon")
-	public boolean holdingWeapon = true;
 	@Check("Ignore Invisibles")
 	public boolean ignoreInvisibles = true;
 	@Check("Not Behind Blocks")
@@ -177,7 +175,7 @@ public class AimAssist extends Module {
 		if (mousePressed && !Mouse.isButtonDown(0)) return false;
 		if (mouseMoved && System.currentTimeMillis() - lastMouseMove > MOUSE_MOVE_WINDOW) return false;
 		if (breakingBlocks && minecraft.interactionManager.isMiningBlock()) return false;
-		return !holdingWeapon || Weapons.isWeapons(player.getItemInHand());
+		return Weapons.isWeapons(player.getItemInHand());
 	}
 
 	private boolean valid(PlayerEntity player, float yaw, float pitch, boolean anyFov) {
