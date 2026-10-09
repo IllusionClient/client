@@ -18,6 +18,7 @@ import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 import org.codeberg.illusionclient.mixin.ScreenInvoker;
+import org.codeberg.illusionclient.util.MouseUtils;
 import org.codeberg.illusionclient.util.PlayerUtils;
 import org.lwjgl.input.Mouse;
 
@@ -145,10 +146,15 @@ public class AutoClicker extends Module {
 	}
 
 	private void click() {
-		if (minecraft.screen == null) {
-			KeyBinding.click(minecraft.options.attackKey.getKeyCode());
-		} else {
+		if (minecraft.screen != null) {
 			inventoryClicks++;
+			return;
+		}
+		int key = minecraft.options.attackKey.getKeyCode();
+		if (key < 0) {
+			MouseUtils.click(key + 100);
+		} else {
+			KeyBinding.click(key);
 		}
 	}
 
