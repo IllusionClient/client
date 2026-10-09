@@ -4,11 +4,13 @@ import io.github.nevalackin.radbus.Listen;
 import net.minecraft.client.Minecraft;
 import org.codeberg.illusionclient.event.PlayerTickEvent;
 import org.codeberg.illusionclient.event.UseDelayEvent;
+import org.codeberg.illusionclient.feature.config.api.Check;
 import org.codeberg.illusionclient.feature.config.api.Slider;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
+import org.codeberg.illusionclient.util.ItemUtils;
 
 @ModuleInfo(name = "Fast Place", category = Category.PLAYER)
 @Description("Removes the delay between block placements while holding the use key.")
@@ -19,6 +21,8 @@ public class FastPlace extends Module {
 	public float maximumCps = 20.0F;
 	@Slider(value = "Activate Delay", min = 0.0F, max = 4.0F)
 	public float activateDelay = 0.0F;
+	@Check("Blocks Only")
+	public boolean blocksOnly = true;
 	private int heldTicks;
 	private float remainder;
 	private String details;
@@ -51,6 +55,8 @@ public class FastPlace extends Module {
 
 	@Listen
 	public void onUseDelay(UseDelayEvent event) {
+		if (blocksOnly && !ItemUtils.isBlock(minecraft.player.inventory.getSelectedItem())) return;
+
 		float ticks = TICKS_PER_SECOND / maximumCps + remainder;
 		int delay = (int) ticks;
 		remainder = ticks - delay;
