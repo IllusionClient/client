@@ -4,6 +4,7 @@ import io.github.nevalackin.radbus.Listen;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import org.codeberg.illusionclient.IllusionClient;
 import org.codeberg.illusionclient.event.KeyPressEvent;
 import org.codeberg.illusionclient.feature.module.api.Module;
@@ -21,6 +22,7 @@ import org.codeberg.illusionclient.feature.module.player.BridgeAssist;
 import org.codeberg.illusionclient.feature.module.player.FastPlace;
 import org.codeberg.illusionclient.feature.module.visual.Esp;
 import org.codeberg.illusionclient.feature.module.visual.ModOverlay;
+import org.codeberg.illusionclient.feature.ui.ClickGui;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +59,14 @@ public final class ModuleManager {
 
 	@Listen
 	public void onKeyPress(KeyPressEvent event) {
-		if (event.key() == 0 || !event.down() || Minecraft.getInstance().screen != null) return;
+		if (event.key() == 0 || !event.down()) return;
+
+		Screen screen = Minecraft.getInstance().screen;
+		if (screen != null) {
+			ClickGuiModule clickGui = get(ClickGuiModule.class);
+			if (screen instanceof ClickGui && clickGui.getBind() == event.key()) clickGui.toggle();
+			return;
+		}
 
 		for (Module module : modules) {
 			if (module.getBind() == event.key()) module.toggle();
