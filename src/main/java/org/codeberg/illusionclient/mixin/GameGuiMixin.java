@@ -21,7 +21,12 @@ public class GameGuiMixin {
 			ordinal = 0
 		)
 	)
-	private void illusion$render2D(float tickDelta, CallbackInfo ci, @Local Window window) {
-		IllusionClient.BUS.publish(Render2DEvent.of(tickDelta, window));
+	private void illusion$render2DPre(float tickDelta, CallbackInfo ci, @Local Window window) {
+		IllusionClient.BUS.publish(Render2DEvent.Pre.of(tickDelta, window));
+	}
+
+	@Inject(method = "render", at = @At("TAIL"))
+	private void illusion$render2DPost(float tickDelta, CallbackInfo ci, @Local Window window) {
+		IllusionClient.BUS.publish(Render2DEvent.Post.of(tickDelta, window));
 	}
 }

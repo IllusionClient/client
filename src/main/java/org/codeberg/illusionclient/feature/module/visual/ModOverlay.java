@@ -48,7 +48,7 @@ public class ModOverlay extends Module {
 	public boolean onlyBoundModules = false;
 
 	@Listen
-	public void onRender2D(Render2DEvent event) {
+	public void onRender2D(Render2DEvent.Post event) {
 		TextRenderer renderer = Minecraft.getInstance().textRenderer;
 		int gap = renderer.getWidth(' ');
 

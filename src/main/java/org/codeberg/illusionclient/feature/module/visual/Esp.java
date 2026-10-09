@@ -142,7 +142,7 @@ public class Esp extends Module {
 	}
 
 	@Listen
-	public void onRender2D(Render2DEvent event) {
+	public void onRender2D(Render2DEvent.Pre event) {
 		if (players.isEmpty()) return;
 
 		float progress = System.currentTimeMillis() % 2000L / 1000.0F;
