@@ -3,6 +3,7 @@ package org.example.illusion.feature.module;
 import io.github.nevalackin.radbus.Listen;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.minecraft.client.Minecraft;
 import org.example.illusion.IllusionClient;
 import org.example.illusion.event.KeyPressEvent;
 import org.example.illusion.feature.module.api.Module;
@@ -56,7 +57,7 @@ public final class ModuleManager {
 
 	@Listen
 	public void onKeyPress(KeyPressEvent event) {
-		if (event.key() == 0 || !event.down()) return;
+		if (event.key() == 0 || !event.down() || Minecraft.getInstance().screen != null) return;
 
 		for (Module module : modules) {
 			if (module.getBind() == event.key()) module.toggle();
