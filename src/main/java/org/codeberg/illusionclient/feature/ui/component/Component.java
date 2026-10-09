@@ -16,6 +16,10 @@ public abstract class Component {
 		return HEIGHT;
 	}
 
+	public boolean visible() {
+		return true;
+	}
+
 	public abstract void render(int mouseX, int mouseY);
 
 	public void mouseClicked(int mouseX, int mouseY, int button) {

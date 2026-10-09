@@ -4,18 +4,17 @@ import org.codeberg.illusionclient.feature.config.api.Option;
 import org.codeberg.illusionclient.feature.config.api.RangeSlider;
 import org.codeberg.illusionclient.feature.ui.Draw;
 
-public class RangeSliderComponent extends Component {
+public class RangeSliderComponent extends OptionComponent {
 	private static final int TRACK_Y = HEIGHT;
 	private static final int TRACK_HEIGHT = 4;
 	private static final int KNOB = 8;
 
-	private final Option option;
 	private int dragging = -1;
 	private float shownLow = Float.NaN, shownHigh = Float.NaN;
 	private String text;
 
 	public RangeSliderComponent(Option option) {
-		this.option = option;
+		super(option);
 	}
 
 	@Override

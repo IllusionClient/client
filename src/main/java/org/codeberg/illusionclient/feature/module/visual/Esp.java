@@ -15,6 +15,7 @@ import org.codeberg.illusionclient.event.WorldLoadEvent;
 import org.codeberg.illusionclient.feature.config.api.Check;
 import org.codeberg.illusionclient.feature.config.api.ColorPicker;
 import org.codeberg.illusionclient.feature.config.api.Combo;
+import org.codeberg.illusionclient.feature.config.api.Requires;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
@@ -33,22 +34,29 @@ public class Esp extends Module {
 	private float pulseFactor;
 	@Check("Box")
 	public boolean box = true;
+	@Requires("box")
 	@ColorPicker("Box Color")
 	public Color boxColor = new Color(0x74C3FF);
 	@Check("Armor Bar")
 	public boolean armorBar = true;
+	@Requires("armorBar")
 	@ColorPicker("Armor Color")
 	public Color armorColor = new Color(0, 255, 255);
 	@Check("HP Bar")
 	public boolean healthBar = true;
+	@Requires("healthBar")
 	@Combo(value = "HP Color Mode", options = {"Solid", "Health", "Gradient"})
 	public String healthMode = "Solid";
+	@Requires(value = "healthMode", is = {"Solid", "Gradient"})
 	@ColorPicker("HP Color")
 	public Color healthColor = new Color(0, 255, 89);
+	@Requires(value = "healthMode", is = "Gradient")
 	@ColorPicker("HP End")
 	public Color healthEndColor = new Color(0xF44336);
+	@Requires("healthBar")
 	@ColorPicker("Absorption")
 	public Color absorptionColor = new Color(0xDD00FF);
+	@Requires("healthBar")
 	@Check("Pulsing HP")
 	public boolean pulsing = true;
 	@Check("Invisibles")

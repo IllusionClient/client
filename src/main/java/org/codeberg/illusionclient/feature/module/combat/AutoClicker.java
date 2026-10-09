@@ -11,6 +11,7 @@ import org.codeberg.illusionclient.event.Render3DEvent;
 import org.codeberg.illusionclient.event.ScreenInputEvent;
 import org.codeberg.illusionclient.feature.config.api.Check;
 import org.codeberg.illusionclient.feature.config.api.Combo;
+import org.codeberg.illusionclient.feature.config.api.Requires;
 import org.codeberg.illusionclient.feature.config.api.Slider;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
@@ -40,6 +41,7 @@ public class AutoClicker extends Module {
 	public boolean allowBreakingBlocks = true;
 	@Check("Inventory")
 	public boolean inventory = false;
+	@Requires("inventory")
 	@Check("Randomize Inventory")
 	public boolean randomizeInventorySpeed = true;
 	@Check("Holding Weapon")

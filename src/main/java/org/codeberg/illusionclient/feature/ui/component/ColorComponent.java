@@ -5,7 +5,7 @@ import org.codeberg.illusionclient.feature.ui.Draw;
 
 import java.awt.*;
 
-public class ColorComponent extends Component {
+public class ColorComponent extends OptionComponent {
 	private static final int BOX_WIDTH = WIDTH - PADDING * 3;
 	private static final int BOX_HEIGHT = 80;
 	private static final int HUE_HEIGHT = 12;
@@ -13,12 +13,11 @@ public class ColorComponent extends Component {
 	private static final int BOX_RADIUS = 6;
 	private static final int HUE_RADIUS = HUE_HEIGHT / 2;
 
-	private final Option option;
 	private final float[] hsb;
 	private boolean open, draggingBox, draggingHue;
 
 	public ColorComponent(Option option) {
-		this.option = option;
+		super(option);
 		Color color = option.get();
 		this.hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 	}

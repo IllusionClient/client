@@ -3,6 +3,7 @@ package org.codeberg.illusionclient.feature.config.api;
 import java.awt.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public final class Option {
 	public final String name;
@@ -10,6 +11,8 @@ public final class Option {
 	public final Annotation info;
 	private final Object owner;
 	private final Field field;
+	private Option required;
+	private List<String> requiredValues;
 
 	private Option(Object owner, Field field, Annotation info, String name, Class<?> type) {
 		if (field.getType() != type) {
@@ -43,6 +46,30 @@ public final class Option {
 		if (picker != null) return new Option(owner, field, picker, picker.value(), Color.class);
 
 		return null;
+	}
+
+	public void link(List<Option> earlier) {
+		Requires requires = field.getAnnotation(Requires.class);
+		if (requires == null) return;
+
+		requiredValues = List.of(requires.is());
+		for (Option option : earlier) {
+			if (option.key.equals(requires.value())) required = option;
+		}
+
+		boolean valid = required != null && (requiredValues.isEmpty()
+			? required.info instanceof Check
+			: required.info instanceof Combo combo && List.of(combo.options()).containsAll(requiredValues));
+		if (!valid) {
+			throw new IllegalStateException("@Requires on " + field.getDeclaringClass().getName() + "." + field.getName()
+				+ " needs " + requires.value() + " to be an earlier @Check, or an earlier @Combo offering " + requiredValues);
+		}
+	}
+
+	public boolean visible() {
+		if (required == null) return true;
+		if (!required.visible()) return false;
+		return requiredValues.isEmpty() ? required.getBoolean() : requiredValues.contains(required.<String>get());
 	}
 
 	@SuppressWarnings("unchecked")

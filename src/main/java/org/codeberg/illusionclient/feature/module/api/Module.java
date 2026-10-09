@@ -28,7 +28,10 @@ public abstract class Module {
 
 		for (Field field : getClass().getDeclaredFields()) {
 			Option option = Option.of(this, field);
-			if (option != null) options.add(option);
+			if (option == null) continue;
+
+			option.link(options);
+			options.add(option);
 		}
 	}
 

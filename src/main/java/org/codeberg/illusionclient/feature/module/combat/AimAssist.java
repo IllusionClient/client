@@ -12,6 +12,7 @@ import org.codeberg.illusionclient.event.WorldLoadEvent;
 import org.codeberg.illusionclient.feature.config.api.Check;
 import org.codeberg.illusionclient.feature.config.api.Combo;
 import org.codeberg.illusionclient.feature.config.api.RangeSlider;
+import org.codeberg.illusionclient.feature.config.api.Requires;
 import org.codeberg.illusionclient.feature.config.api.Slider;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
@@ -49,8 +50,10 @@ public class AimAssist extends Module {
 	public float randomization = 50.0F;
 	@Combo(value = "Target Mode", options = {"Single", "Switch"})
 	public String targetMode = "Single";
+	@Requires(value = "targetMode", is = "Single")
 	@Check("Increased FOV While Locked")
 	public boolean increasedFov = false;
+	@Requires(value = "targetMode", is = "Switch")
 	@Combo(value = "Sort By", options = {"Distance", "Health", "Hurt time", "Aim angle"})
 	public String sortBy = "Distance";
 	@RangeSlider(value = "Range", min = 0.0F, max = 8.0F)

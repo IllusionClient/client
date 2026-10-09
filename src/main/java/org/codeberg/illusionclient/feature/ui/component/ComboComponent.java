@@ -5,11 +5,9 @@ import org.codeberg.illusionclient.feature.config.api.Option;
 
 import java.util.Arrays;
 
-public class ComboComponent extends Component {
-	private final Option option;
-
+public class ComboComponent extends OptionComponent {
 	public ComboComponent(Option option) {
-		this.option = option;
+		super(option);
 	}
 
 	@Override

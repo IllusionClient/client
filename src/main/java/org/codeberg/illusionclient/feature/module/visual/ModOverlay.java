@@ -9,6 +9,7 @@ import org.codeberg.illusionclient.IllusionClient;
 import org.codeberg.illusionclient.event.Render2DEvent;
 import org.codeberg.illusionclient.feature.config.api.Check;
 import org.codeberg.illusionclient.feature.config.api.ColorPicker;
+import org.codeberg.illusionclient.feature.config.api.Requires;
 import org.codeberg.illusionclient.feature.config.api.Slider;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
@@ -36,12 +37,13 @@ public class ModOverlay extends Module {
 	public float rounding = 3.0F;
 	@ColorPicker("Text Color")
 	public Color textColor = new Color(46, 204, 113);
+	@Check("Show Details")
+	public boolean showDetails = true;
+	@Requires("showDetails")
 	@ColorPicker("Details Color")
 	public Color detailsColor = new Color(Draw.MUTED);
 	@Check("Lowercase")
 	public boolean lowercase = true;
-	@Check("Show Details")
-	public boolean showDetails = true;
 	@Check("Only Bound Modules")
 	public boolean onlyBoundModules = false;
 

@@ -12,6 +12,10 @@ public abstract class Group extends Component {
 
 	protected abstract void headerClicked(int mouseX, int mouseY, int button);
 
+	private List<Component> visibleChildren() {
+		return children.stream().filter(Component::visible).toList();
+	}
+
 	protected final float headerRadius() {
 		return bottom && (!open || children.isEmpty()) ? RADIUS : 0.0F;
 	}
@@ -20,7 +24,9 @@ public abstract class Group extends Component {
 	public int height() {
 		int height = HEIGHT;
 		if (open) {
-			for (Component child : children) height += child.height();
+			for (Component child : children) {
+				if (child.visible()) height += child.height();
+			}
 		}
 		return height;
 	}
@@ -30,11 +36,12 @@ public abstract class Group extends Component {
 		renderHeader(mouseX, mouseY);
 		if (!open) return;
 
+		List<Component> visible = visibleChildren();
 		int childY = y + HEIGHT;
-		for (Component child : children) {
+		for (Component child : visible) {
 			child.x = x;
 			child.y = childY;
-			child.bottom = bottom && child == children.get(children.size() - 1);
+			child.bottom = bottom && child == visible.get(visible.size() - 1);
 			child.render(mouseX, mouseY);
 			childY += child.height();
 		}
@@ -45,7 +52,9 @@ public abstract class Group extends Component {
 		if (hovered(mouseX, mouseY)) {
 			headerClicked(mouseX, mouseY, button);
 		} else if (open) {
-			for (Component child : children) child.mouseClicked(mouseX, mouseY, button);
+			// A click can reveal an option that still sits where it was last drawn,
+			// so only the children visible before the click receive it.
+			for (Component child : visibleChildren()) child.mouseClicked(mouseX, mouseY, button);
 		}
 	}
 
@@ -59,7 +68,7 @@ public abstract class Group extends Component {
 		if (!open) return false;
 
 		for (Component child : children) {
-			if (child.keyPressed(key)) return true;
+			if (child.visible() && child.keyPressed(key)) return true;
 		}
 		return false;
 	}

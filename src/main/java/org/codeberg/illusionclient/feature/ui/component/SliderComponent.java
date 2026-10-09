@@ -4,18 +4,17 @@ import org.codeberg.illusionclient.feature.config.api.Option;
 import org.codeberg.illusionclient.feature.config.api.Slider;
 import org.codeberg.illusionclient.feature.ui.Draw;
 
-public class SliderComponent extends Component {
+public class SliderComponent extends OptionComponent {
 	private static final int TRACK_Y = HEIGHT;
 	private static final int TRACK_HEIGHT = 4;
 	private static final int KNOB = 8;
 
-	private final Option option;
 	private boolean dragging;
 	private float shown = Float.NaN;
 	private String text;
 
 	public SliderComponent(Option option) {
-		this.option = option;
+		super(option);
 	}
 
 	@Override

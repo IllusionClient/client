@@ -3,15 +3,13 @@ package org.codeberg.illusionclient.feature.ui.component;
 import org.codeberg.illusionclient.feature.config.api.Option;
 import org.codeberg.illusionclient.feature.ui.Draw;
 
-public class CheckComponent extends Component {
+public class CheckComponent extends OptionComponent {
 	private static final int SWITCH_WIDTH = 24;
 	private static final int SWITCH_HEIGHT = 12;
 	private static final int KNOB = SWITCH_HEIGHT - 4;
 
-	private final Option option;
-
 	public CheckComponent(Option option) {
-		this.option = option;
+		super(option);
 	}
 
 	@Override
