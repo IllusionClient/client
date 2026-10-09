@@ -17,8 +17,11 @@ repositories {
 	maven {
 		url "https://maven.ornithemc.net/releases"
 	}
-    maven {
+	maven {
 		url 'https://jitpack.io/'
+		content {
+			includeGroup 'io.github.nevalackin'
+		}
 	}
 }
 
@@ -56,7 +59,7 @@ java {
 jar {
     from sourceSets.standalone.output
     manifest {
-        attributes 'Main-Class': 'org.example.illusion.Main'
+        attributes 'Main-Class': 'org.codeberg.illusionclient.Main'
     }
 
     from('LICENSE') {

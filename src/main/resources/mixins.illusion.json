@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "org.example.illusion.mixin",
+  "package": "org.codeberg.illusionclient.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "LivingEntityMixin"
