@@ -40,6 +40,20 @@ jobs:
           mkdir dist
           find build/libs -name '*.jar' ! -name '*-sources.jar' -exec cp {} dist/ \;
 
+      - name: Read changelog
+        id: changelog
+        run: |
+          awk -v version="${GITHUB_REF_NAME#v}" '/^#+ / { found = ($2 == version); next } found' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "CHANGELOG.md has no entry for ${GITHUB_REF_NAME#v}" >&2
+            exit 1
+          fi
+          {
+            echo 'notes<<CHANGELOG_EOF'
+            cat notes.md
+            echo 'CHANGELOG_EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Publish release
         uses: actions/forgejo-release@v2
         with:
@@ -49,3 +63,4 @@ jobs:
           tag: ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
           release-dir: dist
+          release-notes: ${{ steps.changelog.outputs.notes }}
