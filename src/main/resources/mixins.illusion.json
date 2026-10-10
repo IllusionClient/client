@@ -12,7 +12,8 @@
     "LocalClientPlayerEntityMixin",
     "MinecraftMixin",
     "MouseMixin",
-    "ScreenInvoker"
+    "ScreenInvoker",
+    "compat.FreelookHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
