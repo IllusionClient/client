@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -48,9 +49,19 @@ public class MinecraftMixin {
 		return event.delay;
 	}
 
-	@WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;doUse()V"))
-	private boolean illusion$useItem(Minecraft minecraft) {
-		UseItemEvent event = UseItemEvent.of();
+	@WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;doUse()V", ordinal = 0))
+	private boolean illusion$useItemClick(Minecraft minecraft) {
+		return illusion$useItem(true);
+	}
+
+	@WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;doUse()V", ordinal = 1))
+	private boolean illusion$useItemHeld(Minecraft minecraft) {
+		return illusion$useItem(false);
+	}
+
+	@Unique
+	private boolean illusion$useItem(boolean click) {
+		UseItemEvent event = UseItemEvent.of(click);
 		IllusionClient.BUS.publish(event);
 		return !event.cancelled;
 	}
