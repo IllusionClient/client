@@ -18,18 +18,17 @@ import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 import org.codeberg.illusionclient.mixin.ScreenInvoker;
+import org.codeberg.illusionclient.util.ClickPattern;
 import org.codeberg.illusionclient.util.MouseUtils;
 import org.codeberg.illusionclient.util.PlayerUtils;
 import org.lwjgl.input.Mouse;
-
-import java.util.Random;
 
 @ModuleInfo(name = "Auto Clicker", category = Category.COMBAT)
 @Description("Clicks for you while the attack key is held.")
 public class AutoClicker extends Module {
 	private static final float MAX_FRAME_MS = 100.0F;
 	private final Minecraft minecraft = Minecraft.getInstance();
-	private final Random random = new Random();
+	private final ClickPattern pattern = new ClickPattern();
 	@Combo(value = "Click Pattern", options = {"Jitter", "Butterfly"})
 	public String clickPattern = "Jitter";
 	@Slider(value = "Target CPS", min = 1.0F, max = 25.0F)
@@ -49,26 +48,8 @@ public class AutoClicker extends Module {
 	public boolean holdingWeapon = false;
 	@Check("Not Using Item")
 	public boolean notUsingItem = false;
-	private boolean clicking;
 	private long lastFrame;
-	private float wait;
 	private int inventoryClicks;
-	private int burstSize;
-	private int burstLeft;
-	private float burstSpent;
-	private int gapStart;
-	private int gapSpread;
-	private float singleChance;
-	private float tripleChance;
-	private int streak;
-	private float streakCps;
-	private int phase;
-	private float phaseCps;
-	private int delayStart;
-	private int delaySpread;
-	private float pauseChance;
-	private int exhaustTicks;
-	private float exhaust;
 	private String details;
 	private String detailsPattern;
 	private float detailsCps;
@@ -85,12 +66,12 @@ public class AutoClicker extends Module {
 
 	@Override
 	public void onDisable() {
-		clicking = false;
+		pattern.stop();
 	}
 
 	@Listen
 	public void onPlayerTick(PlayerTickEvent event) {
-		updateRhythm();
+		pattern.tick();
 	}
 
 	@Listen
@@ -119,18 +100,25 @@ public class AutoClicker extends Module {
 
 		LocalClientPlayerEntity player = minecraft.player;
 		if (player == null || !(minecraft.screen == null ? activeInGame(player) : activeInInventory())) {
-			clicking = false;
+			pattern.stop();
 			return;
-		}
-
-		if (!clicking) {
-			clicking = true;
-			startBurst();
-			wait = interval();
 		}
 		if (minecraft.screen != null && !randomizeInventorySpeed) return;
 
-		for (wait -= delta; wait <= 0.0F; wait += interval()) click();
+		int clicks = pattern.advance(delta, targetCps, randomize, simulateExhaust, clickPattern.equals("Butterfly"));
+		if (minecraft.screen != null) {
+			inventoryClicks += clicks;
+			return;
+		}
+
+		int key = minecraft.options.attackKey.getKeyCode();
+		for (; clicks > 0; clicks--) {
+			if (key < 0) {
+				MouseUtils.click(key + 100);
+			} else {
+				KeyBinding.click(key);
+			}
+		}
 	}
 
 	private boolean activeInGame(LocalClientPlayerEntity player) {
@@ -143,79 +131,5 @@ public class AutoClicker extends Module {
 	private boolean activeInInventory() {
 		return inventory && minecraft.screen instanceof InventoryMenuScreen
 			&& Mouse.isButtonDown(0) && Screen.isShiftDown();
-	}
-
-	private void click() {
-		if (minecraft.screen != null) {
-			inventoryClicks++;
-			return;
-		}
-		int key = minecraft.options.attackKey.getKeyCode();
-		if (key < 0) {
-			MouseUtils.click(key + 100);
-		} else {
-			KeyBinding.click(key);
-		}
-	}
-
-	private void updateRhythm() {
-		if (exhaustTicks > 0) {
-			exhaustTicks--;
-		} else if (random.nextInt(120) == 0) {
-			exhaustTicks = 6 + random.nextInt(14);
-			exhaust = 1.3F + random.nextFloat() * 0.4F;
-		}
-	}
-
-	private float period() {
-		if (!randomize) return 1000.0F / targetCps;
-
-		float period = halfPeriod() + halfPeriod();
-		if (random.nextFloat() < pauseChance) period += 70 + random.nextInt(45);
-		return period;
-	}
-
-	private float halfPeriod() {
-		if (streak-- <= 0) {
-			if (phase-- <= 0) {
-				phase = 5 + random.nextInt(15);
-				phaseCps = random.nextFloat() * 2.0F - 1.0F;
-				delayStart = 380 + random.nextInt(40);
-				delaySpread = 50 + random.nextInt(70);
-				pauseChance = 0.02F + random.nextFloat() * 0.05F;
-				gapStart = 15 + random.nextInt(15);
-				gapSpread = 15 + random.nextInt(20);
-				singleChance = 0.08F + random.nextFloat() * 0.25F;
-				tripleChance = random.nextFloat() * 0.08F;
-			}
-			streak = 4 + random.nextInt(30);
-			streakCps = Math.max(1.0F, targetCps + phaseCps + random.nextInt(6) - 3);
-		}
-		return (delayStart + random.nextInt(delaySpread)) / streakCps;
-	}
-
-	private float interval() {
-		float ms = period();
-		if (simulateExhaust && exhaustTicks > 0) ms *= exhaust;
-		if (!clickPattern.equals("Butterfly")) return ms;
-
-		if (burstLeft > 0) {
-			burstLeft--;
-			float gap = randomize ? gapStart + random.nextFloat() * gapSpread : 30.0F;
-			gap = Math.min(ms * 0.8F, gap);
-			burstSpent += gap;
-			return gap;
-		}
-
-		float rest = ms * burstSize - burstSpent;
-		startBurst();
-		return rest;
-	}
-
-	private void startBurst() {
-		float roll = randomize ? random.nextFloat() : 1.0F;
-		burstSize = roll < singleChance ? 1 : roll < singleChance + tripleChance ? 3 : 2;
-		burstLeft = burstSize - 1;
-		burstSpent = 0.0F;
 	}
 }
