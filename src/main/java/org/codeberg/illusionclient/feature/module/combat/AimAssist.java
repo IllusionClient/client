@@ -18,22 +18,18 @@ import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
+import org.codeberg.illusionclient.util.AimPoint;
 import org.codeberg.illusionclient.util.CombatUtils;
 import org.codeberg.illusionclient.util.RotationUtils;
 import org.lwjgl.input.Mouse;
-
-import java.util.Random;
 
 @ModuleInfo(name = "Aim Assist", category = Category.COMBAT)
 @Description("Moves your crosshair onto other players for you.")
 public class AimAssist extends Module {
 	private static final float PREDICT_TICKS = 3.0F;
 	private static final long MOUSE_MOVE_WINDOW = 150L;
-	private static final double EDGE_INSET = 0.05D;
 	private final Minecraft minecraft = Minecraft.getInstance();
-	private final Random random = new Random();
-	private final float[] noise = new float[3];
-	private final float[] noiseGoal = new float[3];
+	private final AimPoint aim = new AimPoint();
 	@Combo(value = "Mode", options = {"Regular", "Linear", "Lock-on"})
 	public String mode = "Regular";
 	@Slider(value = "Horizontal Speed", min = 0.0F, max = 100.0F)
@@ -75,7 +71,6 @@ public class AimAssist extends Module {
 	private PlayerEntity target;
 	private long lastFrame;
 	private long lastMouseMove;
-	private long nextNoise;
 	private float yawRemainder;
 	private float pitchRemainder;
 
@@ -93,13 +88,6 @@ public class AimAssist extends Module {
 			}
 			default -> diff * (1.0F - (float) Math.pow(1.0F - speed / 100.0F, delta * 20.0F));
 		};
-	}
-
-	private static double axis(double eye, double min, double max, float multipoint, float offset) {
-		double center = (min + max) / 2.0D;
-		double closest = MathHelper.clamp(eye, min + EDGE_INSET, max - EDGE_INSET);
-		double point = center + (closest - center) * multipoint / 100.0F + (max - min) * offset;
-		return MathHelper.clamp(point, min + EDGE_INSET, max - EDGE_INSET);
 	}
 
 	@Override
@@ -202,12 +190,7 @@ public class AimAssist extends Module {
 	}
 
 	private Vec3d aimPoint(float tickDelta, float delta) {
-		long now = System.currentTimeMillis();
-		if (now >= nextNoise) {
-			nextNoise = now + 200L + random.nextInt(300);
-			for (int i = 0; i < 3; i++) noiseGoal[i] = random.nextFloat() * 2.0F - 1.0F;
-		}
-		for (int i = 0; i < 3; i++) noise[i] += (noiseGoal[i] - noise[i]) * Math.min(1.0F, delta * 4.0F);
+		aim.advance(delta);
 
 		LocalClientPlayerEntity self = minecraft.player;
 		double selfX = (self.x - self.prevX) * (tickDelta - 1.0F);
@@ -221,9 +204,9 @@ public class AimAssist extends Module {
 
 		Vec3d eye = self.getEyePosition(1.0F);
 		float spread = randomization / 100.0F;
-		double x = axis(eye.x, box.minX, box.maxX, horizontalMultipoint, noise[0] * spread * 0.4F);
-		double y = axis(eye.y, box.minY, box.maxY, verticalMultipoint, noise[1] * spread * 0.3F);
-		double z = axis(eye.z, box.minZ, box.maxZ, horizontalMultipoint, noise[2] * spread * 0.4F);
+		double x = AimPoint.axis(eye.x, box.minX, box.maxX, horizontalMultipoint, spread * 0.4F, aim.noise(0));
+		double y = AimPoint.axis(eye.y, box.minY, box.maxY, verticalMultipoint, spread * 0.3F, aim.noise(1));
+		double z = AimPoint.axis(eye.z, box.minZ, box.maxZ, horizontalMultipoint, spread * 0.4F, aim.noise(2));
 		return new Vec3d(x, y, z);
 	}
 }
