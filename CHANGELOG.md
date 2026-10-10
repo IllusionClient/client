@@ -1,4 +1,4 @@
-# 0.1.0 - 2026-10-10
+# v0.1.0 - 2026-10-10
 Over a year in the making...
 
 - Added Aim Assist module
