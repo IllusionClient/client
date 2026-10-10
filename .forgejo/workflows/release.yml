@@ -43,7 +43,7 @@ jobs:
       - name: Read changelog
         id: changelog
         run: |
-          awk -v version="${GITHUB_REF_NAME#v}" '/^#+ / { found = ($2 == version); next } found' CHANGELOG.md > notes.md
+          awk -v version="${GITHUB_REF_NAME#v}" '/^#+ / { found = ($2 == version || $2 == "v" version); next } found' CHANGELOG.md > notes.md
           if ! grep -q '[^[:space:]]' notes.md; then
             echo "CHANGELOG.md has no entry for ${GITHUB_REF_NAME#v}" >&2
             exit 1
