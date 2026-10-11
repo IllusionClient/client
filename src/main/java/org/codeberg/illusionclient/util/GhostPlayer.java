@@ -17,11 +17,14 @@ import net.minecraft.network.packet.s2c.play.EntityHeadAnglesS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityMoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTeleportS2CPacket;
 import net.minecraft.scoreboard.team.AbstractTeam;
+import org.codeberg.illusionclient.mixin.RemoteClientPlayerEntityAccessor;
 
 public final class GhostPlayer extends RemoteClientPlayerEntity {
 	private static final double POSITION_SCALE = 32.0D;
 	private static final float ANGLE_SCALE = 360.0F / 256.0F;
 	private static final int LERP_STEPS = 3;
+	private static final double TELEPORT_TOLERANCE = 0.03125D;
+	private static final double TELEPORT_TOLERANCE_Y = 0.015625D;
 	private static final int EQUIPMENT_SLOTS = 5;
 	private static final int HURT_EVENT = 2;
 	private final PlayerEntity player;
@@ -73,7 +76,12 @@ public final class GhostPlayer extends RemoteClientPlayerEntity {
 		getSyncedData().update(player.getSyncedData().getAll());
 		for (int slot = 0; slot < EQUIPMENT_SLOTS; slot++) setEquipment(slot, player.getEquipment(slot));
 
-		lerpToServerPosition(yaw, pitch);
+		if (player instanceof RemoteClientPlayerEntityAccessor lerp) {
+			lerpPositionAndAngles(lerp.illusion$lerpX(), lerp.illusion$lerpY(), lerp.illusion$lerpZ(),
+				(float) lerp.illusion$lerpYaw(), (float) lerp.illusion$lerpPitch(), lerp.illusion$lerpSteps(), false);
+		} else {
+			lerpToServerPosition(yaw, pitch);
+		}
 	}
 
 	public void handle(Packet<?> packet) {
@@ -88,7 +96,10 @@ public final class GhostPlayer extends RemoteClientPlayerEntity {
 			lastKnownX = teleport.getX();
 			lastKnownY = teleport.getY();
 			lastKnownZ = teleport.getZ();
-			lerpToServerPosition(teleport.getYaw() * ANGLE_SCALE, teleport.getPitch() * ANGLE_SCALE);
+			float teleportYaw = teleport.getYaw() * ANGLE_SCALE;
+			float teleportPitch = teleport.getPitch() * ANGLE_SCALE;
+			if (isNearServerPosition()) lerpPositionAndAngles(x, y, z, teleportYaw, teleportPitch, LERP_STEPS, true);
+			else lerpToServerPosition(teleportYaw, teleportPitch);
 			onGround = teleport.getOnGround();
 		} else if (packet instanceof EntityHeadAnglesS2CPacket head && head.getEntity(world) == player) {
 			setHeadYaw(head.getHeadYaw() * ANGLE_SCALE);
@@ -158,6 +169,12 @@ public final class GhostPlayer extends RemoteClientPlayerEntity {
 		lastYaw = yaw;
 		lastPitch = pitch;
 		ticks++;
+	}
+
+	private boolean isNearServerPosition() {
+		return Math.abs(x - lastKnownX / POSITION_SCALE) < TELEPORT_TOLERANCE
+			&& Math.abs(y - lastKnownY / POSITION_SCALE) < TELEPORT_TOLERANCE_Y
+			&& Math.abs(z - lastKnownZ / POSITION_SCALE) < TELEPORT_TOLERANCE;
 	}
 
 	private void lerpToServerPosition(float yaw, float pitch) {

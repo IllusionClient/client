@@ -15,6 +15,7 @@
     "MinecraftMixin",
     "MouseMixin",
     "PacketUtilsMixin",
+    "RemoteClientPlayerEntityAccessor",
     "ScreenInvoker",
     "compat.FreelookHandlerMixin"
   ],
