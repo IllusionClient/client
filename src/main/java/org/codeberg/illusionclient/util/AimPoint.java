@@ -14,13 +14,9 @@ public final class AimPoint {
 		double center = (min + max) / 2.0D;
 		double inset = Math.min(EDGE_INSET, size / 2.0D);
 		double reach = Math.min(size * spread, size / 2.0D - inset);
-		double closest = clamp(eye, min + inset + reach, max - inset - reach);
+		double closest = Math.clamp(eye, min + inset + reach, max - inset - reach);
 		double point = center + (closest - center) * multipoint / 100.0F + reach * noise;
-		return clamp(point, min + inset, max - inset);
-	}
-
-	private static double clamp(double value, double min, double max) {
-		return Math.max(min, Math.min(max, value));
+		return Math.clamp(point, min + inset, max - inset);
 	}
 
 	public void advance(float delta) {

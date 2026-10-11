@@ -31,23 +31,40 @@ public class Backtrack extends Module {
 	private static final double POSITION_SCALE = 32.0D;
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final PacketQueue packets = new PacketQueue();
+
+	//TODO: Write description
 	@RangeSlider(value = "Target Distance", min = 0.0F, max = 8.0F)
 	public float[] targetDistance = {1.0F, 4.0F};
+
+	//TODO: Write description
 	@Slider(value = "Maximum Delay (ms)", min = 0.0F, max = 500.0F)
 	public float maximumDelay = 200.0F;
+
+	//TODO: Write description
 	@Slider(value = "Maximum Hurt Time (ms)", min = 0.0F, max = 500.0F)
 	public float maximumHurtTime = 500.0F;
+
+	//TODO: Write description
 	@Slider(value = "Cooldown (s)", min = 0.0F, max = 5.0F)
 	public float cooldown = 0.0F;
+
+	//TODO: Write description
 	@Check("Disable On Hit")
 	public boolean disableOnHit = true;
+
+	//TODO: Write description
 	@Check("Ping Fix")
 	public boolean pingFix = false;
+
+	//TODO: Write description
 	@Check("Show Ghost")
 	public boolean showGhost = true;
+
+	//TODO: Write description
 	@Requires("showGhost")
 	@Slider(value = "Ghost Opacity", min = 0.0F, max = 100.0F)
 	public float ghostOpacity = 50.0F;
+
 	private PlayerEntity target;
 	private GhostPlayer ghost;
 	private boolean lagging;

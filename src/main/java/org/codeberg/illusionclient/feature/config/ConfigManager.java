@@ -115,7 +115,7 @@ public final class ConfigManager {
 		if (option.info instanceof Slider slider) {
 			float number = value.getAsFloat();
 			if (Float.isNaN(number)) throw new IllegalArgumentException("not a number");
-			return Math.min(slider.max(), Math.max(slider.min(), number));
+			return Math.clamp(number, slider.min(), slider.max());
 		}
 
 		if (option.info instanceof RangeSlider slider) {
@@ -126,8 +126,8 @@ public final class ConfigManager {
 			float high = array.get(1).getAsFloat();
 			if (Float.isNaN(low) || Float.isNaN(high)) throw new IllegalArgumentException("not a number");
 
-			low = Math.min(slider.max(), Math.max(slider.min(), low));
-			high = Math.min(slider.max(), Math.max(slider.min(), high));
+			low = Math.clamp(low, slider.min(), slider.max());
+			high = Math.clamp(high, slider.min(), slider.max());
 			return new float[]{Math.min(low, high), Math.max(low, high)};
 		}
 

@@ -25,21 +25,34 @@ import java.awt.*;
 @Description(value = "Shows every part of the module API. Only registered in a development environment.", type = Description.Type.WARNING)
 public class TestModule extends Module {
 	private static final int LINE_HEIGHT = 10;
+
+	@Description("Options take a description too, shown when the row is hovered.")
 	@Check("Check")
 	public boolean check = true;
+
+	//TODO: Write description
 	@Requires("check")
 	@Slider(value = "Slider", min = 0.0F, max = 10.0F)
 	public float slider = 5.0F;
+
+	//TODO: Write description
 	@RangeSlider(value = "Range Slider", min = 0.0F, max = 100.0F)
 	public float[] rangeSlider = {25.0F, 75.0F};
+
+	//TODO: Write description
 	@Combo(value = "Combo", options = {"First", "Second", "Third"})
 	public String combo = "First";
+
+	//TODO: Write description
 	@Requires(value = "combo", is = {"Second", "Third"})
 	@ColorPicker("Color Picker")
 	public Color colorPicker = new Color(46, 204, 113);
+
 	@Requires(value = "combo", is = "Third")
+	@Description(value = "Caps the use delay at the Slider value while the module is enabled.", type = Description.Type.WARNING)
 	@Check("Cap Use Delay")
 	public boolean capUseDelay = false;
+
 	private int ticks;
 
 	@Override

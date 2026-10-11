@@ -34,46 +34,85 @@ public class AimAssist extends Module {
 	private static final long RESIST_COOLDOWN = 1000L;
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final AimPoint aim = new AimPoint();
+
+	//TODO: Write description
 	@Combo(value = "Mode", options = {"Regular", "Linear", "Lock-on"})
 	public String mode = "Regular";
+
+	//TODO: Write description
 	@Slider(value = "Horizontal Speed", min = 0.0F, max = 100.0F)
 	public float horizontalSpeed = 30.0F;
+
+	//TODO: Write description
 	@Slider(value = "Vertical Speed", min = 0.0F, max = 100.0F)
 	public float verticalSpeed = 15.0F;
+
+	//TODO: Write description
 	@Slider(value = "Horizontal Multipoint", min = 0.0F, max = 100.0F)
 	public float horizontalMultipoint = 0.0F;
+
+	//TODO: Write description
 	@Slider(value = "Vertical Multipoint", min = 0.0F, max = 100.0F)
 	public float verticalMultipoint = 0.0F;
+
+	//TODO: Write description
 	@Slider(value = "Predict", min = 0.0F, max = 100.0F)
 	public float predict = 0.0F;
+
+	//TODO: Write description
 	@Slider(value = "Randomization", min = 0.0F, max = 100.0F)
 	public float randomization = 50.0F;
+
+	//TODO: Write description
 	@Combo(value = "Target Mode", options = {"Single", "Switch"})
 	public String targetMode = "Single";
+
+	//TODO: Write description
 	@Requires(value = "targetMode", is = "Single")
 	@Check("Increased FOV While Locked")
 	public boolean increasedFov = false;
+
+	//TODO: Write description
 	@Requires(value = "targetMode", is = "Switch")
 	@Combo(value = "Sort By", options = {"Distance", "Health", "Hurt time", "Aim angle"})
 	public String sortBy = "Distance";
+
+	//TODO: Write description
 	@RangeSlider(value = "Range", min = 0.0F, max = 8.0F)
 	public float[] range = {0.0F, 4.5F};
+
+	//TODO: Write description
 	@RangeSlider(value = "FOV", min = 0.0F, max = 360.0F)
 	public float[] fov = {0.0F, 90.0F};
+
+	//TODO: Write description
 	@Check("Sprinting")
 	public boolean sprinting = false;
+
+	//TODO: Write description
 	@Check("Mouse Pressed")
 	public boolean mousePressed = true;
+
+	//TODO: Write description
 	@Check("Mouse Moved")
 	public boolean mouseMoved = false;
+
+	//TODO: Write description
 	@Check("Stop When Resisting")
 	public boolean resisting = false;
+
+	//TODO: Write description
 	@Check("Disable While Breaking Blocks")
 	public boolean breakingBlocks = true;
+
+	//TODO: Write description
 	@Check("Ignore Invisibles")
 	public boolean ignoreInvisibles = true;
+
+	//TODO: Write description
 	@Check("Not Behind Blocks")
 	public boolean notBehindBlocks = true;
+
 	private PlayerEntity target;
 	private long lastFrame;
 	private long lastMouseMove;

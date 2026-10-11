@@ -26,41 +26,66 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+//TODO: Write description
 @ModuleInfo(name = "ESP", category = Category.VISUAL)
 public class Esp extends Module {
 	private static final int OUTLINE = 0x96000000;
 	private final List<PlayerEntity> players = new ObjectArrayList<>();
 	private float[] bounds = new float[64];
 	private float pulseFactor;
+
+	//TODO: Write description
 	@Check("Box")
 	public boolean box = true;
+
+	//TODO: Write description
 	@Requires("box")
 	@ColorPicker("Box Color")
 	public Color boxColor = new Color(0x74C3FF);
+
+	//TODO: Write description
 	@Check("Armor Bar")
 	public boolean armorBar = true;
+
+	//TODO: Write description
 	@Requires("armorBar")
 	@ColorPicker("Armor Color")
 	public Color armorColor = new Color(0, 255, 255);
+
+	//TODO: Write description
 	@Check("HP Bar")
 	public boolean healthBar = true;
+
+	//TODO: Write description
 	@Requires("healthBar")
 	@Combo(value = "HP Color Mode", options = {"Solid", "Health", "Gradient"})
 	public String healthMode = "Solid";
+
+	//TODO: Write description
 	@Requires(value = "healthMode", is = {"Solid", "Gradient"})
 	@ColorPicker("HP Color")
 	public Color healthColor = new Color(0, 255, 89);
+
+	//TODO: Write description
 	@Requires(value = "healthMode", is = "Gradient")
 	@ColorPicker("HP End")
 	public Color healthEndColor = new Color(0xF44336);
+
+	//TODO: Write description
 	@Requires("healthBar")
 	@ColorPicker("Absorption")
 	public Color absorptionColor = new Color(0xDD00FF);
+
+	//TODO: Write description
 	@Requires("healthBar")
 	@Check("Pulsing HP")
 	public boolean pulsing = true;
+
+	//TODO: Write description
 	@Check("Invisibles")
 	public boolean invisibles = false;
+
+	//TODO: Write description
 	@Check("Self")
 	public boolean self = true;
 

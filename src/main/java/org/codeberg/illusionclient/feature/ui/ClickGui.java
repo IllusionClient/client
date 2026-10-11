@@ -30,6 +30,9 @@ public class ClickGui extends Screen {
 			frame.render(mouseX, mouseY);
 			Draw.flush();
 		}
+
+		Tooltip.render(mouseX, mouseY, width, height);
+		Draw.flush();
 	}
 
 	@Override

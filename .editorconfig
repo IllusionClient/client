@@ -15,6 +15,7 @@ indent_style = tab
 
 [*.java]
 indent_style = tab
+ij_java_blank_lines_around_field_with_annotations = 1
 
 [*.json]
 indent_style = space

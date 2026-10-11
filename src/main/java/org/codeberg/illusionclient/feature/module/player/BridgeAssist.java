@@ -29,26 +29,47 @@ public class BridgeAssist extends Module {
 	private static final float MS_PER_TICK = 50.0F;
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final Random random = new Random();
+
+	//TODO: Write description
 	@Slider(value = "Edge Offset", min = 0.0F, max = 30.0F)
 	public float edgeOffset = 15.0F;
+
+	//TODO: Write description
 	@Slider(value = "Unsneak Delay", min = 50.0F, max = 500.0F)
 	public float unsneakDelay = 100.0F;
+
+	//TODO: Write description
 	@Combo(value = "Select Blocks", options = {"No", "On depletion", "Always"})
 	public String selectBlocks = "No";
+
+	//TODO: Write description
 	@Check("Randomize")
 	public boolean randomize = false;
+
+	//TODO: Write description
 	@Check("Sneak On Jump")
 	public boolean sneakOnJump = false;
+
+	//TODO: Write description
 	@Check("Avoid Double-Sneaking")
 	public boolean avoidDoubleSneaking = false;
+
+	//TODO: Write description
 	@Check("Sneak Key Pressed")
 	public boolean sneakKeyPressed = false;
+
+	//TODO: Write description
 	@Check("Holding Blocks")
 	public boolean holdingBlocks = true;
+
+	//TODO: Write description
 	@Check("Looking Down")
 	public boolean lookingDown = false;
+
+	//TODO: Write description
 	@Check("Not Moving Forward")
 	public boolean notMovingForward = false;
+
 	private boolean edge;
 	private boolean placed;
 	private float offset;

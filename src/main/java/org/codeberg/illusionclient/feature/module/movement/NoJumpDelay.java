@@ -21,6 +21,8 @@ public class NoJumpDelay extends Module {
 	private static final double LOOKAHEAD = 1.5D;
 	private static final double LOOKAHEAD_STEP = 0.25D;
 	private final Minecraft minecraft = Minecraft.getInstance();
+
+	//TODO: Write description
 	@Combo(value = "Mode", options = {"Regular", "Smart"})
 	public String mode = "Regular";
 

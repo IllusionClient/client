@@ -3,20 +3,23 @@ package org.codeberg.illusionclient.feature.ui.component;
 import org.codeberg.illusionclient.feature.config.api.*;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.ui.Draw;
+import org.codeberg.illusionclient.feature.ui.Tooltip;
 
 public class ModuleComponent extends Group {
 	private final Module module;
 
 	public ModuleComponent(Module module) {
 		this.module = module;
+		this.description = module.description;
 
-		if (module.description != null) children.add(new LabelComponent(module.description));
 		for (Option option : module.options) {
-			if (option.info instanceof Check) children.add(new CheckComponent(option));
-			else if (option.info instanceof Slider) children.add(new SliderComponent(option));
-			else if (option.info instanceof RangeSlider) children.add(new RangeSliderComponent(option));
-			else if (option.info instanceof Combo) children.add(new ComboComponent(option));
-			else children.add(new ColorComponent(option));
+			switch (option.info) {
+				case Check _ -> children.add(new CheckComponent(option));
+				case Slider _ -> children.add(new SliderComponent(option));
+				case RangeSlider _ -> children.add(new RangeSliderComponent(option));
+				case Combo _ -> children.add(new ComboComponent(option));
+				case null, default -> children.add(new ColorComponent(option));
+			}
 		}
 		children.add(new KeybindComponent(module));
 	}
@@ -25,6 +28,7 @@ public class ModuleComponent extends Group {
 	protected void renderHeader(int mouseX, int mouseY) {
 		boolean hovered = hovered(mouseX, mouseY);
 		int accent = Draw.accent().getRGB();
+		if (hovered) Tooltip.show(description);
 
 		Draw.rounded(x, y, WIDTH, HEIGHT, 0.0F, headerRadius(), hovered ? Draw.BACKGROUND_HOVER : Draw.BACKGROUND_DARK);
 		Draw.rect(x, y, WIDTH, 2, Draw.DIVIDER);

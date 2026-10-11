@@ -22,30 +22,25 @@ public class AntiBot extends Module {
 	private static final int MIN_AGE_TICKS = 20;
 	private final Set<PlayerEntity> seenVisible = Collections.newSetFromMap(new WeakHashMap<>());
 	private final Set<PlayerEntity> seenMoving = Collections.newSetFromMap(new WeakHashMap<>());
-	/**
-	 * Filter players with an invalid UUID.
-	 */
+
 	@Check("Invalid UUID")
+	@Description("Filter players with an invalid UUID.")
 	public boolean invalidUuid = true;
-	/**
-	 * Filter players that have been invisible from the moment they first spawned in.
-	 */
+
 	@Check("Always Invisible")
+	@Description("Filter players that have been invisible from the moment they first spawned in.")
 	public boolean alwaysInvisible = true;
-	/**
-	 * Filter players who have never moved (horizontally) at all.
-	 */
+
 	@Check("Always stationary")
+	@Description("Filter players who have never moved (horizontally) at all.")
 	public boolean alwaysStationary = true;
-	/**
-	 * Filter players who are sleeping.
-	 */
+
 	@Check("Sleeping")
+	@Description("Filter players who are sleeping.")
 	public boolean sleeping = true;
-	/**
-	 * Filter players that spawned recently.
-	 */
+
 	@Check("Entity age")
+	@Description("Filter players that spawned recently.")
 	public boolean entityAge = true;
 
 	public static boolean isBot(PlayerEntity player) {

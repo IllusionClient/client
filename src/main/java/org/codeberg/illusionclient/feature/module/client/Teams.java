@@ -14,9 +14,11 @@ import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 @Description("Configures which players are considered friendly.")
 @ModuleInfo(name = "Teams", category = Category.CLIENT)
 public class Teams extends Module {
+	//TODO: Write description
 	@Check("Match own nametag")
 	public boolean matchOwnNametag;
 
+	//TODO: Write description
 	@Combo(value = "Colors", options = {
 		"Black", "Dark Blue", "Dark Green",
 		"Dark Aqua", "Dark Red", "Dark Purple",
@@ -26,6 +28,7 @@ public class Teams extends Module {
 		"White", "None"
 	})
 	public String colors = "None";
+
 	private String teamColorName;
 	private Formatting teamColor;
 

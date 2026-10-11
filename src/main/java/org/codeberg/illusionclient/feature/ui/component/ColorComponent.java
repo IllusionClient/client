@@ -28,7 +28,7 @@ public class ColorComponent extends OptionComponent {
 	}
 
 	private static float fraction(int offset, int size) {
-		return Math.min(1.0F, Math.max(0.0F, offset / (float) size));
+		return Math.clamp(offset / (float) size, 0.0F, 1.0F);
 	}
 
 	@Override

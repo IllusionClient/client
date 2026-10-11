@@ -1,5 +1,7 @@
 package org.codeberg.illusionclient.feature.config.api;
 
+import org.codeberg.illusionclient.feature.module.api.Description;
+
 import java.awt.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -9,6 +11,7 @@ public final class Option {
 	public final String name;
 	public final String key;
 	public final Annotation info;
+	public final Description description;
 	private final Object owner;
 	private final Field field;
 	private Option required;
@@ -24,6 +27,7 @@ public final class Option {
 		this.name = name;
 		this.key = field.getName();
 		this.info = info;
+		this.description = field.getAnnotation(Description.class);
 		this.owner = owner;
 		this.field = field;
 		field.setAccessible(true);

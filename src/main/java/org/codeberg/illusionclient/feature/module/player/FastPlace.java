@@ -24,14 +24,23 @@ public class FastPlace extends Module {
 	private static final float TICKS_PER_SECOND = 20.0F;
 	private static final double DIAGONAL_RATIO = Math.sin(Math.toRadians(22.5D));
 	private final Minecraft minecraft = Minecraft.getInstance();
+
+	//TODO: Write description
 	@Combo(value = "Mode", options = {"Regular", "Smart"})
 	public String mode = "Regular";
+
+	//TODO: Write description
 	@Slider(value = "Maximum CPS", min = 5.0F, max = 20.0F)
 	public float maximumCps = 20.0F;
+
+	//TODO: Write description
 	@Slider(value = "Activate Delay", min = 0.0F, max = 4.0F)
 	public float activateDelay = 0.0F;
+
+	//TODO: Write description
 	@Check("Blocks Only")
 	public boolean blocksOnly = true;
+
 	private Direction lockedFace;
 	private BlockPos lockedPos;
 	private int heldTicks;

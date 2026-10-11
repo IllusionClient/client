@@ -19,14 +19,23 @@ public class Sprint extends Module {
 	private static final float ITEM_USE_SLOWDOWN = 0.2F;
 	private static final float MINIMUM_FOOD = 6.0F;
 	private final Minecraft minecraft = Minecraft.getInstance();
+
+	//TODO: Write description
 	@Check("Using Item")
 	public boolean usingItem = false;
+
+	//TODO: Write description
 	@Check("Backwards")
 	public boolean backwards = false;
+
+	//TODO: Write description
 	@Check("Sideways")
 	public boolean sideways = false;
+
+	//TODO: Write description
 	@Check("In Inventory")
 	public boolean inInventory = false;
+
 	private boolean sprinting;
 
 	@Override

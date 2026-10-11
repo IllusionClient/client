@@ -14,8 +14,11 @@ import org.codeberg.illusionclient.util.PlayerUtils;
 @ModuleInfo(name = "No Hit Delay", category = Category.COMBAT)
 @Description("Removes the attack cooldown that follows a missed swing.")
 public class NoHitDelay extends Module {
+	//TODO: Write description
 	@Combo(value = "Mode", options = {"Regular", "Legit"})
 	public String mode = "Regular";
+
+	//TODO: Write description
 	@Check("Remove Mining Penalty")
 	public boolean removeMiningPenalty = false;
 

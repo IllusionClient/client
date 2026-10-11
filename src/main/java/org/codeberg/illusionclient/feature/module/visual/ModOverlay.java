@@ -27,23 +27,41 @@ import java.util.Objects;
 public class ModOverlay extends Module {
 	private final List<Row> rows = new ObjectArrayList<>();
 	private Row[] all;
+
+	//TODO: Write description
 	@Slider(value = "Text Size", min = 0.5F, max = 3.0F)
 	public float textSize = 1.0F;
+
+	//TODO: Write description
 	@Slider(value = "Padding X", min = 0.0F, max = 10.0F)
 	public float paddingX = 3.0F;
+
+	//TODO: Write description
 	@Slider(value = "Padding Y", min = 0.0F, max = 10.0F)
 	public float paddingY = 2.0F;
+
+	//TODO: Write description
 	@Slider(value = "Rounding", min = 0.0F, max = 10.0F)
 	public float rounding = 3.0F;
+
+	//TODO: Write description
 	@ColorPicker("Text Color")
 	public Color textColor = new Color(46, 204, 113);
+
+	//TODO: Write description
 	@Check("Show Details")
 	public boolean showDetails = true;
+
+	//TODO: Write description
 	@Requires("showDetails")
 	@ColorPicker("Details Color")
 	public Color detailsColor = new Color(Draw.MUTED);
+
+	//TODO: Write description
 	@Check("Lowercase")
 	public boolean lowercase = true;
+
+	//TODO: Write description
 	@Check("Only Bound Modules")
 	public boolean onlyBoundModules = false;
 

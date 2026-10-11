@@ -10,8 +10,10 @@ import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 
+//TODO: Write description
 @ModuleInfo(name = "ClickGui", category = Category.CLIENT, bind = Keyboard.KEY_RSHIFT)
 public class ClickGuiModule extends Module {
+	//TODO: Write description
 	@ColorPicker("Color")
 	public Color color = new Color(46, 204, 113);
 

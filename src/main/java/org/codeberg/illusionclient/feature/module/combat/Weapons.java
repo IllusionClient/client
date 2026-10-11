@@ -9,26 +9,34 @@ import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 
+//TODO: Write description
 @ModuleInfo(name = "Weapons", category = Category.COMBAT)
 public class Weapons extends Module {
+	//TODO: Write description
 	@Check("Swords")
 	public boolean swords = true;
 
+	//TODO: Write description
 	@Check("Axes")
 	public boolean axes = true;
 
+	//TODO: Write description
 	@Check("Sticks")
 	public boolean sticks = false;
 
+	//TODO: Write description
 	@Check("Fists")
 	public boolean fists = false;
 
+	//TODO: Write description
 	@Check("Sharpness")
 	public boolean sharpness = true;
 
+	//TODO: Write description
 	@Check("Knockback")
 	public boolean knockback = true;
 
+	//TODO: Write description
 	@Check("Fire Aspect")
 	public boolean fireAspect = true;
 

@@ -29,25 +29,44 @@ public class AutoClicker extends Module {
 	private static final float MAX_FRAME_MS = 100.0F;
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final ClickPattern pattern = new ClickPattern();
+
+	//TODO: Write description
 	@Combo(value = "Click Pattern", options = {"Jitter", "Butterfly"})
 	public String clickPattern = "Jitter";
+
+	//TODO: Write description
 	@Slider(value = "Target CPS", min = 1.0F, max = 25.0F)
 	public float targetCps = 12.0F;
+
+	//TODO: Write description
 	@Check("Randomize")
 	public boolean randomize = true;
+
+	//TODO: Write description
 	@Check("Simulate Exhaust")
 	public boolean simulateExhaust = true;
+
+	//TODO: Write description
 	@Check("Allow Breaking Blocks")
 	public boolean allowBreakingBlocks = true;
+
+	//TODO: Write description
 	@Check("Inventory")
 	public boolean inventory = false;
+
+	//TODO: Write description
 	@Requires("inventory")
 	@Check("Randomize Inventory")
 	public boolean randomizeInventorySpeed = true;
+
+	//TODO: Write description
 	@Check("Holding Weapon")
 	public boolean holdingWeapon = false;
+
+	//TODO: Write description
 	@Check("Not Using Item")
 	public boolean notUsingItem = false;
+
 	private long lastFrame;
 	private int inventoryClicks;
 	private String details;

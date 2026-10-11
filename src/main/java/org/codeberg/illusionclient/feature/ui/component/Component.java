@@ -1,6 +1,8 @@
 package org.codeberg.illusionclient.feature.ui.component;
 
+import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.ui.Draw;
+import org.codeberg.illusionclient.feature.ui.Tooltip;
 
 public abstract class Component {
 	public static final int WIDTH = 176;
@@ -11,6 +13,7 @@ public abstract class Component {
 
 	protected int x, y;
 	protected boolean bottom;
+	protected Description description;
 
 	public int height() {
 		return HEIGHT;
@@ -45,8 +48,10 @@ public abstract class Component {
 	}
 
 	protected final void row(String label, int mouseX, int mouseY) {
-		int background = hovered(mouseX, mouseY) ? Draw.BACKGROUND_HOVER : Draw.BACKGROUND;
-		Draw.rounded(x, y, WIDTH, height(), 0.0F, bottom ? RADIUS : 0.0F, background);
+		boolean hovered = hovered(mouseX, mouseY);
+		if (hovered) Tooltip.show(description);
+
+		Draw.rounded(x, y, WIDTH, height(), 0.0F, bottom ? RADIUS : 0.0F, hovered ? Draw.BACKGROUND_HOVER : Draw.BACKGROUND);
 		Draw.rect(left(), y, right() - left(), 2, Draw.DIVIDER);
 		Draw.text(label, left(), y + TEXT_Y, -1);
 	}
