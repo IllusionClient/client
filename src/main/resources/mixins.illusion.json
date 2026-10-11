@@ -6,12 +6,15 @@
     "LivingEntityMixin"
   ],
   "client": [
+    "ClientPlayNetworkHandlerMixin",
     "GameGuiMixin",
     "GameRendererMixin",
+    "GlStateManagerMixin",
     "KeyboardInputMixin",
     "LocalClientPlayerEntityMixin",
     "MinecraftMixin",
     "MouseMixin",
+    "PacketUtilsMixin",
     "ScreenInvoker",
     "compat.FreelookHandlerMixin"
   ],

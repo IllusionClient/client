@@ -16,6 +16,7 @@ import org.codeberg.illusionclient.feature.module.client.Teams;
 import org.codeberg.illusionclient.feature.module.client.TestModule;
 import org.codeberg.illusionclient.feature.module.combat.AimAssist;
 import org.codeberg.illusionclient.feature.module.combat.AutoClicker;
+import org.codeberg.illusionclient.feature.module.combat.Backtrack;
 import org.codeberg.illusionclient.feature.module.combat.NoHitDelay;
 import org.codeberg.illusionclient.feature.module.combat.Weapons;
 import org.codeberg.illusionclient.feature.module.movement.NullMove;
@@ -38,6 +39,7 @@ public final class ModuleManager {
 		new Teams(),
 		new AimAssist(),
 		new AutoClicker(),
+		new Backtrack(),
 		new NoHitDelay(),
 		new Weapons(),
 		new NoJumpDelay(),
