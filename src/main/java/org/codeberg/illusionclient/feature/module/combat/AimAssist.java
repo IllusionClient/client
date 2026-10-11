@@ -28,6 +28,10 @@ import org.lwjgl.input.Mouse;
 public class AimAssist extends Module {
 	private static final float PREDICT_TICKS = 3.0F;
 	private static final long MOUSE_MOVE_WINDOW = 150L;
+	private static final long CLICK_WINDOW = 300L;
+	private static final float RESIST_LIMIT = 15.0F;
+	private static final float RESIST_DECAY = 30.0F;
+	private static final long RESIST_COOLDOWN = 1000L;
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final AimPoint aim = new AimPoint();
 	@Combo(value = "Mode", options = {"Regular", "Linear", "Lock-on"})
@@ -62,6 +66,8 @@ public class AimAssist extends Module {
 	public boolean mousePressed = true;
 	@Check("Mouse Moved")
 	public boolean mouseMoved = false;
+	@Check("Stop When Resisting")
+	public boolean resisting = false;
 	@Check("Disable While Breaking Blocks")
 	public boolean breakingBlocks = true;
 	@Check("Ignore Invisibles")
@@ -71,6 +77,10 @@ public class AimAssist extends Module {
 	private PlayerEntity target;
 	private long lastFrame;
 	private long lastMouseMove;
+	private long lastClick;
+	private PlayerEntity resisted;
+	private long resistedUntil;
+	private float resist;
 	private float yawRemainder;
 	private float pitchRemainder;
 
@@ -97,12 +107,12 @@ public class AimAssist extends Module {
 
 	@Override
 	public void onDisable() {
-		target = null;
+		target = resisted = null;
 	}
 
 	@Listen
 	public void onWorldLoad(WorldLoadEvent event) {
-		target = null;
+		target = resisted = null;
 	}
 
 	@Listen
@@ -112,21 +122,24 @@ public class AimAssist extends Module {
 		lastFrame = now;
 
 		if (minecraft.mouse.x != 0 || minecraft.mouse.y != 0) lastMouseMove = System.currentTimeMillis();
+		if (Mouse.isButtonDown(0)) lastClick = System.currentTimeMillis();
 
 		LocalClientPlayerEntity player = minecraft.player;
 		if (player == null || findTarget(player.yaw, player.pitch) == null) {
-			yawRemainder = pitchRemainder = 0.0F;
+			yawRemainder = pitchRemainder = resist = 0.0F;
 			return;
 		}
 
 		float[] goal = RotationUtils.rotationTo(aimPoint(event.partialTicks(), delta));
 		float yawDiff = MathHelper.wrapDegrees(goal[0] - player.yaw);
 		float pitchDiff = goal[1] - player.pitch;
-		if (Math.hypot(yawDiff, pitchDiff) * 2.0D < fov[0]) return;
 
 		float sensitivity = minecraft.options.mouseSensitivity * 0.6F + 0.2F;
 		float scale = sensitivity * sensitivity * sensitivity * 8.0F;
 		float gcd = scale * 0.15F;
+
+		if (resisting && resisted(minecraft.mouse.x * gcd, yawDiff, delta)) return;
+		if (Math.hypot(yawDiff, pitchDiff) * 2.0D < fov[0]) return;
 
 		float yawTotal = step(yawDiff, horizontalSpeed, delta, mode) + yawRemainder;
 		float pitchTotal = step(pitchDiff, verticalSpeed, delta, mode) + pitchRemainder;
@@ -136,6 +149,18 @@ public class AimAssist extends Module {
 		int yawCounts = mouseCounts(yawTotal, yawDiff, gcd);
 		int pitchCounts = mouseCounts(pitchTotal, pitchDiff, gcd);
 		if (yawCounts != 0 || pitchCounts != 0) player.updateLocalPlayerCamera(yawCounts * scale, -pitchCounts * scale);
+	}
+
+	private boolean resisted(float mouseYaw, float yawDiff, float delta) {
+		float away = -mouseYaw * Math.signum(yawDiff);
+		resist = Math.max(0.0F, resist + Math.max(0.0F, away) - RESIST_DECAY * delta);
+		if (resist < RESIST_LIMIT) return false;
+
+		resisted = target;
+		resistedUntil = System.currentTimeMillis() + RESIST_COOLDOWN;
+		target = null;
+		yawRemainder = pitchRemainder = resist = 0.0F;
+		return true;
 	}
 
 	private PlayerEntity findTarget(float yaw, float pitch) {
@@ -163,7 +188,7 @@ public class AimAssist extends Module {
 		LocalClientPlayerEntity player = minecraft.player;
 		if (player == null || minecraft.world == null || minecraft.screen != null || !player.isAlive()) return false;
 		if (sprinting && !player.isSprinting()) return false;
-		if (mousePressed && !Mouse.isButtonDown(0)) return false;
+		if (mousePressed && System.currentTimeMillis() - lastClick > CLICK_WINDOW) return false;
 		if (mouseMoved && System.currentTimeMillis() - lastMouseMove > MOUSE_MOVE_WINDOW) return false;
 		if (breakingBlocks && minecraft.interactionManager.isMiningBlock()) return false;
 		return Weapons.isWeapons(player.getItemInHand());
@@ -173,6 +198,7 @@ public class AimAssist extends Module {
 		LocalClientPlayerEntity self = minecraft.player;
 		if (player == self || !player.isAlive() || !CombatUtils.isTarget(player)) return false;
 		if (ignoreInvisibles && player.isInvisible()) return false;
+		if (player == resisted && System.currentTimeMillis() < resistedUntil) return false;
 
 		double distance = CombatUtils.distanceTo(player);
 		if (distance < range[0] || distance > range[1]) return false;
