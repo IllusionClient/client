@@ -3,6 +3,7 @@ package org.codeberg.illusionclient.feature.module.client;
 import net.minecraft.client.Minecraft;
 import org.codeberg.illusionclient.feature.config.api.ColorPicker;
 import org.codeberg.illusionclient.feature.module.api.Category;
+import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 import org.codeberg.illusionclient.feature.ui.ClickGui;
@@ -10,10 +11,10 @@ import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 
-//TODO: Write description
+@Description("Opens this menu.")
 @ModuleInfo(name = "ClickGui", category = Category.CLIENT, bind = Keyboard.KEY_RSHIFT)
 public class ClickGuiModule extends Module {
-	//TODO: Write description
+	@Description("The accent color of this menu.")
 	@ColorPicker("Color")
 	public Color color = new Color(46, 204, 113);
 

@@ -23,45 +23,45 @@ import java.util.Locale;
 import java.util.Objects;
 
 @ModuleInfo(name = "Mod Overlay", category = Category.VISUAL)
-@Description("Lists the enabled modules in the corner of the screen.")
+@Description("Lists enabled modules in the corner.")
 public class ModOverlay extends Module {
 	private final List<Row> rows = new ObjectArrayList<>();
 	private Row[] all;
 
-	//TODO: Write description
+	@Description("How large the text is.")
 	@Slider(value = "Text Size", min = 0.5F, max = 3.0F)
 	public float textSize = 1.0F;
 
-	//TODO: Write description
+	@Description("Space to the left and right of each name.")
 	@Slider(value = "Padding X", min = 0.0F, max = 10.0F)
 	public float paddingX = 3.0F;
 
-	//TODO: Write description
+	@Description("Space above and below each name.")
 	@Slider(value = "Padding Y", min = 0.0F, max = 10.0F)
 	public float paddingY = 2.0F;
 
-	//TODO: Write description
+	@Description("How rounded the background corners are.")
 	@Slider(value = "Rounding", min = 0.0F, max = 10.0F)
 	public float rounding = 3.0F;
 
-	//TODO: Write description
+	@Description("The color of module names.")
 	@ColorPicker("Text Color")
 	public Color textColor = new Color(46, 204, 113);
 
-	//TODO: Write description
+	@Description("Shows mode or main setting beside each name.")
 	@Check("Show Details")
 	public boolean showDetails = true;
 
-	//TODO: Write description
+	@Description("The color of the details.")
 	@Requires("showDetails")
 	@ColorPicker("Details Color")
 	public Color detailsColor = new Color(Draw.MUTED);
 
-	//TODO: Write description
+	@Description("Writes the list in lowercase.")
 	@Check("Lowercase")
 	public boolean lowercase = true;
 
-	//TODO: Write description
+	@Description("Only lists modules that have a keybind.")
 	@Check("Only Bound Modules")
 	public boolean onlyBoundModules = false;
 

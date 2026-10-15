@@ -25,42 +25,42 @@ import org.codeberg.illusionclient.util.GhostPlayer;
 import org.codeberg.illusionclient.util.PacketQueue;
 
 @ModuleInfo(name = "Backtrack", category = Category.COMBAT)
-@Description("Lags other players as they move out of range, giving you extra hits on them.")
+@Description("Lags players leaving your range for extra hits.")
 public class Backtrack extends Module {
 	private static final int MILLIS_PER_TICK = 50;
 	private static final double POSITION_SCALE = 32.0D;
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final PacketQueue packets = new PacketQueue();
 
-	//TODO: Write description
+	@Description("Only lags players within this distance.")
 	@RangeSlider(value = "Target Distance", min = 0.0F, max = 8.0F)
 	public float[] targetDistance = {1.0F, 4.0F};
 
-	//TODO: Write description
+	@Description("The longest the target is held back.")
 	@Slider(value = "Maximum Delay (ms)", min = 0.0F, max = 500.0F)
 	public float maximumDelay = 200.0F;
 
-	//TODO: Write description
+	@Description("Only lags players hit within this time. 500 is unlimited.")
 	@Slider(value = "Maximum Hurt Time (ms)", min = 0.0F, max = 500.0F)
 	public float maximumHurtTime = 500.0F;
 
-	//TODO: Write description
+	@Description("Cooldown before lagging again.")
 	@Slider(value = "Cooldown (s)", min = 0.0F, max = 5.0F)
 	public float cooldown = 0.0F;
 
-	//TODO: Write description
+	@Description("Stops lagging as soon as you take knockback.")
 	@Check("Disable On Hit")
 	public boolean disableOnHit = true;
 
-	//TODO: Write description
+	@Description("Replies to the server instantly so ping stays low.")
 	@Check("Ping Fix")
 	public boolean pingFix = false;
 
-	//TODO: Write description
+	@Description("Shows the target's real server position.")
 	@Check("Show Ghost")
 	public boolean showGhost = true;
 
-	//TODO: Write description
+	@Description("How visible the ghost is.")
 	@Requires("showGhost")
 	@Slider(value = "Ghost Opacity", min = 0.0F, max = 100.0F)
 	public float ghostOpacity = 50.0F;

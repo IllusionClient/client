@@ -11,14 +11,14 @@ import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 
-@Description("Configures which players are considered friendly.")
+@Description("Decides which players count as teammates.")
 @ModuleInfo(name = "Teams", category = Category.CLIENT)
 public class Teams extends Module {
-	//TODO: Write description
+	@Description("Teammates share your nametag color.")
 	@Check("Match own nametag")
 	public boolean matchOwnNametag;
 
-	//TODO: Write description
+	@Description("Teammates have this nametag color.")
 	@Combo(value = "Colors", options = {
 		"Black", "Dark Blue", "Dark Green",
 		"Dark Aqua", "Dark Red", "Dark Purple",

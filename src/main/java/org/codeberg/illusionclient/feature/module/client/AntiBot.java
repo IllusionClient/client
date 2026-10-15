@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-@Description("Defines which players are considered bots.")
+@Description("Decides which players count as bots.")
 @ModuleInfo(name = "Anti Bot", category = Category.CLIENT)
 public class AntiBot extends Module {
 	private static final int MIN_AGE_TICKS = 20;
@@ -24,23 +24,23 @@ public class AntiBot extends Module {
 	private final Set<PlayerEntity> seenMoving = Collections.newSetFromMap(new WeakHashMap<>());
 
 	@Check("Invalid UUID")
-	@Description("Filter players with an invalid UUID.")
+	@Description("Flags players with an invalid UUID.")
 	public boolean invalidUuid = true;
 
 	@Check("Always Invisible")
-	@Description("Filter players that have been invisible from the moment they first spawned in.")
+	@Description("Flags players invisible since spawning.")
 	public boolean alwaysInvisible = true;
 
 	@Check("Always stationary")
-	@Description("Filter players who have never moved (horizontally) at all.")
+	@Description("Flags players who never moved horizontally.")
 	public boolean alwaysStationary = true;
 
 	@Check("Sleeping")
-	@Description("Filter players who are sleeping.")
+	@Description("Flags sleeping players.")
 	public boolean sleeping = true;
 
 	@Check("Entity age")
-	@Description("Filter players that spawned recently.")
+	@Description("Flags recently spawned players.")
 	public boolean entityAge = true;
 
 	public static boolean isBot(PlayerEntity player) {

@@ -30,40 +30,36 @@ public class AutoClicker extends Module {
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final ClickPattern pattern = new ClickPattern();
 
-	//TODO: Write description
+	@Description("Jitter clicks evenly, Butterfly in bursts of two.")
 	@Combo(value = "Click Pattern", options = {"Jitter", "Butterfly"})
 	public String clickPattern = "Jitter";
 
-	//TODO: Write description
+	@Description("How many clicks per second to aim for.")
 	@Slider(value = "Target CPS", min = 1.0F, max = 25.0F)
 	public float targetCps = 12.0F;
 
-	//TODO: Write description
+	@Description("Varies click timing to avoid a fixed rhythm.")
 	@Check("Randomize")
 	public boolean randomize = true;
 
-	//TODO: Write description
+	@Description("Sometimes slows down briefly, like a tired hand.")
 	@Check("Simulate Exhaust")
 	public boolean simulateExhaust = true;
 
-	//TODO: Write description
+	@Description("Pauses on blocks so you can mine.")
 	@Check("Allow Breaking Blocks")
 	public boolean allowBreakingBlocks = true;
 
-	//TODO: Write description
+	@Description("Clicks while Shift-clicking in inventories.")
 	@Check("Inventory")
 	public boolean inventory = false;
 
-	//TODO: Write description
+	@Description("Uses the click pattern in inventories, not max speed.")
 	@Requires("inventory")
 	@Check("Randomize Inventory")
 	public boolean randomizeInventorySpeed = true;
 
-	//TODO: Write description
-	@Check("Holding Weapon")
-	public boolean holdingWeapon = false;
-
-	//TODO: Write description
+	@Description("Pauses while you use an item.")
 	@Check("Not Using Item")
 	public boolean notUsingItem = false;
 
@@ -142,7 +138,7 @@ public class AutoClicker extends Module {
 
 	private boolean activeInGame(LocalClientPlayerEntity player) {
 		if (!minecraft.options.attackKey.isPressed() || !player.isAlive()) return false;
-		if (holdingWeapon && !Weapons.isWeapons(player.getItemInHand())) return false;
+		if (!Weapons.isWeapons(player.getItemInHand())) return false;
 		if (notUsingItem && player.getItemInUse() != null) return false;
 		return !allowBreakingBlocks || !PlayerUtils.aimingAtBlock();
 	}

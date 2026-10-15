@@ -21,7 +21,7 @@ import org.codeberg.illusionclient.util.MoveUtils;
 import java.util.Random;
 
 @ModuleInfo(name = "Bridge Assist", category = Category.PLAYER)
-@Description("Sneaks for you when you are near the edge of a block.")
+@Description("Sneaks for you at block edges.")
 public class BridgeAssist extends Module {
 	private static final float LOOKING_DOWN_PITCH = 45.0F;
 	private static final double DIAGONAL_RATIO = Math.sin(Math.toRadians(22.5D));
@@ -30,43 +30,43 @@ public class BridgeAssist extends Module {
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final Random random = new Random();
 
-	//TODO: Write description
+	@Description("How far past the edge before sneaking.")
 	@Slider(value = "Edge Offset", min = 0.0F, max = 30.0F)
 	public float edgeOffset = 15.0F;
 
-	//TODO: Write description
+	@Description("Sneak time after you're back on the block.")
 	@Slider(value = "Unsneak Delay", min = 50.0F, max = 500.0F)
 	public float unsneakDelay = 100.0F;
 
-	//TODO: Write description
+	@Description("Swaps to hotbar blocks when your hand has none.")
 	@Combo(value = "Select Blocks", options = {"No", "On depletion", "Always"})
 	public String selectBlocks = "No";
 
-	//TODO: Write description
+	@Description("Varies the edge offset and unsneak delay.")
 	@Check("Randomize")
 	public boolean randomize = false;
 
-	//TODO: Write description
+	@Description("Also sneaks while you jump.")
 	@Check("Sneak On Jump")
 	public boolean sneakOnJump = false;
 
-	//TODO: Write description
+	@Description("Waits for the second edge when bridging diagonally.")
 	@Check("Avoid Double-Sneaking")
 	public boolean avoidDoubleSneaking = false;
 
-	//TODO: Write description
+	@Description("Only sneaks at edges while you hold sneak.")
 	@Check("Sneak Key Pressed")
 	public boolean sneakKeyPressed = false;
 
-	//TODO: Write description
+	@Description("Only works while you hold blocks.")
 	@Check("Holding Blocks")
 	public boolean holdingBlocks = true;
 
-	//TODO: Write description
+	@Description("Only works while you look down.")
 	@Check("Looking Down")
 	public boolean lookingDown = false;
 
-	//TODO: Write description
+	@Description("Only works when not pressing forward.")
 	@Check("Not Moving Forward")
 	public boolean notMovingForward = false;
 

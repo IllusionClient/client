@@ -10,7 +10,7 @@ import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 
 @ModuleInfo(name = "Null Move", category = Category.MOVEMENT)
-@Description("Also known as SOCD / Null Binds.")
+@Description("Opposite keys move you toward the last one pressed (SOCD).")
 public class NullMove extends Module {
 	private final Minecraft minecraft = Minecraft.getInstance();
 

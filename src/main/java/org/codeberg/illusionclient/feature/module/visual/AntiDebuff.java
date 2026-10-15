@@ -12,11 +12,11 @@ import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 @ModuleInfo(name = "Anti Debuff", category = Category.VISUAL)
 @Description("Hides negative visual effects.")
 public class AntiDebuff extends Module {
-	//TODO: Write description
+	@Description("Removes the dark fog from Blindness.")
 	@Check("Blindness")
 	public boolean blindness = true;
 
-	//TODO: Write description
+	@Description("Removes the screen wobble from Nausea.")
 	@Check("Nausea")
 	public boolean nausea = true;
 

@@ -13,7 +13,7 @@ import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 import org.codeberg.illusionclient.util.MoveUtils;
 
 @ModuleInfo(name = "No Jump Delay", category = Category.MOVEMENT)
-@Description("Removes the jump cooldown while holding the jump key.")
+@Description("Removes the jump cooldown while holding jump.")
 public class NoJumpDelay extends Module {
 	private static final double JUMP_RISE = 0.42D;
 	private static final double SPRINT_JUMP_BOOST = 0.2D;
@@ -22,7 +22,7 @@ public class NoJumpDelay extends Module {
 	private static final double LOOKAHEAD_STEP = 0.25D;
 	private final Minecraft minecraft = Minecraft.getInstance();
 
-	//TODO: Write description
+	@Description("Regular jumps on landing, Smart waits for slabs and stairs.")
 	@Combo(value = "Mode", options = {"Regular", "Smart"})
 	public String mode = "Regular";
 

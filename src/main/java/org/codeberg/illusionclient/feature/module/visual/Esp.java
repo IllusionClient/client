@@ -17,6 +17,7 @@ import org.codeberg.illusionclient.feature.config.api.ColorPicker;
 import org.codeberg.illusionclient.feature.config.api.Combo;
 import org.codeberg.illusionclient.feature.config.api.Requires;
 import org.codeberg.illusionclient.feature.module.api.Category;
+import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 import org.codeberg.illusionclient.feature.ui.Draw;
@@ -26,7 +27,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO: Write description
+@Description("Draws boxes and bars around players.")
 @ModuleInfo(name = "ESP", category = Category.VISUAL)
 public class Esp extends Module {
 	private static final int OUTLINE = 0x96000000;
@@ -34,58 +35,58 @@ public class Esp extends Module {
 	private float[] bounds = new float[64];
 	private float pulseFactor;
 
-	//TODO: Write description
+	@Description("Draws a box around players.")
 	@Check("Box")
 	public boolean box = true;
 
-	//TODO: Write description
+	@Description("The color of the box.")
 	@Requires("box")
 	@ColorPicker("Box Color")
 	public Color boxColor = new Color(0x74C3FF);
 
-	//TODO: Write description
+	@Description("Draws an armor bar below the box.")
 	@Check("Armor Bar")
 	public boolean armorBar = true;
 
-	//TODO: Write description
+	@Description("The color of the armor bar.")
 	@Requires("armorBar")
 	@ColorPicker("Armor Color")
 	public Color armorColor = new Color(0, 255, 255);
 
-	//TODO: Write description
+	@Description("Draws a health bar beside the box.")
 	@Check("HP Bar")
 	public boolean healthBar = true;
 
-	//TODO: Write description
+	@Description("Solid color, green to red by health, or a gradient.")
 	@Requires("healthBar")
 	@Combo(value = "HP Color Mode", options = {"Solid", "Health", "Gradient"})
 	public String healthMode = "Solid";
 
-	//TODO: Write description
+	@Description("Health bar color, or the gradient's top.")
 	@Requires(value = "healthMode", is = {"Solid", "Gradient"})
 	@ColorPicker("HP Color")
 	public Color healthColor = new Color(0, 255, 89);
 
-	//TODO: Write description
+	@Description("The bottom color of the gradient.")
 	@Requires(value = "healthMode", is = "Gradient")
 	@ColorPicker("HP End")
 	public Color healthEndColor = new Color(0xF44336);
 
-	//TODO: Write description
+	@Description("Absorption color on the health bar.")
 	@Requires("healthBar")
 	@ColorPicker("Absorption")
 	public Color absorptionColor = new Color(0xDD00FF);
 
-	//TODO: Write description
+	@Description("Makes the health bar slowly pulse.")
 	@Requires("healthBar")
 	@Check("Pulsing HP")
 	public boolean pulsing = true;
 
-	//TODO: Write description
+	@Description("Also draws invisible players.")
 	@Check("Invisibles")
 	public boolean invisibles = false;
 
-	//TODO: Write description
+	@Description("Also draws you in third person.")
 	@Check("Self")
 	public boolean self = true;
 

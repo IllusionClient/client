@@ -19,25 +19,25 @@ import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 import org.codeberg.illusionclient.util.ItemUtils;
 
 @ModuleInfo(name = "Fast Place", category = Category.PLAYER)
-@Description("Removes the delay between block placements while holding the use key.")
+@Description("Removes the delay between block placements.")
 public class FastPlace extends Module {
 	private static final float TICKS_PER_SECOND = 20.0F;
 	private static final double DIAGONAL_RATIO = Math.sin(Math.toRadians(22.5D));
 	private final Minecraft minecraft = Minecraft.getInstance();
 
-	//TODO: Write description
+	@Description("Smart only places on the face you started on.")
 	@Combo(value = "Mode", options = {"Regular", "Smart"})
 	public String mode = "Regular";
 
-	//TODO: Write description
+	@Description("The most blocks placed per second.")
 	@Slider(value = "Maximum CPS", min = 5.0F, max = 20.0F)
 	public float maximumCps = 20.0F;
 
-	//TODO: Write description
+	@Description("Ticks to hold use before placing speeds up.")
 	@Slider(value = "Activate Delay", min = 0.0F, max = 4.0F)
 	public float activateDelay = 0.0F;
 
-	//TODO: Write description
+	@Description("Only speeds up blocks, not other items.")
 	@Check("Blocks Only")
 	public boolean blocksOnly = true;
 

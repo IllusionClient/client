@@ -7,5 +7,6 @@
 - Module descriptions now show as a tooltip when you hover the module, instead of taking up a row in its settings.
 - Made Freelook always work on multiplayer.
 - Aim Assist's Mouse Pressed check now keeps aiming between clicks instead of cutting out each time the button is released.
+- Fixed Auto Clicker not following Weapons module
 - Fixed Aim Assist randomization getting cut off at the edge of the hitbox when multipoint is high.
 - Fixed Aim Assist randomization changing speed with frame rate.

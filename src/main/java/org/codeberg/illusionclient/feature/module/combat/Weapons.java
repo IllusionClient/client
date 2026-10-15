@@ -6,37 +6,38 @@ import net.minecraft.item.*;
 import org.codeberg.illusionclient.IllusionClient;
 import org.codeberg.illusionclient.feature.config.api.Check;
 import org.codeberg.illusionclient.feature.module.api.Category;
+import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 
-//TODO: Write description
+@Description("Limits Aim Assist and Auto Clicker to weapons.")
 @ModuleInfo(name = "Weapons", category = Category.COMBAT)
 public class Weapons extends Module {
-	//TODO: Write description
+	@Description("Counts swords as weapons.")
 	@Check("Swords")
 	public boolean swords = true;
 
-	//TODO: Write description
+	@Description("Counts axes as weapons.")
 	@Check("Axes")
 	public boolean axes = true;
 
-	//TODO: Write description
+	@Description("Counts sticks as weapons.")
 	@Check("Sticks")
 	public boolean sticks = false;
 
-	//TODO: Write description
+	@Description("Counts an empty hand as a weapon.")
 	@Check("Fists")
 	public boolean fists = false;
 
-	//TODO: Write description
+	@Description("Counts any item with Sharpness as a weapon.")
 	@Check("Sharpness")
 	public boolean sharpness = true;
 
-	//TODO: Write description
+	@Description("Counts any item with Knockback as a weapon.")
 	@Check("Knockback")
 	public boolean knockback = true;
 
-	//TODO: Write description
+	@Description("Counts any item with Fire Aspect as a weapon.")
 	@Check("Fire Aspect")
 	public boolean fireAspect = true;
 

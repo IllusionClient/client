@@ -13,26 +13,26 @@ import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 
 @ModuleInfo(name = "Sprint", category = Category.MOVEMENT)
-@Description("Sprints for you without holding the sprint key.")
+@Description("Sprints without holding the sprint key.")
 public class Sprint extends Module {
 	private static final float SPRINT_INPUT = 0.8F;
 	private static final float ITEM_USE_SLOWDOWN = 0.2F;
 	private static final float MINIMUM_FOOD = 6.0F;
 	private final Minecraft minecraft = Minecraft.getInstance();
 
-	//TODO: Write description
+	@Description("Keeps sprinting while using items.")
 	@Check("Using Item")
 	public boolean usingItem = false;
 
-	//TODO: Write description
+	@Description("Sprints while walking backwards.")
 	@Check("Backwards")
 	public boolean backwards = false;
 
-	//TODO: Write description
+	@Description("Sprints while strafing.")
 	@Check("Sideways")
 	public boolean sideways = false;
 
-	//TODO: Write description
+	@Description("Keeps sprinting with a screen open.")
 	@Check("In Inventory")
 	public boolean inInventory = false;
 

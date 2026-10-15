@@ -24,7 +24,7 @@ import org.codeberg.illusionclient.util.RotationUtils;
 import org.lwjgl.input.Mouse;
 
 @ModuleInfo(name = "Aim Assist", category = Category.COMBAT)
-@Description("Moves your crosshair onto other players for you.")
+@Description("Moves your crosshair onto players.")
 public class AimAssist extends Module {
 	private static final float PREDICT_TICKS = 3.0F;
 	private static final long MOUSE_MOVE_WINDOW = 150L;
@@ -35,81 +35,81 @@ public class AimAssist extends Module {
 	private final Minecraft minecraft = Minecraft.getInstance();
 	private final AimPoint aim = new AimPoint();
 
-	//TODO: Write description
+	@Description("Regular eases in, Linear is steady, Lock-on snaps.")
 	@Combo(value = "Mode", options = {"Regular", "Linear", "Lock-on"})
 	public String mode = "Regular";
 
-	//TODO: Write description
+	@Description("Horizontal turn speed.")
 	@Slider(value = "Horizontal Speed", min = 0.0F, max = 100.0F)
 	public float horizontalSpeed = 30.0F;
 
-	//TODO: Write description
+	@Description("Vertical turn speed.")
 	@Slider(value = "Vertical Speed", min = 0.0F, max = 100.0F)
 	public float verticalSpeed = 15.0F;
 
-	//TODO: Write description
+	@Description("Pulls horizontal aim toward your crosshair. 0 is center.")
 	@Slider(value = "Horizontal Multipoint", min = 0.0F, max = 100.0F)
 	public float horizontalMultipoint = 0.0F;
 
-	//TODO: Write description
+	@Description("Pulls vertical aim toward your crosshair. 0 is center.")
 	@Slider(value = "Vertical Multipoint", min = 0.0F, max = 100.0F)
 	public float verticalMultipoint = 0.0F;
 
-	//TODO: Write description
+	@Description("Aims ahead of moving targets.")
 	@Slider(value = "Predict", min = 0.0F, max = 100.0F)
 	public float predict = 0.0F;
 
-	//TODO: Write description
+	@Description("Wanders the aim point around the hitbox.")
 	@Slider(value = "Randomization", min = 0.0F, max = 100.0F)
 	public float randomization = 50.0F;
 
-	//TODO: Write description
+	@Description("Single keeps one target, Switch picks the best each frame.")
 	@Combo(value = "Target Mode", options = {"Single", "Switch"})
 	public String targetMode = "Single";
 
-	//TODO: Write description
+	@Description("Keeps the target after it leaves your FOV.")
 	@Requires(value = "targetMode", is = "Single")
 	@Check("Increased FOV While Locked")
 	public boolean increasedFov = false;
 
-	//TODO: Write description
+	@Description("Which target to prefer.")
 	@Requires(value = "targetMode", is = "Switch")
 	@Combo(value = "Sort By", options = {"Distance", "Health", "Hurt time", "Aim angle"})
 	public String sortBy = "Distance";
 
-	//TODO: Write description
+	@Description("Only aims at players within this distance.")
 	@RangeSlider(value = "Range", min = 0.0F, max = 8.0F)
 	public float[] range = {0.0F, 4.5F};
 
-	//TODO: Write description
+	@Description("Aims within the max angle, stops inside the min angle.")
 	@RangeSlider(value = "FOV", min = 0.0F, max = 360.0F)
 	public float[] fov = {0.0F, 90.0F};
 
-	//TODO: Write description
+	@Description("Only aims while you are sprinting.")
 	@Check("Sprinting")
 	public boolean sprinting = false;
 
-	//TODO: Write description
+	@Description("Only aims while you are clicking.")
 	@Check("Mouse Pressed")
 	public boolean mousePressed = true;
 
-	//TODO: Write description
+	@Description("Only aims while you are moving your mouse.")
 	@Check("Mouse Moved")
 	public boolean mouseMoved = false;
 
-	//TODO: Write description
+	@Description("Drops the target briefly when you aim away.")
 	@Check("Stop When Resisting")
 	public boolean resisting = false;
 
-	//TODO: Write description
+	@Description("Stops aiming while you are mining a block.")
 	@Check("Disable While Breaking Blocks")
 	public boolean breakingBlocks = true;
 
-	//TODO: Write description
+	@Description("Skips invisible players.")
 	@Check("Ignore Invisibles")
 	public boolean ignoreInvisibles = true;
 
-	//TODO: Write description
+	@Description("Skips players you can't see through blocks.")
 	@Check("Not Behind Blocks")
 	public boolean notBehindBlocks = true;
 
