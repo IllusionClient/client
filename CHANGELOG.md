@@ -1,13 +1,5 @@
-# v0.2.0 - 2026-10-15
+# v0.2.1 - 2026-10-16
 
-- Added Anti Debuff, which hides the negative visual effects.
-- Added Backtrack, which lags other players as they move out of range.
-- Added a Smart mode to No Jump Delay, which times jumps right before slabs and stairs so you step up them with the jump boost.
-- Added a Stop When Resisting option to Aim Assist, which drops the target when you pull your mouse away from it.
-- Added descriptions to all modules and options
-- Module descriptions now show as a tooltip when you hover the module, instead of taking up a row in its settings.
-- Made Freelook always work on multiplayer.
-- Aim Assist's Mouse Pressed check now keeps aiming between clicks instead of cutting out each time the button is released.
-- Fixed Auto Clicker not following Weapons module
-- Fixed Aim Assist randomization getting cut off at the edge of the hitbox when multipoint is high.
-- Fixed Aim Assist randomization changing speed with frame rate.
+- Added a documentation page listing every module and option.
+- Auto Clicker's CPS now varies on a bell curve, so it stays near the set value more often and makes fewer big jumps.
+- Illusion now requires Java 25.

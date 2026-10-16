@@ -33,30 +33,34 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class ModuleManager {
-	public final List<Module> modules = new ObjectArrayList<>(Arrays.asList(
-		new AntiBot(),
-		new ClickGuiModule(),
-		new Teams(),
-		new AimAssist(),
-		new AutoClicker(),
-		new Backtrack(),
-		new NoHitDelay(),
-		new Weapons(),
-		new NoJumpDelay(),
-		new NullMove(),
-		new Sprint(),
-		new BridgeAssist(),
-		new FastPlace(),
-		new AntiDebuff(),
-		new Esp(),
-		new ModOverlay()
-	));
+	public final List<Module> modules = builtIn();
 	private final Reference2ObjectMap<Class<?>, Module> byType = new Reference2ObjectOpenHashMap<>();
 
 	public ModuleManager() {
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) modules.add(new TestModule());
 		for (Module module : modules) byType.put(module.getClass(), module);
 		IllusionClient.BUS.subscribe(this);
+	}
+
+	public static List<Module> builtIn() {
+		return new ObjectArrayList<>(Arrays.asList(
+			new AntiBot(),
+			new ClickGuiModule(),
+			new Teams(),
+			new AimAssist(),
+			new AutoClicker(),
+			new Backtrack(),
+			new NoHitDelay(),
+			new Weapons(),
+			new NoJumpDelay(),
+			new NullMove(),
+			new Sprint(),
+			new BridgeAssist(),
+			new FastPlace(),
+			new AntiDebuff(),
+			new Esp(),
+			new ModOverlay()
+		));
 	}
 
 	public <T extends Module> T get(Class<T> type) {

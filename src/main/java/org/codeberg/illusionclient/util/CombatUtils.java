@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.codeberg.illusionclient.feature.module.client.AntiBot;
 import org.codeberg.illusionclient.feature.module.client.Teams;
@@ -22,9 +21,9 @@ public final class CombatUtils {
 
 	public static double distanceTo(Box box) {
 		Vec3d eye = Minecraft.getInstance().player.getEyePosition(1.0F);
-		double x = eye.x - MathHelper.clamp(eye.x, box.minX, box.maxX);
-		double y = eye.y - MathHelper.clamp(eye.y, box.minY, box.maxY);
-		double z = eye.z - MathHelper.clamp(eye.z, box.minZ, box.maxZ);
+		double x = eye.x - Math.clamp(eye.x, box.minX, box.maxX);
+		double y = eye.y - Math.clamp(eye.y, box.minY, box.maxY);
+		double z = eye.z - Math.clamp(eye.z, box.minZ, box.maxZ);
 		return Math.sqrt(x * x + y * y + z * z);
 	}
 }

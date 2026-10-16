@@ -153,8 +153,8 @@ public final class ConfigManager {
 			JsonObject settings = new JsonObject();
 			for (Option option : module.options) {
 				Object value = option.get();
-				settings.add(option.key, value instanceof Color
-					? new JsonPrimitive(((Color) value).getRGB())
+				settings.add(option.key, value instanceof Color color
+					? new JsonPrimitive(color.getRGB())
 					: GSON.toJsonTree(value));
 			}
 
@@ -174,7 +174,7 @@ public final class ConfigManager {
 
 			try {
 				Files.move(temp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-			} catch (AtomicMoveNotSupportedException e) {
+			} catch (AtomicMoveNotSupportedException _) {
 				Files.move(temp, file, StandardCopyOption.REPLACE_EXISTING);
 			}
 		} catch (IOException e) {

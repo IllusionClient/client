@@ -69,7 +69,7 @@ public final class ClickPattern {
 		if (streak-- <= 0) {
 			if (phase-- <= 0) {
 				phase = 5 + random.nextInt(15);
-				phaseCps = random.nextFloat() * 2.0F - 1.0F;
+				phaseCps = gaussian(0.6F, 1.0F);
 				delayStart = 380 + random.nextInt(40);
 				delaySpread = 50 + random.nextInt(70);
 				pauseChance = 0.02F + random.nextFloat() * 0.05F;
@@ -79,9 +79,14 @@ public final class ClickPattern {
 				tripleChance = random.nextFloat() * 0.08F;
 			}
 			streak = 4 + random.nextInt(30);
-			streakCps = Math.max(1.0F, cps + phaseCps + random.nextInt(6) - 3);
+			streakCps = Math.max(1.0F, cps + phaseCps + gaussian(1.5F, 3.0F));
 		}
 		return (delayStart + random.nextInt(delaySpread)) / streakCps;
+	}
+
+	private float gaussian(float deviation, float limit) {
+		float value = (float) random.nextGaussian() * deviation;
+		return Math.clamp(value, -limit, limit);
 	}
 
 	private float interval() {

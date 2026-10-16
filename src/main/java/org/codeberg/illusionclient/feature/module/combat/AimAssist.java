@@ -125,7 +125,7 @@ public class AimAssist extends Module {
 
 	private static int mouseCounts(float total, float diff, float gcd) {
 		int limit = (int) (diff / gcd);
-		return MathHelper.clamp((int) (total / gcd), Math.min(limit, 0), Math.max(limit, 0));
+		return Math.clamp((int) (total / gcd), Math.min(limit, 0), Math.max(limit, 0));
 	}
 
 	private static float step(float diff, float speed, float delta, String mode) {
@@ -133,7 +133,7 @@ public class AimAssist extends Module {
 			case "Lock-on" -> diff;
 			case "Linear" -> {
 				float limit = speed * 6.0F * delta * Math.min(1.0F, 0.4F + Math.abs(diff) / 15.0F);
-				yield MathHelper.clamp(diff, -limit, limit);
+				yield Math.clamp(diff, -limit, limit);
 			}
 			default -> diff * (1.0F - (float) Math.pow(1.0F - speed / 100.0F, delta * 20.0F));
 		};

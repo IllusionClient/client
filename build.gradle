@@ -11,6 +11,10 @@ group = project.maven_group
 
 sourceSets {
     standalone
+    docs {
+        compileClasspath += main.output + main.compileClasspath
+        runtimeClasspath += main.output + main.runtimeClasspath
+    }
 }
 
 repositories {
@@ -50,8 +54,8 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 
     withSourcesJar()
 }
@@ -65,4 +69,21 @@ jar {
     from('LICENSE') {
         rename { "${it}_${base.archivesName.get()}" }
     }
+}
+
+tasks.register('docs', JavaExec) {
+    group = 'documentation'
+    description = 'Generates the module documentation page.'
+
+    def output = layout.buildDirectory.file('docs/index.html')
+    def channel = findProperty('channel') ?: 'stable'
+    inputs.property 'version', version
+    inputs.property 'channel', channel
+    outputs.file output
+
+    workingDir = layout.buildDirectory.dir('docs-run').get().asFile
+    doFirst { workingDir.mkdirs() }
+    classpath = sourceSets.docs.runtimeClasspath
+    mainClass = 'org.codeberg.illusionclient.docs.DocsGenerator'
+    args output.get().asFile.path, version, channel
 }

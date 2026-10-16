@@ -41,7 +41,7 @@ public abstract class Group extends Component {
 		for (Component child : visible) {
 			child.x = x;
 			child.y = childY;
-			child.bottom = bottom && child == visible.get(visible.size() - 1);
+			child.bottom = bottom && child == visible.getLast();
 			child.render(mouseX, mouseY);
 			childY += child.height();
 		}

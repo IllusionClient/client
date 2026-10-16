@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build
-        run: ./gradlew build --no-daemon -Pversion="${GITHUB_REF_NAME#v}"
+        run: ./gradlew build docs --no-daemon -Pversion="${GITHUB_REF_NAME#v}"
 
       - name: Collect binary
         run: |
@@ -64,3 +64,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-dir: dist
           release-notes: ${{ steps.changelog.outputs.notes }}
+
+      - name: Publish docs
+        env:
+          TOKEN: ${{ secrets.PAGES_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          cd build/docs
+          git init -q -b pages
+          git add index.html
+          git -c user.name=forgejo-actions -c user.email=actions@noreply.codeberg.org commit -q -m "docs: ${GITHUB_REF_NAME}"
+          git push -f "https://token:${TOKEN}@${GITHUB_SERVER_URL#https://}/${OWNER}/docs.git" pages
