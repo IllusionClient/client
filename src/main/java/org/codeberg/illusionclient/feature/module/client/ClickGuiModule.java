@@ -16,7 +16,7 @@ import java.awt.*;
 public class ClickGuiModule extends Module {
 	@Description("The accent color of this menu.")
 	@ColorPicker("Color")
-	public Color color = new Color(46, 204, 113);
+	public Color color = new Color(41, 227, 143);
 
 	private ClickGui gui;
 

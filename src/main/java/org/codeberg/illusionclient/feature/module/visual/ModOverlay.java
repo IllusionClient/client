@@ -46,7 +46,7 @@ public class ModOverlay extends Module {
 
 	@Description("The color of module names.")
 	@ColorPicker("Text Color")
-	public Color textColor = new Color(46, 204, 113);
+	public Color textColor = new Color(41, 227, 143);
 
 	@Description("Shows mode or main setting beside each name.")
 	@Check("Show Details")

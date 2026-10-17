@@ -39,7 +39,7 @@ public class TestModule extends Module {
 
 	@Requires(value = "combo", is = {"Second", "Third"})
 	@ColorPicker("Color Picker")
-	public Color colorPicker = new Color(46, 204, 113);
+	public Color colorPicker = new Color(41, 227, 143);
 
 	@Requires(value = "combo", is = "Third")
 	@Check("Cap Use Delay")
