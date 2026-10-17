@@ -6,12 +6,21 @@ import org.lwjgl.input.Mouse;
 public final class MouseUtils {
 	private static int button;
 	private static int pendingEvents;
+	private static boolean lifted;
 	private static boolean synthetic;
 
-	public static void click(int button) {
-		if (button != MouseUtils.button) pendingEvents = 0;
+	public static void toggle(int button) {
+		if (button != MouseUtils.button) {
+			pendingEvents = 0;
+			lifted = false;
+		}
 		MouseUtils.button = button;
-		pendingEvents += 2;
+		pendingEvents++;
+	}
+
+	public static void resync() {
+		pendingEvents = lifted && Mouse.isButtonDown(button) ? 1 : 0;
+		if (pendingEvents == 0) lifted = false;
 	}
 
 	public static boolean next(boolean hasEvent) {
@@ -19,11 +28,13 @@ public final class MouseUtils {
 			synthetic = false;
 			return true;
 		}
-		if ((pendingEvents & 1) == 0 && !(Minecraft.getInstance().screen == null && Mouse.isButtonDown(button))) {
+		if (lifted && !(Minecraft.getInstance().screen == null && Mouse.isButtonDown(button))) {
 			pendingEvents = 0;
+			lifted = false;
 		}
 		if (pendingEvents == 0) return synthetic = false;
 		pendingEvents--;
+		lifted = !lifted;
 		return synthetic = true;
 	}
 
@@ -36,6 +47,6 @@ public final class MouseUtils {
 	}
 
 	public static boolean eventState() {
-		return (pendingEvents & 1) == 0;
+		return !lifted;
 	}
 }

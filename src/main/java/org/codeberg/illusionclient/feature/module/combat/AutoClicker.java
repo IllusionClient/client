@@ -64,6 +64,7 @@ public class AutoClicker extends Module {
 	public boolean notUsingItem = false;
 
 	private long lastFrame;
+	private boolean inScreen;
 	private int inventoryClicks;
 	private String details;
 	private String detailsPattern;
@@ -81,12 +82,13 @@ public class AutoClicker extends Module {
 
 	@Override
 	public void onDisable() {
-		pattern.stop();
+		stop();
 	}
 
 	@Listen
 	public void onPlayerTick(PlayerTickEvent event) {
-		pattern.tick();
+		LocalClientPlayerEntity player = minecraft.player;
+		if (player != null) pattern.tick(player.yaw, player.pitch);
 	}
 
 	@Listen
@@ -114,30 +116,40 @@ public class AutoClicker extends Module {
 		lastFrame = now;
 
 		LocalClientPlayerEntity player = minecraft.player;
-		if (player == null || !(minecraft.screen == null ? activeInGame(player) : activeInInventory())) {
-			pattern.stop();
+		boolean screen = minecraft.screen != null;
+		if (player == null || screen != inScreen || !(screen ? activeInInventory() : activeInGame(player))) {
+			inScreen = screen;
+			stop();
 			return;
 		}
-		if (minecraft.screen != null && !randomizeInventorySpeed) return;
+		if (screen && !randomizeInventorySpeed) return;
 
-		int clicks = pattern.advance(delta, targetCps, randomize, simulateExhaust, clickPattern.equals("Butterfly"));
-		if (minecraft.screen != null) {
-			inventoryClicks += clicks;
+		int edges = pattern.advance(delta, targetCps, randomize, simulateExhaust, clickPattern.equals("Butterfly"));
+		if (screen) {
+			inventoryClicks += pattern.presses();
 			return;
 		}
 
 		int key = minecraft.options.attackKey.getKeyCode();
-		for (; clicks > 0; clicks--) {
-			if (key < 0) {
-				MouseUtils.click(key + 100);
-			} else {
-				KeyBinding.click(key);
-			}
+		if (key < 0) {
+			for (; edges > 0; edges--) MouseUtils.toggle(key + 100);
+		} else {
+			for (int presses = pattern.presses(); presses > 0; presses--) KeyBinding.click(key);
 		}
 	}
 
+	private void stop() {
+		pattern.stop();
+		MouseUtils.resync();
+	}
+
+	private boolean attackHeld() {
+		int key = minecraft.options.attackKey.getKeyCode();
+		return key < 0 ? Mouse.isButtonDown(key + 100) : minecraft.options.attackKey.isPressed();
+	}
+
 	private boolean activeInGame(LocalClientPlayerEntity player) {
-		if (!minecraft.options.attackKey.isPressed() || !player.isAlive()) return false;
+		if (!attackHeld() || !player.isAlive()) return false;
 		if (!Weapons.isWeapons(player.getItemInHand())) return false;
 		if (notUsingItem && player.getItemInUse() != null) return false;
 		return !allowBreakingBlocks || !PlayerUtils.aimingAtBlock();
