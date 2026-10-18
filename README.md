@@ -1,6 +1,6 @@
 # Illusion [W.I.P]
 
-Minecraft 1.8.9 libre ghost client built for Ornithe. [Join the Discord!](https://discord.com/invite/rzgm3C8YWu)
+An independent, fully open source ghost client for Minecraft 1.8.9, written from the ground up. [Join the Discord!](https://discord.com/invite/rzgm3C8YWu)
 
 ---
 
