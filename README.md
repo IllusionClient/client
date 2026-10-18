@@ -11,10 +11,10 @@ Requires Git and Java 25.
 ```sh
 git clone https://codeberg.org/awruff/Illusion.git
 cd Illusion
-./gradlew build
+./gradlew buildAndCollect
 ```
 
-The jar is written to `build/libs/`.
+The Fabric (Ornithe) and Forge jars are written to `build/libs/`.
 
 ## Screenshot
 

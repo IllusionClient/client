@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build
-        run: ./gradlew build docs --no-daemon -Pversion="${GITHUB_REF_NAME#v}"
+        run: ./gradlew build buildAndCollect docs --no-daemon -Pversion="${GITHUB_REF_NAME#v}"
 
       - name: Collect binary
         run: |

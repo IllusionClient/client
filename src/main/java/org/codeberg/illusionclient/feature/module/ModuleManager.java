@@ -4,10 +4,10 @@ import io.github.nevalackin.radbus.Listen;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import org.codeberg.illusionclient.IllusionClient;
+import org.codeberg.illusionclient.Platform;
 import org.codeberg.illusionclient.event.KeyPressEvent;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.client.AntiBot;
@@ -37,7 +37,7 @@ public final class ModuleManager {
 	private final Reference2ObjectMap<Class<?>, Module> byType = new Reference2ObjectOpenHashMap<>();
 
 	public ModuleManager() {
-		if (FabricLoader.getInstance().isDevelopmentEnvironment()) modules.add(new TestModule());
+		if (Platform.isDevelopmentEnvironment()) modules.add(new TestModule());
 		for (Module module : modules) byType.put(module.getClass(), module);
 		IllusionClient.BUS.subscribe(this);
 	}

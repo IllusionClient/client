@@ -50,7 +50,7 @@ public class ClickGui extends Screen {
 	}
 
 	@Override
-	public void handleMouse() {
+	public void handleMouse() /*? if forge {*//*throws java.io.IOException*//*?}*/ {
 		super.handleMouse();
 
 		int wheel = Mouse.getEventDWheel();
@@ -63,7 +63,7 @@ public class ClickGui extends Screen {
 	}
 
 	@Override
-	protected void keyPressed(char chr, int key) {
+	protected void keyPressed(char chr, int key) /*? if forge {*//*throws java.io.IOException*//*?}*/ {
 		for (Frame frame : frames) {
 			if (frame.keyPressed(key)) return;
 		}

@@ -39,7 +39,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build
-        run: ./gradlew build docs --no-daemon
+        run: ./gradlew build buildAndCollect docs --no-daemon
 
       - name: Upload artifact
         uses: forgejo/upload-artifact@v4

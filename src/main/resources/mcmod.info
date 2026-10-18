@@ -1,0 +1,12 @@
+[
+	{
+		"modid": "illusion",
+		"name": "Illusion Client",
+		"description": "Minecraft 1.8.9 libre ghost client.",
+		"version": "${version}",
+		"mcversion": "1.8.9",
+		"url": "https://codeberg.org/IllusionClient/Illusion/",
+		"authorList": ["awruff", "Zircta"],
+		"logoFile": "assets/illusion/icon.png"
+	}
+]

@@ -1,0 +1,15 @@
+deps.radbus = "1.0.0"
+
+[fabric]
+deps.feather = "1.8.9+build.2"
+deps.fabric_loader = "0.19.5"
+deps.osl = "0.22.1"
+
+[forge]
+deps.feather = "2"
+deps.forge = "11.15.1.2318-1.8.9"
+deps.mixin = "0.17.4+mixin.0.8.7"
+deps.mixinbooter = "11.18"
+deps.mixinextras = "0.5.5"
+deps.fastutil = "8.5.9"
+deps.gson = "2.10"
