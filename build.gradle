@@ -19,10 +19,10 @@ sourceSets {
 
 repositories {
 	maven {
-		url "https://maven.ornithemc.net/releases"
+		url = "https://maven.ornithemc.net/releases"
 	}
 	maven {
-		url 'https://jitpack.io/'
+		url = 'https://jitpack.io/'
 		content {
 			includeGroup 'io.github.nevalackin'
 		}
@@ -41,10 +41,11 @@ dependencies {
 }
 
 processResources {
-    inputs.property 'version', version
+    def modVersion = version.toString()
+    inputs.property 'version', modVersion
 
     filesMatching('fabric.mod.json') {
-        expand 'version': version
+        expand 'version': modVersion
     }
 }
 
@@ -66,8 +67,9 @@ jar {
         attributes 'Main-Class': 'org.codeberg.illusionclient.Main'
     }
 
+    def archivesName = base.archivesName
     from('LICENSE') {
-        rename { "${it}_${base.archivesName.get()}" }
+        rename { "${it}_${archivesName.get()}" }
     }
 }
 
@@ -76,14 +78,20 @@ tasks.register('docs', JavaExec) {
     description = 'Generates the module documentation page.'
 
     def output = layout.buildDirectory.file('docs/index.html')
-    def channel = findProperty('channel') ?: 'stable'
-    inputs.property 'version', version
+    def runDir = layout.buildDirectory.dir('docs-run')
+    def docsVersion = version.toString()
+    def channel = providers.gradleProperty('channel').orElse('stable')
+
+    inputs.property 'version', docsVersion
     inputs.property 'channel', channel
     outputs.file output
 
-    workingDir = layout.buildDirectory.dir('docs-run').get().asFile
-    doFirst { workingDir.mkdirs() }
     classpath = sourceSets.docs.runtimeClasspath
     mainClass = 'org.codeberg.illusionclient.docs.DocsGenerator'
-    args output.get().asFile.path, version, channel
+    workingDir = runDir
+    argumentProviders.add({
+        [output.get().asFile.absolutePath, docsVersion, channel.get()]
+    } as CommandLineArgumentProvider)
+
+    doFirst { runDir.get().asFile.mkdirs() }
 }
