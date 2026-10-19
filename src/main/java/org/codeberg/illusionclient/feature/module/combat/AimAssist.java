@@ -32,6 +32,8 @@ public class AimAssist extends Module {
 	private static final float RESIST_DECAY = 30.0F;
 	private static final long RESIST_COOLDOWN = 1000L;
 	private static final double CLOSE_RANGE = 3.5D;
+	private static final double NOISE_PER_DEGREE = 0.03D;
+	private static final double TARGETING_MARGIN = 0.1D;
 	private final Minecraft minecraft = Minecraft.getInstance();
 
 	@Description("Regular eases in, Linear is steady, Lock-on snaps.")
@@ -50,7 +52,7 @@ public class AimAssist extends Module {
 	@Slider(value = "Horizontal Multipoint", min = 0.0F, max = 100.0F)
 	public float horizontalMultipoint = 0.0F;
 
-	@Description("Pulls vertical aim toward your crosshair. 0 is center.")
+	@Description("Pulls vertical aim toward your crosshair. 0 is eye height.")
 	@Slider(value = "Vertical Multipoint", min = 0.0F, max = 100.0F)
 	public float verticalMultipoint = 0.0F;
 
@@ -120,6 +122,7 @@ public class AimAssist extends Module {
 	private float resist;
 	private float yawRemainder;
 	private float pitchRemainder;
+	private double noiseSeed;
 
 	private static int mouseCounts(float total, float diff, float gcd) {
 		int limit = (int) (diff / gcd);
@@ -218,7 +221,10 @@ public class AimAssist extends Module {
 		pitchRemainder = pitchTotal % gcd;
 		int pitchCounts = mouseCounts(pitchTotal, pitchDiff, gcd);
 		if (mouseMoved) pitchCounts = Math.clamp(pitchCounts, -Math.abs(minecraft.mouse.y), Math.abs(minecraft.mouse.y));
-		if (yawCounts != 0 || pitchCounts != 0) player.updateLocalPlayerCamera(yawCounts * scale, -pitchCounts * scale);
+		if (yawCounts == 0 && pitchCounts == 0) return;
+
+		player.updateLocalPlayerCamera(yawCounts * scale, -pitchCounts * scale);
+		noiseSeed += (Math.abs(yawCounts) + Math.abs(pitchCounts)) * gcd * NOISE_PER_DEGREE;
 	}
 
 	private boolean resisted(float mouseYaw, float yawDiff, float delta) {
@@ -239,6 +245,9 @@ public class AimAssist extends Module {
 		boolean single = targetMode.equals("Single");
 		if (single && target != null && valid(target, yaw, pitch, increasedFov)) return target;
 
+		PlayerEntity hovered = hovered(yaw, pitch);
+		if (hovered != null) return target = hovered;
+
 		String sort = single ? "Aim angle" : sortBy;
 		PlayerEntity best = null;
 		double bestScore = Double.MAX_VALUE;
@@ -252,6 +261,26 @@ public class AimAssist extends Module {
 			}
 		}
 		return target = best;
+	}
+
+	private PlayerEntity hovered(float yaw, float pitch) {
+		LocalClientPlayerEntity self = minecraft.player;
+		Vec3d eye = self.getEyePosition(1.0F);
+		Vec3d look = self.getRotationVector(1.0F);
+		Vec3d end = eye.add(look.x * range[1], look.y * range[1], look.z * range[1]);
+		PlayerEntity closest = null;
+		double closestDistance = Double.MAX_VALUE;
+		for (PlayerEntity player : minecraft.world.players) {
+			if (!valid(player, yaw, pitch, true)) continue;
+
+			Box box = player.getShape().grown(TARGETING_MARGIN, TARGETING_MARGIN, TARGETING_MARGIN);
+			double distance = CombatUtils.distanceTo(player);
+			if (distance < closestDistance && box.clip(eye, end) != null) {
+				closest = player;
+				closestDistance = distance;
+			}
+		}
+		return closest;
 	}
 
 	private boolean active() {
@@ -299,10 +328,9 @@ public class AimAssist extends Module {
 		float near = (float) Math.min(1.0D, CombatUtils.distanceTo(box) / CLOSE_RANGE);
 		float spread = randomization / 100.0F * (0.1F + 0.9F * near);
 		float multipoint = horizontalMultipoint * near;
-		double seed = 0.1D * (eye.x + eye.y + eye.z + (box.minX + box.maxX + box.minY + box.maxY + box.minZ + box.maxZ) / 2.0D);
-		double x = AimPoint.axis(eye.x, (box.minX + box.maxX) / 2.0D, box.minX, box.maxX, multipoint, spread * 0.4F, noise(seed));
-		double y = AimPoint.axis(eye.y, box.minY + target.getEyeHeight(), box.minY, box.maxY, verticalMultipoint, spread * 0.3F, noise(seed + 10000.0D));
-		double z = AimPoint.axis(eye.z, (box.minZ + box.maxZ) / 2.0D, box.minZ, box.maxZ, multipoint, spread * 0.4F, noise(seed + 20000.0D));
+		double x = AimPoint.axis(eye.x, (box.minX + box.maxX) / 2.0D, box.minX, box.maxX, multipoint, spread * 0.4F, noise(noiseSeed));
+		double y = AimPoint.axis(eye.y, box.minY + target.getEyeHeight(), box.minY, box.maxY, verticalMultipoint, spread * 0.3F, noise(noiseSeed + 10000.0D));
+		double z = AimPoint.axis(eye.z, (box.minZ + box.maxZ) / 2.0D, box.minZ, box.maxZ, multipoint, spread * 0.4F, noise(noiseSeed + 20000.0D));
 		return new Vec3d(x, y, z);
 	}
 }
