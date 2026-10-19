@@ -6,6 +6,8 @@
     "LivingEntityMixin"
   ],
   "client": [
+    "ClientChunkCacheAccessor",
+    "ClientChunkCacheMixin",
     "ClientPlayNetworkHandlerMixin",
     "GameGuiMixin",
     "GameRendererMixin",
@@ -17,6 +19,7 @@
     "PacketUtilsMixin",
     "RemoteClientPlayerEntityAccessor",
     "ScreenInvoker",
+    "WorldChunkMixin",
     "compat.FreelookHandlerMixin"
   ],
   "injectors": {

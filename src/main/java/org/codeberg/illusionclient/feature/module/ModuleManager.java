@@ -26,6 +26,7 @@ import org.codeberg.illusionclient.feature.module.player.AutoTool;
 import org.codeberg.illusionclient.feature.module.player.BridgeAssist;
 import org.codeberg.illusionclient.feature.module.player.FastPlace;
 import org.codeberg.illusionclient.feature.module.visual.AntiDebuff;
+import org.codeberg.illusionclient.feature.module.visual.Bedplates;
 import org.codeberg.illusionclient.feature.module.visual.Esp;
 import org.codeberg.illusionclient.feature.module.visual.ModOverlay;
 import org.codeberg.illusionclient.feature.ui.ClickGui;
@@ -61,6 +62,7 @@ public final class ModuleManager {
 			new BridgeAssist(),
 			new FastPlace(),
 			new AntiDebuff(),
+			new Bedplates(),
 			new Esp(),
 			new ModOverlay()
 		));

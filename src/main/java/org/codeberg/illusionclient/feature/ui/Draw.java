@@ -105,6 +105,37 @@ public final class Draw {
 		fan(shapes(), x + width / 2.0F, y + height / 2.0F, 0, OUTLINE_POINTS, color);
 	}
 
+	public static void roundedOutline(int x, int y, int width, int height, float radius, float thickness, int color) {
+		radius = Math.min(radius, Math.min(width, height) / 2.0F);
+		if (radius <= 0.0F) {
+			fill(x - thickness, y - thickness, x + width + thickness, y, color);
+			fill(x - thickness, y + height, x + width + thickness, y + height + thickness, color);
+			fill(x - thickness, y, x, y + height, color);
+			fill(x + width, y, x + width + thickness, y + height, color);
+			return;
+		}
+
+		float left = x + radius, right = x + width - radius;
+		float top = y + radius, bottom = y + height - radius;
+		float outer = radius + thickness;
+		BufferBuilder buffer = shapes();
+		for (int from = 0; from < OUTLINE_POINTS; from++) {
+			int to = (from + 1) % OUTLINE_POINTS;
+			float fromX = from / ARC_POINTS == 1 || from / ARC_POINTS == 2 ? left : right;
+			float fromY = from / ARC_POINTS < 2 ? top : bottom;
+			float toX = to / ARC_POINTS == 1 || to / ARC_POINTS == 2 ? left : right;
+			float toY = to / ARC_POINTS < 2 ? top : bottom;
+
+			vertex(buffer, fromX + COS[from] * radius, fromY - SIN[from] * radius, color);
+			vertex(buffer, fromX + COS[from] * outer, fromY - SIN[from] * outer, color);
+			vertex(buffer, toX + COS[to] * outer, toY - SIN[to] * outer, color);
+
+			vertex(buffer, fromX + COS[from] * radius, fromY - SIN[from] * radius, color);
+			vertex(buffer, toX + COS[to] * outer, toY - SIN[to] * outer, color);
+			vertex(buffer, toX + COS[to] * radius, toY - SIN[to] * radius, color);
+		}
+	}
+
 	public static void fill(float left, float top, float right, float bottom, int color) {
 		fill(left, top, right, bottom, color, color);
 	}
