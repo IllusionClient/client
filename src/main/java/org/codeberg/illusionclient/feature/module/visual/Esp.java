@@ -9,6 +9,7 @@ import net.minecraft.client.render.FrustumData;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.platform.GlStateManager;
 import net.minecraft.entity.living.player.PlayerEntity;
+import net.minecraft.text.Formatting;
 import org.codeberg.illusionclient.event.Render2DEvent;
 import org.codeberg.illusionclient.event.Render3DEvent;
 import org.codeberg.illusionclient.event.WorldLoadEvent;
@@ -22,6 +23,7 @@ import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 import org.codeberg.illusionclient.feature.ui.Draw;
 import org.codeberg.illusionclient.util.ColorUtils;
+import org.codeberg.illusionclient.util.PlayerUtils;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -43,6 +45,11 @@ public class Esp extends Module {
 	@Requires("box")
 	@ColorPicker("Box Color")
 	public Color boxColor = new Color(0x74C3FF);
+
+	@Description("Colors the box with the player's nametag color.")
+	@Requires("box")
+	@Check("Team Color")
+	public boolean teamColor = false;
 
 	@Description("Draws an armor bar below the box.")
 	@Check("Armor Bar")
@@ -192,7 +199,7 @@ public class Esp extends Module {
 
 			if (box) {
 				outline(left, top, right, bottom, 3.0F, OUTLINE);
-				outline(left + 1, top + 1, right - 1, bottom - 1, 1.0F, boxRgb);
+				outline(left + 1, top + 1, right - 1, bottom - 1, 1.0F, teamColor ? teamColor(player, boxRgb) : boxRgb);
 			}
 		}
 		Draw.flush();
@@ -243,6 +250,18 @@ public class Esp extends Module {
 		boolean firstPerson = minecraft.options.perspective == 0;
 		if (player == minecraft.player) return self && !firstPerson;
 		return !firstPerson || player.distanceTo(minecraft.player) >= 1.0F;
+	}
+
+	private static int teamColor(PlayerEntity player, int fallback) {
+		Formatting color = PlayerUtils.nametagColor(player);
+		if (color == null) return fallback;
+
+		int id = color.getId();
+		int light = (id >> 3 & 1) * 85;
+		int red = (id >> 2 & 1) * 170 + light + (id == 6 ? 85 : 0);
+		int green = (id >> 1 & 1) * 170 + light;
+		int blue = (id & 1) * 170 + light;
+		return 0xFF000000 | red << 16 | green << 8 | blue;
 	}
 
 	private int pulse(int color) {

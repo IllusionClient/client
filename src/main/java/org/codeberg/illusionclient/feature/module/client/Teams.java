@@ -10,6 +10,7 @@ import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
+import org.codeberg.illusionclient.util.PlayerUtils;
 
 @Description("Decides which players count as teammates.")
 @ModuleInfo(name = "Teams", category = Category.CLIENT)
@@ -39,9 +40,9 @@ public class Teams extends Module {
 		Formatting teamColor = teams.teamColor();
 		if (teamColor == null && !teams.matchOwnNametag) return false;
 
-		Formatting color = nametagColor(player);
+		Formatting color = PlayerUtils.nametagColor(player);
 		if (color == null) return false;
-		if (teams.matchOwnNametag && color == nametagColor(Minecraft.getInstance().player)) return true;
+		if (teams.matchOwnNametag && color == PlayerUtils.nametagColor(Minecraft.getInstance().player)) return true;
 
 		return color == teamColor;
 	}
@@ -52,22 +53,6 @@ public class Teams extends Module {
 			teamColor = Formatting.byName(colors);
 		}
 		return teamColor;
-	}
-
-	private static Formatting nametagColor(PlayerEntity player) {
-		String display = player.getDisplayName().getFormattedString();
-		int nameStart = display.indexOf(player.getName());
-
-		Formatting color = null;
-		for (int i = 0; i + 1 < nameStart; i++) {
-			if (display.charAt(i) != '§') continue;
-
-			char code = Character.toLowerCase(display.charAt(++i));
-			int id = Character.digit(code, 16);
-			if (id >= 0) color = Formatting.byId(id);
-			else if (code == 'r') color = null;
-		}
-		return color;
 	}
 
 	@Override
