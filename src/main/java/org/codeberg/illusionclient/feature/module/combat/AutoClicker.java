@@ -6,6 +6,7 @@ import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.game.inventory.InventoryMenuScreen;
 import net.minecraft.client.options.KeyBinding;
+import org.codeberg.illusionclient.IllusionClient;
 import org.codeberg.illusionclient.event.PlayerTickEvent;
 import org.codeberg.illusionclient.event.Render3DEvent;
 import org.codeberg.illusionclient.event.ScreenInputEvent;
@@ -143,13 +144,8 @@ public class AutoClicker extends Module {
 		MouseUtils.resync();
 	}
 
-	private boolean attackHeld() {
-		int key = minecraft.options.attackKey.getKeyCode();
-		return key < 0 ? Mouse.isButtonDown(key + 100) : minecraft.options.attackKey.isPressed();
-	}
-
 	private boolean activeInGame(LocalClientPlayerEntity player) {
-		if (!attackHeld() || !player.isAlive()) return false;
+		if (!IllusionClient.INPUT.held(minecraft.options.attackKey) || !player.isAlive()) return false;
 		if (!Weapons.isWeapons(player.getItemInHand())) return false;
 		if (notUsingItem && player.getItemInUse() != null) return false;
 		return !allowBreakingBlocks || !PlayerUtils.aimingAtBlock();

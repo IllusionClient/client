@@ -6,12 +6,16 @@ import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 public final class MoveUtils {
 	public static double[] inputDirection(LocalClientPlayerEntity player) {
 		Input input = player.input;
-		double yaw = Math.toRadians(player.yaw);
-		double sin = Math.sin(yaw);
-		double cos = Math.cos(yaw);
+		return inputDirection(player.yaw, input.movementForward, input.movementSideways);
+	}
+
+	public static double[] inputDirection(float yaw, float forward, float sideways) {
+		double radians = Math.toRadians(yaw);
+		double sin = Math.sin(radians);
+		double cos = Math.cos(radians);
 		return new double[]{
-			input.movementSideways * cos - input.movementForward * sin,
-			input.movementForward * cos + input.movementSideways * sin
+			sideways * cos - forward * sin,
+			forward * cos + sideways * sin
 		};
 	}
 }

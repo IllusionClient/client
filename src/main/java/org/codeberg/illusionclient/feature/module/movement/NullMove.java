@@ -1,9 +1,9 @@
 package org.codeberg.illusionclient.feature.module.movement;
 
 import io.github.nevalackin.radbus.Listen;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.options.GameOptions;
-import org.codeberg.illusionclient.event.MoveInputEvent;
+import org.codeberg.illusionclient.IllusionClient;
+import org.codeberg.illusionclient.event.InputEvent;
+import org.codeberg.illusionclient.feature.input.InputState;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
@@ -12,8 +12,6 @@ import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 @ModuleInfo(name = "Null Move", category = Category.MOVEMENT)
 @Description("Opposite keys move you toward the last one pressed (SOCD).")
 public class NullMove extends Module {
-	private final Minecraft minecraft = Minecraft.getInstance();
-
 	private final Axis forward = new Axis();
 	private final Axis sideways = new Axis();
 
@@ -24,10 +22,15 @@ public class NullMove extends Module {
 	}
 
 	@Listen
-	public void onMoveInput(MoveInputEvent event) {
-		GameOptions options = minecraft.options;
-		event.forward = forward.resolve(options.forwardKey.isPressed(), options.backKey.isPressed());
-		event.sideways = sideways.resolve(options.leftKey.isPressed(), options.rightKey.isPressed());
+	public void onInput(InputEvent event) {
+		InputState player = IllusionClient.INPUT.player;
+		InputState client = IllusionClient.INPUT.client;
+		float forward = this.forward.resolve(player.forward, player.back);
+		float sideways = this.sideways.resolve(player.left, player.right);
+		client.forward = forward > 0.0F;
+		client.back = forward < 0.0F;
+		client.left = sideways > 0.0F;
+		client.right = sideways < 0.0F;
 	}
 
 	private static final class Axis {

@@ -2,15 +2,16 @@ package org.codeberg.illusionclient.feature.module.player;
 
 import io.github.nevalackin.radbus.Listen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.living.player.Input;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.entity.living.player.PlayerInventory;
 import net.minecraft.util.math.Box;
-import org.codeberg.illusionclient.event.SneakEvent;
+import org.codeberg.illusionclient.IllusionClient;
+import org.codeberg.illusionclient.event.InputEvent;
 import org.codeberg.illusionclient.event.UseItemEvent;
 import org.codeberg.illusionclient.feature.config.api.Check;
 import org.codeberg.illusionclient.feature.config.api.Combo;
 import org.codeberg.illusionclient.feature.config.api.Slider;
+import org.codeberg.illusionclient.feature.input.InputState;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
@@ -97,10 +98,10 @@ public class BridgeAssist extends Module {
 	}
 
 	@Listen
-	public void onSneak(SneakEvent event) {
+	public void onInput(InputEvent event) {
 		LocalClientPlayerEntity player = minecraft.player;
 		PlayerInventory inventory = player.inventory;
-		boolean active = active(player, event.sneaking);
+		boolean active = active(player);
 
 		boolean depleted = inventory.getSelectedItem() == null && inventory.selectedSlot == blockSlot;
 		if (active && !ItemUtils.isBlock(inventory.getSelectedItem())
@@ -124,13 +125,14 @@ public class BridgeAssist extends Module {
 		offset = edgeOffset / 100.0F * (1.0F - spread * 0.3F);
 		edge = player.onGround && overEdge(player);
 		if (!edge) placed = false;
-		boolean jump = sneakOnJump && (player.input.jumping || !player.onGround);
+		boolean jump = sneakOnJump && (IllusionClient.INPUT.player.jump || !player.onGround);
 		if (edge || jump) unsneakTicks = Math.max(1, Math.round(unsneakDelay * (1.0F + spread * 0.5F) / MS_PER_TICK));
 
 		boolean sneak = edge || jump || unsneakTicks-- > 0;
 		if (sneaking && !sneak) jitter = random.nextFloat();
 		sneaking = sneak;
-		event.sneaking = sneak || !sneakKeyPressed && event.sneaking;
+		InputState client = IllusionClient.INPUT.client;
+		client.sneak = sneak || !sneakKeyPressed && client.sneak;
 	}
 
 	@Listen
@@ -155,17 +157,20 @@ public class BridgeAssist extends Module {
 		}
 	}
 
-	private boolean active(LocalClientPlayerEntity player, boolean sneakKey) {
+	private boolean active(LocalClientPlayerEntity player) {
+		InputState input = IllusionClient.INPUT.player;
 		if (minecraft.screen != null) return false;
-		if (sneakKeyPressed && !sneakKey) return false;
+		if (sneakKeyPressed && !input.sneak) return false;
 		if (lookingDown && player.pitch < LOOKING_DOWN_PITCH) return false;
-		return !notMovingForward || player.input.movementForward <= 0.0F;
+		return !notMovingForward || !input.forward;
 	}
 
 	private boolean overEdge(LocalClientPlayerEntity player) {
-		Input input = player.input;
-		double acceleration = player.getSpeed() / Math.max(1.0D, Math.hypot(input.movementForward, input.movementSideways));
-		double[] direction = MoveUtils.inputDirection(player);
+		InputState input = IllusionClient.INPUT.client;
+		float forward = input.forwardAxis();
+		float sideways = input.sidewaysAxis();
+		double acceleration = player.getSpeed() / Math.max(1.0D, Math.hypot(forward, sideways));
+		double[] direction = MoveUtils.inputDirection(player.yaw, forward, sideways);
 		return unsupported(player, player.velocityX + direction[0] * acceleration, player.velocityZ + direction[1] * acceleration);
 	}
 

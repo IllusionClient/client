@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.codeberg.illusionclient.event.Event;
 import org.codeberg.illusionclient.feature.config.ConfigManager;
+import org.codeberg.illusionclient.feature.input.InputManager;
 import org.codeberg.illusionclient.feature.module.ModuleManager;
 
 public final class IllusionClient {
@@ -16,8 +17,10 @@ public final class IllusionClient {
 	public static final PubSub<Event> BUS = PubSub.newInstance(LOGGER::error);
 	public static ModuleManager MODULES;
 	public static ConfigManager CONFIG;
+	public static InputManager INPUT;
 
 	public static void init() {
+		INPUT = new InputManager();
 		MODULES = new ModuleManager();
 		CONFIG = new ConfigManager();
 
