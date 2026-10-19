@@ -22,6 +22,7 @@ import org.codeberg.illusionclient.feature.module.combat.Weapons;
 import org.codeberg.illusionclient.feature.module.movement.NullMove;
 import org.codeberg.illusionclient.feature.module.movement.NoJumpDelay;
 import org.codeberg.illusionclient.feature.module.movement.Sprint;
+import org.codeberg.illusionclient.feature.module.player.AutoTool;
 import org.codeberg.illusionclient.feature.module.player.BridgeAssist;
 import org.codeberg.illusionclient.feature.module.player.FastPlace;
 import org.codeberg.illusionclient.feature.module.visual.AntiDebuff;
@@ -35,6 +36,7 @@ import java.util.List;
 public final class ModuleManager {
 	public final List<Module> modules = builtIn();
 	private final Reference2ObjectMap<Class<?>, Module> byType = new Reference2ObjectOpenHashMap<>();
+	private Module slotOwner;
 
 	public ModuleManager() {
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) modules.add(new TestModule());
@@ -55,6 +57,7 @@ public final class ModuleManager {
 			new NoJumpDelay(),
 			new NullMove(),
 			new Sprint(),
+			new AutoTool(),
 			new BridgeAssist(),
 			new FastPlace(),
 			new AntiDebuff(),
@@ -67,6 +70,16 @@ public final class ModuleManager {
 		Module module = byType.get(type);
 		if (module == null) throw new IllegalArgumentException("Unregistered module " + type.getName());
 		return type.cast(module);
+	}
+
+	public boolean claimSlot(Module module) {
+		if (slotOwner != null && slotOwner != module) return false;
+		slotOwner = module;
+		return true;
+	}
+
+	public void releaseSlot(Module module) {
+		if (slotOwner == module) slotOwner = null;
 	}
 
 	@Listen
