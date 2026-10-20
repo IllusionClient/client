@@ -7,6 +7,7 @@ import org.codeberg.illusionclient.event.Event;
 import org.codeberg.illusionclient.feature.config.ConfigManager;
 import org.codeberg.illusionclient.feature.input.InputManager;
 import org.codeberg.illusionclient.feature.module.ModuleManager;
+import org.codeberg.illusionclient.feature.stats.Statistics;
 
 public final class IllusionClient {
 	public static final String ID = "illusion";
@@ -18,13 +19,16 @@ public final class IllusionClient {
 	public static ModuleManager MODULES;
 	public static ConfigManager CONFIG;
 	public static InputManager INPUT;
+	public static Statistics STATS;
 
 	public static void init() {
 		INPUT = new InputManager();
+		STATS = new Statistics();
 		MODULES = new ModuleManager();
 		CONFIG = new ConfigManager();
 
 		CONFIG.load();
+		BUS.subscribe(STATS);
 		Runtime.getRuntime().addShutdownHook(new Thread(CONFIG::save));
 	}
 }

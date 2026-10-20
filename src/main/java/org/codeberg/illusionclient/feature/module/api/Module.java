@@ -65,6 +65,7 @@ public abstract class Module {
 	}
 
 	public final void toggle() {
+		IllusionClient.STATS.toggled(this);
 		setEnabled(!enabled);
 	}
 

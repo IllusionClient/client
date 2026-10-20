@@ -4,8 +4,8 @@ import org.codeberg.illusionclient.feature.config.api.Option;
 import org.codeberg.illusionclient.feature.ui.Draw;
 
 public class CheckComponent extends OptionComponent {
-	private static final int SWITCH_WIDTH = 24;
-	private static final int SWITCH_HEIGHT = 12;
+	public static final int SWITCH_WIDTH = 24;
+	public static final int SWITCH_HEIGHT = 12;
 	private static final int KNOB = SWITCH_HEIGHT - 4;
 
 	public CheckComponent(Option option) {
@@ -16,13 +16,18 @@ public class CheckComponent extends OptionComponent {
 	public void render(int mouseX, int mouseY) {
 		row(option.name, mouseX, mouseY);
 
-		boolean checked = option.getBoolean();
-		int switchX = right() - SWITCH_WIDTH;
-		int switchY = y + (HEIGHT - SWITCH_HEIGHT) / 2;
-		int knobX = checked ? switchX + SWITCH_WIDTH - KNOB - 2 : switchX + 2;
+		drawSwitch(right() - SWITCH_WIDTH, y + (HEIGHT - SWITCH_HEIGHT) / 2, option.getBoolean());
+	}
 
-		Draw.rounded(switchX, switchY, SWITCH_WIDTH, SWITCH_HEIGHT, SWITCH_HEIGHT / 2.0F, checked ? Draw.accent().getRGB() : Draw.TRACK);
-		Draw.rounded(knobX, switchY + 2, KNOB, KNOB, KNOB / 2.0F, checked ? -1 : Draw.MUTED);
+	public static void drawSwitch(int x, int y, boolean checked) {
+		int knobX = checked ? x + SWITCH_WIDTH - KNOB - 2 : x + 2;
+		if (checked) {
+			Draw.rounded(x, y, SWITCH_WIDTH, SWITCH_HEIGHT, SWITCH_HEIGHT / 2.0F, Draw.accent().getRGB());
+		} else {
+			Draw.rounded(x, y, SWITCH_WIDTH, SWITCH_HEIGHT, SWITCH_HEIGHT / 2.0F, Draw.FAINT);
+			Draw.rounded(x + 1, y + 1, SWITCH_WIDTH - 2, SWITCH_HEIGHT - 2, SWITCH_HEIGHT / 2.0F - 1, Draw.CONTAINER_HIGHEST);
+		}
+		Draw.rounded(knobX, y + 2, KNOB, KNOB, KNOB / 2.0F, checked ? Draw.ON_ACCENT : Draw.FAINT);
 	}
 
 	@Override

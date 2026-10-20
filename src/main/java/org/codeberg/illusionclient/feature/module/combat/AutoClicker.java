@@ -107,6 +107,7 @@ public class AutoClicker extends Module {
 		for (; inventoryClicks > 0; inventoryClicks--) {
 			invoker.illusion$mouseClicked(x, y, 0);
 			invoker.illusion$mouseReleased(x, y, 0);
+			IllusionClient.STATS.autoClicks++;
 		}
 	}
 
@@ -130,6 +131,7 @@ public class AutoClicker extends Module {
 			inventoryClicks += pattern.presses();
 			return;
 		}
+		IllusionClient.STATS.autoClicks += pattern.presses();
 
 		int key = minecraft.options.attackKey.getKeyCode();
 		if (key < 0) {

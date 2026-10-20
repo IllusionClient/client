@@ -24,7 +24,7 @@ public class SliderComponent extends OptionComponent {
 
 	@Override
 	protected boolean hovered(int mouseX, int mouseY) {
-		return mouseX >= x && mouseX < x + WIDTH && mouseY >= y && mouseY < y + height();
+		return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height();
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.List;
 
 public abstract class Group extends Component {
 	protected final List<Component> children = new ObjectArrayList<>();
+	private final List<Component> visible = new ObjectArrayList<>();
 	protected boolean open;
 
 	protected abstract void renderHeader(int mouseX, int mouseY);
@@ -13,7 +14,11 @@ public abstract class Group extends Component {
 	protected abstract void headerClicked(int mouseX, int mouseY, int button);
 
 	private List<Component> visibleChildren() {
-		return children.stream().filter(Component::visible).toList();
+		visible.clear();
+		for (Component child : children) {
+			if (child.visible()) visible.add(child);
+		}
+		return visible;
 	}
 
 	protected final float headerRadius() {
@@ -39,9 +44,7 @@ public abstract class Group extends Component {
 		List<Component> visible = visibleChildren();
 		int childY = y + HEIGHT;
 		for (Component child : visible) {
-			child.x = x;
-			child.y = childY;
-			child.bottom = bottom && child == visible.getLast();
+			child.place(x, childY, width, bottom && child == visible.getLast());
 			child.render(mouseX, mouseY);
 			childY += child.height();
 		}
@@ -52,8 +55,6 @@ public abstract class Group extends Component {
 		if (hovered(mouseX, mouseY)) {
 			headerClicked(mouseX, mouseY, button);
 		} else if (open) {
-			// A click can reveal an option that still sits where it was last drawn,
-			// so only the children visible before the click receive it.
 			for (Component child : visibleChildren()) child.mouseClicked(mouseX, mouseY, button);
 		}
 	}

@@ -20,4 +20,8 @@ The jar is written to `build/libs/`.
 
 ![Screenshot](.forgejo/assets/preview.png)
 
+## Credits
+
+- [Inter](https://rsms.me/inter/). Used under [OFL](licenses/Inter-OFL.txt).
+
 ---

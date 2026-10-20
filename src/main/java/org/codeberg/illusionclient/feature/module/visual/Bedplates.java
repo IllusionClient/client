@@ -62,16 +62,10 @@ import java.util.List;
 @Description("Shows the blocks defending each bed.")
 @ModuleInfo(name = "Bedplates", category = Category.VISUAL)
 public class Bedplates extends Module {
-	private static final int BED = Block.getId(Blocks.BED);
 	private static final int FACING_BITS = 3;
 	private static final int OCCUPIED_BIT = 4;
 	private static final int HEAD_BIT = 8;
 	private static final int HEAD_MASK = ~(FACING_BITS | OCCUPIED_BIT);
-	private static final int BED_HEAD = BlockUtils.state(BED, HEAD_BIT);
-	private static final int FLOWING_WATER = Block.getId(Blocks.FLOWING_WATER);
-	private static final int WATER = Block.getId(Blocks.WATER);
-	private static final int FLOWING_LAVA = Block.getId(Blocks.FLOWING_LAVA);
-	private static final int LAVA = Block.getId(Blocks.LAVA);
 	private static final int[] FACING_X = {0, -1, 0, 1};
 	private static final int[] FACING_Z = {1, 0, -1, 0};
 	private static final int[] STEP_X = {1, -1, 0, 0, 0, 0};
@@ -80,7 +74,6 @@ public class Bedplates extends Module {
 	private static final int UP = 4;
 	private static final int DOWN = 5;
 	private static final byte NEVER = 0, ALWAYS = 1, NOT_BELOW = 2, SIDES = 3;
-	private static final byte[] EXPOSURE = new byte[4096];
 	private static final int OUTLINE = 0x96000000;
 	private static final ItemStack[] NONE = new ItemStack[0];
 	private static final int ICON = 16;
@@ -108,10 +101,6 @@ public class Bedplates extends Module {
 	@Description("The plate border when a bed face is exposed.")
 	@ColorPicker("Exposed Color")
 	public Color exposedColor = new Color(0x80EF7E);
-
-	static {
-		for (int id = 0; id < EXPOSURE.length; id++) EXPOSURE[id] = exposure(Block.byId(id));
-	}
 
 	@Override
 	public void onEnable() {
@@ -210,7 +199,7 @@ public class Bedplates extends Module {
 			int y = bed.plateY = Math.round(bed.screenY / scale) - plateHeight;
 			int border = bed.exposed ? exposedColor.getRGB() : OUTLINE;
 
-			Draw.rounded(x, y, width, plateHeight, cornerRadius, Draw.BACKGROUND);
+			Draw.rounded(x, y, width, plateHeight, cornerRadius, Draw.HUD_BACKGROUND);
 			Draw.roundedOutline(x, y, width, plateHeight, cornerRadius, 1.0F, border);
 		}
 		Draw.flush();
@@ -233,11 +222,11 @@ public class Bedplates extends Module {
 	}
 
 	private static boolean isHead(int state) {
-		return (state & HEAD_MASK) == BED_HEAD;
+		return (state & HEAD_MASK) == Lookup.BED_HEAD;
 	}
 
 	private void scan(WorldChunk chunk) {
-		BlockUtils.scan(chunk, HEAD_MASK, BED_HEAD, this::add);
+		BlockUtils.scan(chunk, HEAD_MASK, Lookup.BED_HEAD, this::add);
 	}
 
 	private void add(int x, int y, int z, int state) {
@@ -259,8 +248,8 @@ public class Bedplates extends Module {
 			int state = BlockUtils.state(world, columnX, y, columnZ);
 			int id = BlockUtils.id(state);
 			if (id == 0) break;
-			if (id == FLOWING_WATER) id = WATER;
-			else if (id == FLOWING_LAVA) id = LAVA;
+			if (id == Lookup.FLOWING_WATER) id = Lookup.WATER;
+			else if (id == Lookup.FLOWING_LAVA) id = Lookup.LAVA;
 			if (skipNonFull && !Block.byId(id).isCube()) continue;
 
 			ItemStack stack = icon(id, state);
@@ -274,7 +263,7 @@ public class Bedplates extends Module {
 	private static boolean exposed(World world, int x, int y, int z) {
 		for (int face = 0; face < 6; face++) {
 			int id = BlockUtils.id(BlockUtils.state(world, x + STEP_X[face], y + STEP_Y[face], z + STEP_Z[face]));
-			switch (EXPOSURE[id]) {
+			switch (Lookup.EXPOSURE[id]) {
 				case ALWAYS -> {
 					return true;
 				}
@@ -304,8 +293,8 @@ public class Bedplates extends Module {
 	}
 
 	private static ItemStack icon(int id, int state) {
-		if (id == WATER) return new ItemStack(Items.WATER_BUCKET);
-		if (id == LAVA) return new ItemStack(Items.LAVA_BUCKET);
+		if (id == Lookup.WATER) return new ItemStack(Items.WATER_BUCKET);
+		if (id == Lookup.LAVA) return new ItemStack(Items.LAVA_BUCKET);
 
 		Item item = Item.byBlock(Block.byId(id));
 		if (item == null) return null;
@@ -328,6 +317,19 @@ public class Bedplates extends Module {
 			this.z = z;
 			this.footX = x - FACING_X[facing];
 			this.footZ = z - FACING_Z[facing];
+		}
+	}
+
+	private static final class Lookup {
+		static final byte[] EXPOSURE = new byte[4096];
+		static final int BED_HEAD = BlockUtils.state(Block.getId(Blocks.BED), HEAD_BIT);
+		static final int FLOWING_WATER = Block.getId(Blocks.FLOWING_WATER);
+		static final int WATER = Block.getId(Blocks.WATER);
+		static final int FLOWING_LAVA = Block.getId(Blocks.FLOWING_LAVA);
+		static final int LAVA = Block.getId(Blocks.LAVA);
+
+		static {
+			for (int id = 0; id < EXPOSURE.length; id++) EXPOSURE[id] = exposure(Block.byId(id));
 		}
 	}
 }

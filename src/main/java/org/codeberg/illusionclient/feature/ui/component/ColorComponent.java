@@ -6,7 +6,6 @@ import org.codeberg.illusionclient.feature.ui.Draw;
 import java.awt.*;
 
 public class ColorComponent extends OptionComponent {
-	private static final int BOX_WIDTH = WIDTH - PADDING * 3;
 	private static final int BOX_HEIGHT = 80;
 	private static final int HUE_HEIGHT = 12;
 	private static final int HUE_SEGMENTS = 6;
@@ -40,13 +39,14 @@ public class ColorComponent extends OptionComponent {
 	public void render(int mouseX, int mouseY) {
 		int boxX = left();
 		int boxY = y + HEIGHT;
+		int boxWidth = right() - left();
 		int hueY = boxY + BOX_HEIGHT + PADDING;
 
 		if (draggingBox) {
-			hsb[1] = fraction(mouseX - boxX - BOX_RADIUS, BOX_WIDTH - BOX_RADIUS * 2);
+			hsb[1] = fraction(mouseX - boxX - BOX_RADIUS, boxWidth - BOX_RADIUS * 2);
 			hsb[2] = 1.0F - fraction(mouseY - boxY - BOX_RADIUS, BOX_HEIGHT - BOX_RADIUS * 2);
 		} else if (draggingHue) {
-			hsb[0] = fraction(mouseX - boxX - HUE_RADIUS, BOX_WIDTH - HUE_RADIUS * 2);
+			hsb[0] = fraction(mouseX - boxX - HUE_RADIUS, boxWidth - HUE_RADIUS * 2);
 		}
 		if (draggingBox || draggingHue) option.set(new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2])));
 
@@ -55,13 +55,13 @@ public class ColorComponent extends OptionComponent {
 		if (!open) return;
 
 		int hue = Color.HSBtoRGB(hsb[0], 1.0F, 1.0F);
-		Draw.roundedGradient(boxX, boxY, BOX_WIDTH, BOX_HEIGHT - BOX_RADIUS, BOX_RADIUS, 0.0F, -1, hue, -1, hue);
-		Draw.roundedGradient(boxX, boxY, BOX_WIDTH, BOX_HEIGHT, BOX_RADIUS, BOX_RADIUS, 0, 0, 0xFF000000, 0xFF000000);
-		cursor(boxX + BOX_RADIUS + (int) (hsb[1] * (BOX_WIDTH - BOX_RADIUS * 2)),
+		Draw.roundedGradient(boxX, boxY, boxWidth, BOX_HEIGHT - BOX_RADIUS, BOX_RADIUS, 0.0F, -1, hue, -1, hue);
+		Draw.roundedGradient(boxX, boxY, boxWidth, BOX_HEIGHT, BOX_RADIUS, BOX_RADIUS, 0, 0, 0xFF000000, 0xFF000000);
+		cursor(boxX + BOX_RADIUS + (int) (hsb[1] * (boxWidth - BOX_RADIUS * 2)),
 			boxY + BOX_RADIUS + (int) ((1.0F - hsb[2]) * (BOX_HEIGHT - BOX_RADIUS * 2)), option.<Color>get().getRGB());
 
 		int hueX = boxX + HUE_RADIUS;
-		int hueWidth = BOX_WIDTH - HUE_RADIUS * 2;
+		int hueWidth = boxWidth - HUE_RADIUS * 2;
 		Draw.rounded(boxX, hueY, HUE_HEIGHT, HUE_HEIGHT, HUE_RADIUS, 0xFFFF0000);
 		Draw.rounded(boxX + hueWidth, hueY, HUE_HEIGHT, HUE_HEIGHT, HUE_RADIUS, 0xFFFF0000);
 		for (int i = 0; i < HUE_SEGMENTS; i++) {

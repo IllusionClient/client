@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -34,23 +35,32 @@ public final class DocsGenerator {
 		}
 		byCategory.values().forEach(modules -> modules.sort(Comparator.comparing(module -> module.name)));
 
+		StringBuilder icons = new StringBuilder();
+		for (String icon : List.of("logo", "search")) icons.append(icon(icon));
 		StringBuilder nav = new StringBuilder();
 		StringBuilder body = new StringBuilder();
-		byCategory.forEach((category, modules) -> {
+		for (Map.Entry<Category, List<Module>> entry : byCategory.entrySet()) {
+			Category category = entry.getKey();
+			List<Module> modules = entry.getValue();
 			String title = title(category);
 			String id = category.name().toLowerCase(Locale.ROOT);
-			nav.append("<div class=\"frame\">\n<a class=\"frame-head\" href=\"#").append(id).append("\">").append(title).append("</a>\n");
+			icons.append(icon(id));
+			nav.append("<div class=\"group\">\n<a class=\"entry category\" href=\"#").append(id).append("\"><span class=\"icon\" style=\"--icon: var(--icon-").append(id).append(")\"></span>")
+				.append(title).append("<span class=\"count\">").append(modules.size()).append("</span></a>\n");
 			body.append("<section class=\"category\" id=\"").append(id).append("\">\n")
-				.append("<h2>").append(title).append("</h2>\n");
+				.append("<h2><span class=\"icon\" style=\"--icon: var(--icon-").append(id).append(")\"></span>").append(title).append("</h2>\n");
 			for (Module module : modules) {
-				nav.append("<a href=\"#").append(module.key).append("\">").append(escape(module.name)).append("</a>\n");
+				nav.append("<a class=\"entry\" href=\"#").append(module.key).append("\">").append(escape(module.name)).append("</a>\n");
 				module(body, module);
 			}
 			nav.append("</div>\n");
 			body.append("</section>\n");
-		});
+		}
+		int count = byCategory.values().stream().mapToInt(List::size).sum();
 
 		String page = template()
+			.replace("{{icons}}", icons)
+			.replace("{{count}}", String.valueOf(count))
 			.replace("{{version}}", escape(version))
 			.replace("{{stable}}", channel.equals("stable") ? " class=\"active\"" : "")
 			.replace("{{nightly}}", channel.equals("nightly") ? " class=\"active\"" : "")
@@ -62,11 +72,11 @@ public final class DocsGenerator {
 
 	private static void module(StringBuilder out, Module module) {
 		out.append("<article class=\"module\" id=\"").append(module.key).append("\">\n")
-			.append("<h3><a href=\"#").append(module.key).append("\">").append(escape(module.name)).append("</a></h3>\n")
-			.append(description(module.description)).append('\n');
+			.append("<header class=\"module-head\">\n<div>\n<h3><a href=\"#").append(module.key).append("\">").append(escape(module.name)).append("</a></h3>\n")
+			.append(description(module.description)).append("\n</div>\n</header>\n");
 
 		if (module.options.isEmpty()) {
-			out.append("<p class=\"none\">No settings.</p>\n</article>\n");
+			out.append("</article>\n");
 			return;
 		}
 
@@ -76,9 +86,18 @@ public final class DocsGenerator {
 			out.append("<div class=\"setting\" data-search=\"").append(escape((option.name + " " + text(option.description)).toLowerCase(Locale.ROOT))).append("\">\n")
 				.append("<h4>").append(escape(option.name)).append("</h4>").append(description(option.description));
 			if (requires != null) out.append("<p class=\"requires\">").append(requirement(module, requires)).append("</p>");
-			out.append("</div>\n");
+			out.append("\n</div>\n");
 		}
 		out.append("</div>\n</article>\n");
+	}
+
+	private static String list(String[] values) {
+		StringBuilder out = new StringBuilder();
+		for (int i = 0; i < values.length; i++) {
+			if (i > 0) out.append(i == values.length - 1 ? " or " : ", ");
+			out.append("<em>").append(escape(values[i])).append("</em>");
+		}
+		return out.toString();
 	}
 
 	private static String description(Description description) {
@@ -103,13 +122,7 @@ public final class DocsGenerator {
 		Option required = module.options.stream().filter(option -> option.key.equals(requires.value())).findFirst().orElseThrow();
 		String name = "<strong>" + escape(required.name) + "</strong>";
 		if (requires.is().length == 0) return "Shown when " + name + " is on.";
-
-		StringBuilder values = new StringBuilder();
-		for (int i = 0; i < requires.is().length; i++) {
-			if (i > 0) values.append(i == requires.is().length - 1 ? " or " : ", ");
-			values.append("<em>").append(escape(requires.is()[i])).append("</em>");
-		}
-		return "Shown when " + name + " is " + values + ".";
+		return "Shown when " + name + " is " + list(requires.is()) + ".";
 	}
 
 	private static String title(Category category) {
@@ -119,6 +132,12 @@ public final class DocsGenerator {
 
 	private static String escape(String text) {
 		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
+	}
+
+	private static String icon(String name) throws IOException {
+		try (InputStream in = DocsGenerator.class.getResourceAsStream("/assets/illusion/textures/gui/icons/smooth/" + name + ".png")) {
+			return "--icon-" + name + ": url(\"data:image/png;base64," + Base64.getEncoder().encodeToString(in.readAllBytes()) + "\");\n";
+		}
 	}
 
 	private static String template() throws IOException {

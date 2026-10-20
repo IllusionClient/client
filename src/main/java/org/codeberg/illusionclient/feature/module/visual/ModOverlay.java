@@ -2,8 +2,6 @@ package org.codeberg.illusionclient.feature.module.visual;
 
 import io.github.nevalackin.radbus.Listen;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.TextRenderer;
 import net.minecraft.client.render.platform.GlStateManager;
 import org.codeberg.illusionclient.IllusionClient;
 import org.codeberg.illusionclient.event.Render2DEvent;
@@ -55,7 +53,7 @@ public class ModOverlay extends Module {
 	@Description("The color of the details.")
 	@Requires("showDetails")
 	@ColorPicker("Details Color")
-	public Color detailsColor = new Color(Draw.MUTED);
+	public Color detailsColor = new Color(0xAAAAAA);
 
 	@Description("Writes the list in lowercase.")
 	@Check("Lowercase")
@@ -67,8 +65,7 @@ public class ModOverlay extends Module {
 
 	@Listen
 	public void onRender2D(Render2DEvent.Post event) {
-		TextRenderer renderer = Minecraft.getInstance().textRenderer;
-		int gap = renderer.getWidth(' ');
+		int gap = Draw.width(" ");
 
 		if (all == null) {
 			List<Module> modules = IllusionClient.MODULES.modules;
@@ -86,8 +83,8 @@ public class ModOverlay extends Module {
 			if (onlyBoundModules && module.getBind() == 0) continue;
 
 			row.update(lowercase, showDetails ? module.details() : null);
-			row.nameWidth = renderer.getWidth(row.name);
-			float textWidth = row.nameWidth + (row.details == null ? 0 : gap + renderer.getWidth(row.details));
+			row.nameWidth = Draw.width(row.name);
+			float textWidth = row.nameWidth + (row.details == null ? 0 : gap + Draw.width(row.details));
 			row.width = Math.round(textWidth * textSize + paddingX * 2.0F);
 			rows.add(row);
 		}
@@ -95,13 +92,13 @@ public class ModOverlay extends Module {
 		rows.sort((a, b) -> b.width - a.width);
 
 		int right = event.window().getWidth();
-		int height = Math.round(renderer.fontHeight * textSize + paddingY * 2.0F);
+		int height = Math.round(9 * textSize + paddingY * 2.0F);
 
 		for (int i = 0; i < rows.size(); i++) {
 			Row row = rows.get(i);
 			float radius = i + 1 < rows.size() ? Math.min(rounding, row.width - rows.get(i + 1).width) : rounding;
 			int overhang = (int) Math.ceil(radius);
-			Draw.rounded(right - row.width, i * height, row.width + overhang, height, 0.0F, radius, Draw.BACKGROUND);
+			Draw.rounded(right - row.width, i * height, row.width + overhang, height, 0.0F, radius, Draw.HUD_BACKGROUND);
 		}
 		Draw.flush();
 

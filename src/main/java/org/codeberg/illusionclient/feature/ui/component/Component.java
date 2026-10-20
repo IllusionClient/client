@@ -9,9 +9,8 @@ public abstract class Component {
 	public static final int HEIGHT = 24;
 	public static final int PADDING = 8;
 	public static final float RADIUS = 6.0F;
-	protected static final float TEXT_Y = 8.0F;
 
-	protected int x, y;
+	protected int x, y, width = WIDTH;
 	protected boolean bottom;
 	protected Description description;
 
@@ -21,6 +20,13 @@ public abstract class Component {
 
 	public boolean visible() {
 		return true;
+	}
+
+	public final void place(int x, int y, int width, boolean bottom) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.bottom = bottom;
 	}
 
 	public abstract void render(int mouseX, int mouseY);
@@ -36,27 +42,27 @@ public abstract class Component {
 	}
 
 	protected boolean hovered(int mouseX, int mouseY) {
-		return mouseX >= x && mouseX < x + WIDTH && mouseY >= y && mouseY < y + HEIGHT;
+		return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + HEIGHT;
 	}
 
 	protected final int left() {
-		return x + PADDING * 2;
+		return x + PADDING;
 	}
 
 	protected final int right() {
-		return x + WIDTH - PADDING;
+		return x + width - PADDING;
 	}
 
 	protected final void row(String label, int mouseX, int mouseY) {
 		boolean hovered = hovered(mouseX, mouseY);
 		if (hovered) Tooltip.show(description);
 
-		Draw.rounded(x, y, WIDTH, height(), 0.0F, bottom ? RADIUS : 0.0F, hovered ? Draw.BACKGROUND_HOVER : Draw.BACKGROUND);
+		Draw.rounded(x, y, width, height(), 0.0F, bottom ? RADIUS : 0.0F, hovered ? Draw.CONTAINER_HIGH : Draw.CONTAINER);
 		Draw.rect(left(), y, right() - left(), 2, Draw.DIVIDER);
-		Draw.text(label, left(), y + TEXT_Y, -1);
+		Draw.text(label, left(), Draw.textY(y, HEIGHT), Draw.TEXT);
 	}
 
 	protected final void value(String text) {
-		Draw.textRight(text, right(), y + TEXT_Y, Draw.MUTED);
+		Draw.textRight(text, right(), Draw.textY(y, HEIGHT), Draw.MUTED);
 	}
 }

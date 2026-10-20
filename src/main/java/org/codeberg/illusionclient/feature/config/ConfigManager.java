@@ -1,6 +1,7 @@
 package org.codeberg.illusionclient.feature.config;
 
 import com.google.gson.*;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ public final class ConfigManager {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	private static final String VERSION_KEY = "configVersion";
+	private static final String STATS_KEY = "stats";
+	private static final String GUI_KEY = "gui";
 	private static final Map<String, String> RENAMED_LABELS = Map.of("Randomize Inventory", "Randomize Inventory Speed");
 	private static final List<Consumer<JsonObject>> MIGRATIONS = List.of(
 		ConfigManager::keyByFieldName,
@@ -38,6 +41,8 @@ public final class ConfigManager {
 
 	private final Path file = FabricLoader.getInstance().getConfigDir()
 		.resolve(IllusionClient.ID).resolve("settings.json");
+
+	public JsonObject gui = new JsonObject();
 
 	private static void keyByFieldName(JsonObject root) {
 		for (Module module : IllusionClient.MODULES.modules) {
@@ -98,6 +103,41 @@ public final class ConfigManager {
 
 		JsonElement enabled = entry.get("enabled");
 		if (enabled != null) guarded(module, "enabled", () -> module.setEnabled(readBoolean(enabled)));
+	}
+
+	private static void loadStats(JsonObject stats) {
+		IllusionClient.STATS.previousPlaytime = readCount(stats, "playtime");
+		IllusionClient.STATS.autoClicks = readCount(stats, "autoClicks");
+		IllusionClient.STATS.bestCombo = readCount(stats, "bestCombo");
+		readCounts(stats, "toggles", IllusionClient.STATS.toggles);
+	}
+
+	private static void readCounts(JsonObject stats, String key, Object2LongMap<String> counts) {
+		JsonElement value = stats.get(key);
+		if (value == null || !value.isJsonObject()) return;
+
+		JsonObject object = value.getAsJsonObject();
+		for (String entry : object.keySet()) counts.put(entry, readCount(object, entry));
+	}
+
+	private static JsonObject writeCounts(Object2LongMap<String> counts) {
+		JsonObject object = new JsonObject();
+		for (Object2LongMap.Entry<String> entry : counts.object2LongEntrySet()) object.addProperty(entry.getKey(), entry.getLongValue());
+		return object;
+	}
+
+	private static long readCount(JsonObject stats, String key) {
+		JsonElement value = stats.get(key);
+		if (value == null) return 0;
+
+		try {
+			long count = value.getAsLong();
+			if (count < 0) throw new IllegalArgumentException("negative count " + count);
+			return count;
+		} catch (RuntimeException e) {
+			LOGGER.warn("Ignoring invalid '{}' in stats: {}", key, e.toString());
+			return 0;
+		}
 	}
 
 	private static void guarded(Module module, String key, Runnable action) {
@@ -165,6 +205,14 @@ public final class ConfigManager {
 			root.add(module.key, entry);
 		}
 
+		JsonObject stats = new JsonObject();
+		stats.addProperty("playtime", IllusionClient.STATS.playtime());
+		stats.addProperty("autoClicks", IllusionClient.STATS.autoClicks);
+		stats.addProperty("bestCombo", IllusionClient.STATS.bestCombo);
+		stats.add("toggles", writeCounts(IllusionClient.STATS.toggles));
+		root.add(STATS_KEY, stats);
+		root.add(GUI_KEY, gui);
+
 		Path temp = file.resolveSibling(file.getFileName() + ".tmp");
 		try {
 			Files.createDirectories(file.getParent());
@@ -213,6 +261,12 @@ public final class ConfigManager {
 			JsonElement entry = root.get(module.key);
 			if (entry != null && entry.isJsonObject()) load(module, entry.getAsJsonObject());
 		}
+
+		JsonElement stats = root.get(STATS_KEY);
+		if (stats != null && stats.isJsonObject()) loadStats(stats.getAsJsonObject());
+
+		JsonElement layout = root.get(GUI_KEY);
+		if (layout != null && layout.isJsonObject()) gui = layout.getAsJsonObject();
 
 		if (version < VERSION) save();
 	}

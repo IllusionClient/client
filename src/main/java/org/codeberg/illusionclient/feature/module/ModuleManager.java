@@ -29,7 +29,8 @@ import org.codeberg.illusionclient.feature.module.visual.AntiDebuff;
 import org.codeberg.illusionclient.feature.module.visual.Bedplates;
 import org.codeberg.illusionclient.feature.module.visual.Esp;
 import org.codeberg.illusionclient.feature.module.visual.ModOverlay;
-import org.codeberg.illusionclient.feature.ui.ClickGui;
+import org.codeberg.illusionclient.feature.ui.FramesGui;
+import org.codeberg.illusionclient.feature.ui.PanelGui;
 
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +92,7 @@ public final class ModuleManager {
 		Screen screen = Minecraft.getInstance().screen;
 		if (screen != null) {
 			ClickGuiModule clickGui = get(ClickGuiModule.class);
-			if (screen instanceof ClickGui && clickGui.getBind() == event.key()) clickGui.toggle();
+			if ((screen instanceof FramesGui || screen instanceof PanelGui) && clickGui.getBind() == event.key()) clickGui.toggle();
 			return;
 		}
 

@@ -1,0 +1,1519 @@
+{
+  "atlas": {
+    "type": "hinted",
+    "size": 29,
+    "width": 256,
+    "height": 256,
+    "yOrigin": "top"
+  },
+  "glyphs": [
+    {
+      "unicode": 32,
+      "advance": 8.0
+    },
+    {
+      "unicode": 33,
+      "advance": 9.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 7,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 244,
+        "top": 1,
+        "right": 249,
+        "bottom": 22
+      }
+    },
+    {
+      "unicode": 34,
+      "advance": 14.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 12,
+        "bottom": -12
+      },
+      "atlasBounds": {
+        "left": 101,
+        "top": 125,
+        "right": 111,
+        "bottom": 134
+      }
+    },
+    {
+      "unicode": 35,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -21,
+        "right": 19,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 1,
+        "top": 37,
+        "right": 20,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 36,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -25,
+        "right": 18,
+        "bottom": 3
+      },
+      "atlasBounds": {
+        "left": 6,
+        "top": 1,
+        "right": 23,
+        "bottom": 29
+      }
+    },
+    {
+      "unicode": 37,
+      "advance": 29.0,
+      "planeBounds": {
+        "left": 3,
+        "top": -21,
+        "right": 26,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 21,
+        "top": 37,
+        "right": 44,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 38,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 19,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 45,
+        "top": 37,
+        "right": 63,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 39,
+      "advance": 9.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 7,
+        "bottom": -12
+      },
+      "atlasBounds": {
+        "left": 112,
+        "top": 125,
+        "right": 117,
+        "bottom": 134
+      }
+    },
+    {
+      "unicode": 40,
+      "advance": 11.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -23,
+        "right": 10,
+        "bottom": 4
+      },
+      "atlasBounds": {
+        "left": 32,
+        "top": 1,
+        "right": 40,
+        "bottom": 28
+      }
+    },
+    {
+      "unicode": 41,
+      "advance": 11.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -23,
+        "right": 8,
+        "bottom": 4
+      },
+      "atlasBounds": {
+        "left": 41,
+        "top": 1,
+        "right": 48,
+        "bottom": 28
+      }
+    },
+    {
+      "unicode": 42,
+      "advance": 15.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 14,
+        "bottom": -9
+      },
+      "atlasBounds": {
+        "left": 74,
+        "top": 125,
+        "right": 87,
+        "bottom": 137
+      }
+    },
+    {
+      "unicode": 43,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -16,
+        "right": 17,
+        "bottom": -1
+      },
+      "atlasBounds": {
+        "left": 58,
+        "top": 125,
+        "right": 73,
+        "bottom": 140
+      }
+    },
+    {
+      "unicode": 44,
+      "advance": 9.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -4,
+        "right": 7,
+        "bottom": 5
+      },
+      "atlasBounds": {
+        "left": 118,
+        "top": 125,
+        "right": 124,
+        "bottom": 134
+      }
+    },
+    {
+      "unicode": 45,
+      "advance": 13.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -11,
+        "right": 12,
+        "bottom": -8
+      },
+      "atlasBounds": {
+        "left": 170,
+        "top": 125,
+        "right": 180,
+        "bottom": 128
+      }
+    },
+    {
+      "unicode": 46,
+      "advance": 9.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -5,
+        "right": 7,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 157,
+        "top": 125,
+        "right": 162,
+        "bottom": 130
+      }
+    },
+    {
+      "unicode": 47,
+      "advance": 11.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -22,
+        "right": 11,
+        "bottom": 3
+      },
+      "atlasBounds": {
+        "left": 115,
+        "top": 1,
+        "right": 126,
+        "bottom": 26
+      }
+    },
+    {
+      "unicode": 48,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 64,
+        "top": 37,
+        "right": 80,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 49,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 81,
+        "top": 37,
+        "right": 96,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 50,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 97,
+        "top": 37,
+        "right": 112,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 51,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 113,
+        "top": 37,
+        "right": 129,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 52,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 18,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 130,
+        "top": 37,
+        "right": 147,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 53,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 148,
+        "top": 37,
+        "right": 163,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 54,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 164,
+        "top": 37,
+        "right": 180,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 55,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 181,
+        "top": 37,
+        "right": 196,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 56,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 197,
+        "top": 37,
+        "right": 213,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 57,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 214,
+        "top": 37,
+        "right": 230,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 58,
+      "advance": 9.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -16,
+        "right": 7,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 88,
+        "top": 103,
+        "right": 93,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 59,
+      "advance": 9.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 7,
+        "bottom": 5
+      },
+      "atlasBounds": {
+        "left": 231,
+        "top": 37,
+        "right": 237,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 60,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -17,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 47,
+        "top": 103,
+        "right": 62,
+        "bottom": 120
+      }
+    },
+    {
+      "unicode": 61,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 3,
+        "top": -13,
+        "right": 17,
+        "bottom": -4
+      },
+      "atlasBounds": {
+        "left": 125,
+        "top": 125,
+        "right": 139,
+        "bottom": 134
+      }
+    },
+    {
+      "unicode": 62,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 3,
+        "top": -17,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 63,
+        "top": 103,
+        "right": 77,
+        "bottom": 120
+      }
+    },
+    {
+      "unicode": 63,
+      "advance": 15.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 14,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 238,
+        "top": 37,
+        "right": 251,
+        "bottom": 58
+      }
+    },
+    {
+      "unicode": 64,
+      "advance": 28.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 27,
+        "bottom": 6
+      },
+      "atlasBounds": {
+        "left": 49,
+        "top": 1,
+        "right": 75,
+        "bottom": 28
+      }
+    },
+    {
+      "unicode": 65,
+      "advance": 21.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 1,
+        "top": 59,
+        "right": 21,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 66,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 18,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 22,
+        "top": 59,
+        "right": 38,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 67,
+      "advance": 21.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 39,
+        "top": 59,
+        "right": 58,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 68,
+      "advance": 21.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 59,
+        "top": 59,
+        "right": 77,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 69,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 78,
+        "top": 59,
+        "right": 92,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 70,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 93,
+        "top": 59,
+        "right": 107,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 71,
+      "advance": 22.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 21,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 108,
+        "top": 59,
+        "right": 128,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 72,
+      "advance": 22.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 129,
+        "top": 59,
+        "right": 147,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 73,
+      "advance": 8.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 6,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 148,
+        "top": 59,
+        "right": 152,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 74,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 15,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 153,
+        "top": 59,
+        "right": 167,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 75,
+      "advance": 20.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 168,
+        "top": 59,
+        "right": 186,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 76,
+      "advance": 16.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 187,
+        "top": 59,
+        "right": 201,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 77,
+      "advance": 26.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 25,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 202,
+        "top": 59,
+        "right": 225,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 78,
+      "advance": 22.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 226,
+        "top": 59,
+        "right": 244,
+        "bottom": 80
+      }
+    },
+    {
+      "unicode": 79,
+      "advance": 22.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 21,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 1,
+        "top": 81,
+        "right": 21,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 80,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 18,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 22,
+        "top": 81,
+        "right": 38,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 81,
+      "advance": 22.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 21,
+        "bottom": 2
+      },
+      "atlasBounds": {
+        "left": 139,
+        "top": 1,
+        "right": 159,
+        "bottom": 24
+      }
+    },
+    {
+      "unicode": 82,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 18,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 39,
+        "top": 81,
+        "right": 55,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 83,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 18,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 56,
+        "top": 81,
+        "right": 73,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 84,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 18,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 74,
+        "top": 81,
+        "right": 91,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 85,
+      "advance": 21.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 92,
+        "top": 81,
+        "right": 110,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 86,
+      "advance": 21.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 111,
+        "top": 81,
+        "right": 131,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 87,
+      "advance": 29.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -21,
+        "right": 29,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 132,
+        "top": 81,
+        "right": 161,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 88,
+      "advance": 20.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 162,
+        "top": 81,
+        "right": 182,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 89,
+      "advance": 20.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -21,
+        "right": 20,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 183,
+        "top": 81,
+        "right": 203,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 90,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 204,
+        "top": 81,
+        "right": 220,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 91,
+      "advance": 11.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -23,
+        "right": 10,
+        "bottom": 4
+      },
+      "atlasBounds": {
+        "left": 76,
+        "top": 1,
+        "right": 84,
+        "bottom": 28
+      }
+    },
+    {
+      "unicode": 92,
+      "advance": 11.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -22,
+        "right": 11,
+        "bottom": 3
+      },
+      "atlasBounds": {
+        "left": 127,
+        "top": 1,
+        "right": 138,
+        "bottom": 26
+      }
+    },
+    {
+      "unicode": 93,
+      "advance": 11.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -23,
+        "right": 8,
+        "bottom": 4
+      },
+      "atlasBounds": {
+        "left": 85,
+        "top": 1,
+        "right": 92,
+        "bottom": 28
+      }
+    },
+    {
+      "unicode": 94,
+      "advance": 14.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 13,
+        "bottom": -11
+      },
+      "atlasBounds": {
+        "left": 88,
+        "top": 125,
+        "right": 100,
+        "bottom": 135
+      }
+    },
+    {
+      "unicode": 95,
+      "advance": 13.0,
+      "planeBounds": {
+        "left": 0,
+        "top": 0,
+        "right": 14,
+        "bottom": 3
+      },
+      "atlasBounds": {
+        "left": 181,
+        "top": 125,
+        "right": 195,
+        "bottom": 128
+      }
+    },
+    {
+      "unicode": 96,
+      "advance": 10.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -23,
+        "right": 8,
+        "bottom": -18
+      },
+      "atlasBounds": {
+        "left": 163,
+        "top": 125,
+        "right": 169,
+        "bottom": 130
+      }
+    },
+    {
+      "unicode": 97,
+      "advance": 16.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 15,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 94,
+        "top": 103,
+        "right": 108,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 98,
+      "advance": 18.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 221,
+        "top": 81,
+        "right": 236,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 99,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 109,
+        "top": 103,
+        "right": 124,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 100,
+      "advance": 18.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -21,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 237,
+        "top": 81,
+        "right": 252,
+        "bottom": 102
+      }
+    },
+    {
+      "unicode": 101,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 125,
+        "top": 103,
+        "right": 140,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 102,
+      "advance": 11.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -22,
+        "right": 11,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 160,
+        "top": 1,
+        "right": 171,
+        "bottom": 23
+      }
+    },
+    {
+      "unicode": 103,
+      "advance": 18.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 16,
+        "bottom": 6
+      },
+      "atlasBounds": {
+        "left": 172,
+        "top": 1,
+        "right": 187,
+        "bottom": 23
+      }
+    },
+    {
+      "unicode": 104,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 1,
+        "top": 103,
+        "right": 15,
+        "bottom": 124
+      }
+    },
+    {
+      "unicode": 105,
+      "advance": 7.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -22,
+        "right": 6,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 188,
+        "top": 1,
+        "right": 193,
+        "bottom": 23
+      }
+    },
+    {
+      "unicode": 106,
+      "advance": 7.0,
+      "planeBounds": {
+        "left": -1,
+        "top": -22,
+        "right": 6,
+        "bottom": 6
+      },
+      "atlasBounds": {
+        "left": 24,
+        "top": 1,
+        "right": 31,
+        "bottom": 29
+      }
+    },
+    {
+      "unicode": 107,
+      "advance": 16.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 16,
+        "top": 103,
+        "right": 30,
+        "bottom": 124
+      }
+    },
+    {
+      "unicode": 108,
+      "advance": 7.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -21,
+        "right": 6,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 31,
+        "top": 103,
+        "right": 35,
+        "bottom": 124
+      }
+    },
+    {
+      "unicode": 109,
+      "advance": 26.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -16,
+        "right": 24,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 141,
+        "top": 103,
+        "right": 163,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 110,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -16,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 164,
+        "top": 103,
+        "right": 178,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 111,
+      "advance": 18.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 17,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 179,
+        "top": 103,
+        "right": 195,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 112,
+      "advance": 18.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -16,
+        "right": 17,
+        "bottom": 6
+      },
+      "atlasBounds": {
+        "left": 194,
+        "top": 1,
+        "right": 209,
+        "bottom": 23
+      }
+    },
+    {
+      "unicode": 113,
+      "advance": 18.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 16,
+        "bottom": 6
+      },
+      "atlasBounds": {
+        "left": 210,
+        "top": 1,
+        "right": 225,
+        "bottom": 23
+      }
+    },
+    {
+      "unicode": 114,
+      "advance": 11.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -17,
+        "right": 11,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 78,
+        "top": 103,
+        "right": 87,
+        "bottom": 120
+      }
+    },
+    {
+      "unicode": 115,
+      "advance": 16.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 15,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 196,
+        "top": 103,
+        "right": 210,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 116,
+      "advance": 10.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -20,
+        "right": 10,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 36,
+        "top": 103,
+        "right": 46,
+        "bottom": 123
+      }
+    },
+    {
+      "unicode": 117,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -16,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 211,
+        "top": 103,
+        "right": 225,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 118,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -16,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 226,
+        "top": 103,
+        "right": 242,
+        "bottom": 119
+      }
+    },
+    {
+      "unicode": 119,
+      "advance": 24.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -16,
+        "right": 24,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 1,
+        "top": 125,
+        "right": 25,
+        "bottom": 141
+      }
+    },
+    {
+      "unicode": 120,
+      "advance": 16.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -16,
+        "right": 16,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 26,
+        "top": 125,
+        "right": 42,
+        "bottom": 141
+      }
+    },
+    {
+      "unicode": 121,
+      "advance": 17.0,
+      "planeBounds": {
+        "left": 0,
+        "top": -16,
+        "right": 17,
+        "bottom": 6
+      },
+      "atlasBounds": {
+        "left": 226,
+        "top": 1,
+        "right": 243,
+        "bottom": 23
+      }
+    },
+    {
+      "unicode": 122,
+      "advance": 16.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -16,
+        "right": 15,
+        "bottom": 0
+      },
+      "atlasBounds": {
+        "left": 43,
+        "top": 125,
+        "right": 57,
+        "bottom": 141
+      }
+    },
+    {
+      "unicode": 123,
+      "advance": 13.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -23,
+        "right": 12,
+        "bottom": 4
+      },
+      "atlasBounds": {
+        "left": 93,
+        "top": 1,
+        "right": 103,
+        "bottom": 28
+      }
+    },
+    {
+      "unicode": 124,
+      "advance": 10.0,
+      "planeBounds": {
+        "left": 3,
+        "top": -28,
+        "right": 7,
+        "bottom": 7
+      },
+      "atlasBounds": {
+        "left": 1,
+        "top": 1,
+        "right": 5,
+        "bottom": 36
+      }
+    },
+    {
+      "unicode": 125,
+      "advance": 13.0,
+      "planeBounds": {
+        "left": 1,
+        "top": -23,
+        "right": 11,
+        "bottom": 4
+      },
+      "atlasBounds": {
+        "left": 104,
+        "top": 1,
+        "right": 114,
+        "bottom": 28
+      }
+    },
+    {
+      "unicode": 126,
+      "advance": 19.0,
+      "planeBounds": {
+        "left": 2,
+        "top": -12,
+        "right": 18,
+        "bottom": -6
+      },
+      "atlasBounds": {
+        "left": 140,
+        "top": 125,
+        "right": 156,
+        "bottom": 131
+      }
+    }
+  ]
+}
