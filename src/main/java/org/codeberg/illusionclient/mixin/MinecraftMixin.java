@@ -5,7 +5,10 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.client.Minecraft;
 import org.codeberg.illusionclient.IllusionClient;
 import org.codeberg.illusionclient.event.*;
+import org.codeberg.illusionclient.feature.module.api.Module;
+import org.codeberg.illusionclient.util.MouseUtils;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -69,6 +72,12 @@ public class MinecraftMixin {
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;handleGuiKeyBindings()V"))
 	private void illusion$keyPress(CallbackInfo ci) {
 		IllusionClient.BUS.publish(KeyPressEvent.of(Keyboard.getEventKey(), Keyboard.getEventKeyState()));
+	}
+
+	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/options/KeyBinding;set(IZ)V", ordinal = 0))
+	private void illusion$mousePress(CallbackInfo ci) {
+		if (MouseUtils.synthetic()) return;
+		IllusionClient.BUS.publish(KeyPressEvent.of(Module.mouseBind(Mouse.getEventButton()), Mouse.getEventButtonState()));
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;handleInputs()V"))

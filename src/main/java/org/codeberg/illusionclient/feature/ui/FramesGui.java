@@ -7,7 +7,7 @@ import org.codeberg.illusionclient.IllusionClient;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.ui.component.Component;
 import org.codeberg.illusionclient.feature.ui.component.Frame;
-import org.codeberg.illusionclient.feature.ui.component.ModuleComponent;
+import org.codeberg.illusionclient.feature.ui.component.KeybindComponent;
 import org.lwjgl.input.Mouse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +77,7 @@ public class FramesGui extends ClickScreen {
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) {
-		ModuleComponent.stopListening();
+		if (KeybindComponent.mouseBound(button)) return;
 		for (Frame frame : frames) {
 			frame.mouseClicked(mouseX, mouseY, button);
 		}
@@ -105,6 +105,7 @@ public class FramesGui extends ClickScreen {
 
 	@Override
 	protected void keyPressed(char chr, int key) {
+		if (KeybindComponent.keyBound(key)) return;
 		for (Frame frame : frames) {
 			if (frame.keyPressed(key)) return;
 		}
@@ -113,7 +114,7 @@ public class FramesGui extends ClickScreen {
 
 	@Override
 	public void removed() {
-		ModuleComponent.stopListening();
+		KeybindComponent.stopListening();
 		JsonObject state = new JsonObject();
 		for (Frame frame : frames) {
 			frame.mouseReleased();

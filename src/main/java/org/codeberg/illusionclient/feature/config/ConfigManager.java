@@ -96,10 +96,13 @@ public final class ConfigManager {
 		if (bind != null) {
 			guarded(module, "bind", () -> {
 				int key = bind.getAsInt();
-				if (key < 0 || key >= Keyboard.KEYBOARD_SIZE) throw new IllegalArgumentException("unknown key " + key);
+				if (key < Module.mouseBind(1) || key >= Keyboard.KEYBOARD_SIZE) throw new IllegalArgumentException("unknown key " + key);
 				module.setBind(key);
 			});
 		}
+
+		JsonElement hold = entry.get("hold");
+		if (hold != null) guarded(module, "hold", () -> module.setHold(readBoolean(hold)));
 
 		JsonElement enabled = entry.get("enabled");
 		if (enabled != null) guarded(module, "enabled", () -> module.setEnabled(readBoolean(enabled)));
@@ -201,6 +204,7 @@ public final class ConfigManager {
 			JsonObject entry = new JsonObject();
 			entry.addProperty("enabled", module.isEnabled());
 			entry.addProperty("bind", module.getBind());
+			entry.addProperty("hold", module.isHold());
 			entry.add("settings", settings);
 			root.add(module.key, entry);
 		}

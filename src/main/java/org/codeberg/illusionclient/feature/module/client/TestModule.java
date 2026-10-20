@@ -55,7 +55,7 @@ public class TestModule extends Module {
 	@Override
 	public void setBind(int bind) {
 		super.setBind(bind);
-		IllusionClient.LOGGER.info("Test bound to {}", Keyboard.getKeyName(bind));
+		IllusionClient.LOGGER.info("Test bound to {}", bindName());
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class TestModule extends Module {
 	@Listen
 	public void onRender2D(Render2DEvent.Post event) {
 		String[] lines = {
-			name + " [" + category + "] " + Keyboard.getKeyName(getBind()),
+			name + " [" + category + "] " + bindName(),
 			"Enabled for " + ticks + " ticks",
 			"Check: " + check,
 			"Slider: " + number(slider),

@@ -3,6 +3,7 @@ package org.codeberg.illusionclient.feature.module.api;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.codeberg.illusionclient.IllusionClient;
 import org.codeberg.illusionclient.feature.config.api.Option;
+import org.lwjgl.input.Keyboard;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -15,6 +16,7 @@ public abstract class Module {
 	public final List<Option> options = new ObjectArrayList<>();
 
 	private int bind;
+	private boolean hold;
 	private boolean enabled;
 
 	public Module() {
@@ -39,12 +41,28 @@ public abstract class Module {
 		return value == (int) value ? String.valueOf((int) value) : String.valueOf(value);
 	}
 
+	public static int mouseBind(int button) {
+		return button - 100;
+	}
+
 	public final int getBind() {
 		return bind;
 	}
 
 	public void setBind(int bind) {
 		this.bind = bind;
+	}
+
+	public final String bindName() {
+		return bind < 0 ? "Mouse " + (bind + 101) : Keyboard.getKeyName(bind);
+	}
+
+	public final boolean isHold() {
+		return hold;
+	}
+
+	public final void setHold(boolean hold) {
+		this.hold = hold;
 	}
 
 	public final boolean isEnabled() {

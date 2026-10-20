@@ -87,17 +87,23 @@ public final class ModuleManager {
 
 	@Listen
 	public void onKeyPress(KeyPressEvent event) {
-		if (event.key() == 0 || !event.down()) return;
+		if (event.key() == 0) return;
 
 		Screen screen = Minecraft.getInstance().screen;
-		if (screen != null) {
+		if (screen != null && event.down()) {
 			ClickGuiModule clickGui = get(ClickGuiModule.class);
 			if ((screen instanceof FramesGui || screen instanceof PanelGui) && clickGui.getBind() == event.key()) clickGui.toggle();
 			return;
 		}
 
 		for (Module module : modules) {
-			if (module.getBind() == event.key()) module.toggle();
+			if (module.getBind() != event.key()) continue;
+
+			if (module.isHold()) {
+				if (module.isEnabled() != event.down()) module.toggle();
+			} else if (event.down()) {
+				module.toggle();
+			}
 		}
 	}
 }

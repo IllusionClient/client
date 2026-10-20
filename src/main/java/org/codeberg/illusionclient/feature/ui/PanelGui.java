@@ -12,8 +12,8 @@ import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.client.ClickGuiModule;
 import org.codeberg.illusionclient.feature.stats.Statistics;
-import org.codeberg.illusionclient.feature.ui.component.CheckComponent;
 import org.codeberg.illusionclient.feature.ui.component.Component;
+import org.codeberg.illusionclient.feature.ui.component.KeybindComponent;
 import org.codeberg.illusionclient.feature.ui.component.ModuleComponent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -66,7 +66,6 @@ public class PanelGui extends ClickScreen {
 	private int page;
 	private Category category;
 	private Module module;
-	private Module binding;
 	private int contentScroll, contentHeight;
 
 	public PanelGui() {
@@ -285,28 +284,34 @@ public class PanelGui extends ClickScreen {
 	}
 
 	private void card(Module entry, int left, int top, int width, boolean hovered, int mouseX, int mouseY) {
-		Draw.rounded(left, top, width, CARD, Component.RADIUS, hovered ? Draw.CONTAINER_HIGHEST : Draw.CONTAINER_HIGH);
+		boolean enabled = entry.isEnabled();
+		int fill = enabled ? hovered ? Draw.PRIMARY_CONTAINER_HOVER : Draw.PRIMARY_CONTAINER : hovered ? Draw.CONTAINER_HIGHEST : Draw.CONTAINER_HIGH;
+		Draw.rounded(left, top, width, CARD, Component.RADIUS, fill);
 
 		int chevronX = chevronLeft(left, width);
 		boolean chevronHovered = hovered && mouseX >= chevronX - PADDING;
 		Icon.CHEVRON.draw(chevronX, top + (CARD - Icon.CHEVRON.height) / 2, chevronHovered ? Draw.TEXT : hovered ? Draw.MUTED : Draw.FAINT);
 
-		if (toggleable(entry)) {
-			CheckComponent.drawSwitch(switchLeft(left, width), top + (CARD - CheckComponent.SWITCH_HEIGHT) / 2, entry.isEnabled());
-		}
-
-		int textRight = keyRight(entry, left, width) - PADDING + 6;
-		String key = keyLabel(entry, hovered, binding == entry);
+		int textRight = keyRight(left, width) - PADDING + 6;
+		boolean listening = KeybindComponent.listening(entry);
+		String key = keyLabel(entry, hovered, listening);
 		if (key != null) {
-			int keyX = keyLeft(entry, key, left, width);
-			int keyWidth = keyRight(entry, left, width) - keyX;
+			int keyX = keyLeft(key, left, width);
+			int keyWidth = keyRight(left, width) - keyX;
 			boolean keyHovered = hovered && within(mouseX, mouseY, keyX, top + KEY_Y, keyWidth, ModuleComponent.KEY_HEIGHT);
-			ModuleComponent.drawKey(keyX, top + KEY_Y, key, binding == entry, entry.getBind() != Keyboard.KEY_NONE, keyHovered);
+			ModuleComponent.drawKey(keyX, top + KEY_Y, key, listening, entry.getBind() != Keyboard.KEY_NONE, keyHovered);
 			textRight = keyX - PADDING;
+
+			if (ModuleComponent.showHold(entry, hovered)) {
+				int holdX = holdLeft(keyX);
+				boolean holdHovered = hovered && within(mouseX, mouseY, holdX, top + KEY_Y, keyX - 6 - holdX, ModuleComponent.KEY_HEIGHT);
+				ModuleComponent.drawKey(holdX, top + KEY_Y, ModuleComponent.HOLD, false, entry.isHold(), holdHovered);
+				textRight = holdX - PADDING;
+			}
 		}
 
 		int textX = left + PADDING;
-		int nameColor = entry.isEnabled() ? Draw.PRIMARY : Draw.TEXT;
+		int nameColor = enabled ? Draw.ON_PRIMARY_CONTAINER : Draw.TEXT;
 		if (entry.description == null) {
 			Draw.text(entry.name, textX, Draw.textY(top, CARD), nameColor);
 			return;
@@ -329,11 +334,6 @@ public class PanelGui extends ClickScreen {
 		Draw.text(module.name, left + PADDING, top + 9, enabled ? Draw.ON_PRIMARY_CONTAINER : Draw.TEXT);
 
 		int textRight = left + width - PADDING;
-		if (toggleable(module)) {
-			int switchX = left + width - PADDING - CheckComponent.SWITCH_WIDTH;
-			CheckComponent.drawSwitch(switchX, top + (HEADER - CheckComponent.SWITCH_HEIGHT) / 2, module.isEnabled());
-			textRight = switchX - PADDING;
-		}
 
 		if (module.description != null) {
 			String text = module.description.value();
@@ -415,8 +415,7 @@ public class PanelGui extends ClickScreen {
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) {
-		Module previous = binding;
-		binding = null;
+		if (KeybindComponent.mouseBound(button)) return;
 		if (button == BACK_BUTTON) {
 			back();
 			return;
@@ -459,11 +458,14 @@ public class PanelGui extends ClickScreen {
 			for (Card card : cards) {
 				if (!within(mouseX, mouseY, contentLeft(), card.y, contentWidth(), CARD)) continue;
 
-				String key = keyLabel(card.module, true, previous == card.module);
-				int keyX = keyLeft(card.module, key, contentLeft(), contentWidth());
-				boolean onKey = within(mouseX, mouseY, keyX, card.y + KEY_Y, keyRight(card.module, contentLeft(), contentWidth()) - keyX, ModuleComponent.KEY_HEIGHT);
+				String key = keyLabel(card.module, true, false);
+				int keyX = keyLeft(key, contentLeft(), contentWidth());
+				boolean onKey = within(mouseX, mouseY, keyX, card.y + KEY_Y, keyRight(contentLeft(), contentWidth()) - keyX, ModuleComponent.KEY_HEIGHT);
+				int holdX = holdLeft(keyX);
+				boolean onHold = ModuleComponent.showHold(card.module, true) && within(mouseX, mouseY, holdX, card.y + KEY_Y, keyX - 6 - holdX, ModuleComponent.KEY_HEIGHT);
 				boolean onChevron = mouseX >= chevronLeft(contentLeft(), contentWidth()) - PADDING;
-				if (button == 2 || button == 0 && onKey) binding = card.module;
+				if (button == 2 || button == 0 && onKey) KeybindComponent.listen(card.module);
+				else if (button == 0 && onHold) card.module.setHold(!card.module.isHold());
 				else if (button == 1 || button == 0 && (onChevron || !toggleable(card.module))) open(card.module);
 				else if (button == 0) card.module.toggle();
 				return;
@@ -500,11 +502,7 @@ public class PanelGui extends ClickScreen {
 
 	@Override
 	protected void keyPressed(char chr, int key) {
-		if (binding != null) {
-			binding.setBind(key == Keyboard.KEY_ESCAPE ? Keyboard.KEY_NONE : key);
-			binding = null;
-			return;
-		}
+		if (KeybindComponent.keyBound(key)) return;
 
 		if (module != null && search.isEmpty()) {
 			for (Component component : visibleOptions(module)) {
@@ -604,7 +602,7 @@ public class PanelGui extends ClickScreen {
 
 	private void apply() {
 		release();
-		binding = null;
+		KeybindComponent.stopListening();
 		category = history.get(page).category;
 		module = history.get(page).module;
 		contentScroll = 0;
@@ -682,25 +680,25 @@ public class PanelGui extends ClickScreen {
 	}
 
 	private String keyLabel(Module entry, boolean hovered, boolean listening) {
-		if (listening) return "Press a key, Esc clears";
-		if (entry.getBind() != Keyboard.KEY_NONE) return Keyboard.getKeyName(entry.getBind());
-		return hovered ? "Set key" : null;
+		if (listening) return "Press a key...";
+		if (entry.getBind() != Keyboard.KEY_NONE) return entry.bindName();
+		return hovered ? "None" : null;
 	}
 
-	private int keyRight(Module entry, int left, int width) {
-		return toggleable(entry) ? switchLeft(left, width) - 6 : chevronLeft(left, width) - PADDING;
+	private int keyRight(int left, int width) {
+		return chevronLeft(left, width) - PADDING;
 	}
 
-	private int keyLeft(Module entry, String label, int left, int width) {
-		return keyRight(entry, left, width) - Draw.width(label) - 10;
+	private int keyLeft(String label, int left, int width) {
+		return keyRight(left, width) - Draw.width(label) - 10;
+	}
+
+	private int holdLeft(int keyLeft) {
+		return keyLeft - 6 - Draw.width(ModuleComponent.HOLD) - 10;
 	}
 
 	private int chevronLeft(int left, int width) {
 		return left + width - PADDING - Icon.CHEVRON.width;
-	}
-
-	private int switchLeft(int left, int width) {
-		return chevronLeft(left, width) - PADDING - CheckComponent.SWITCH_WIDTH;
 	}
 
 	private int searchLeft() {
