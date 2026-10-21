@@ -1,15 +1,10 @@
 package org.codeberg.illusionclient.feature.module.visual;
 
 import io.github.nevalackin.radbus.Listen;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.FrustumCuller;
-import net.minecraft.client.render.FrustumData;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.platform.GlStateManager;
 import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.text.Formatting;
+import net.minecraft.util.math.Box;
 import org.codeberg.illusionclient.event.Render2DEvent;
 import org.codeberg.illusionclient.event.Render3DEvent;
 import org.codeberg.illusionclient.event.WorldLoadEvent;
@@ -21,21 +16,22 @@ import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
+import org.codeberg.illusionclient.feature.render.EspRenderer;
 import org.codeberg.illusionclient.feature.ui.Draw;
 import org.codeberg.illusionclient.util.ColorUtils;
 import org.codeberg.illusionclient.util.PlayerUtils;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 @Description("Draws boxes and bars around players.")
 @ModuleInfo(name = "ESP", category = Category.VISUAL)
 public class Esp extends Module {
-	private static final int OUTLINE = 0x96000000;
-	private final List<PlayerEntity> players = new ObjectArrayList<>();
-	private float[] bounds = new float[64];
+	private final EspRenderer<PlayerEntity> renderer = new EspRenderer<>();
 	private float pulseFactor;
+
+	@Description("2D draws flat boxes and bars on screen, 3D draws boxes in the world.")
+	@Combo(value = "Mode", options = {"2D", "3D"})
+	public String mode = "2D";
 
 	@Description("Draws a box around players.")
 	@Check("Box")
@@ -52,6 +48,7 @@ public class Esp extends Module {
 	public boolean teamColor = false;
 
 	@Description("Draws an armor bar below the box.")
+	@Requires(value = "mode", is = "2D")
 	@Check("Armor Bar")
 	public boolean armorBar = true;
 
@@ -61,6 +58,7 @@ public class Esp extends Module {
 	public Color armorColor = new Color(0, 255, 255);
 
 	@Description("Draws a health bar beside the box.")
+	@Requires(value = "mode", is = "2D")
 	@Check("HP Bar")
 	public boolean healthBar = true;
 
@@ -97,122 +95,60 @@ public class Esp extends Module {
 	@Check("Self")
 	public boolean self = true;
 
-	private static void outline(float left, float top, float right, float bottom, float thickness, int color) {
-		thickness = Math.min(thickness, Math.min(right - left, bottom - top) / 2.0F);
-
-		Draw.fill(left, top, left + thickness, bottom, color);
-		Draw.fill(right - thickness, top, right, bottom, color);
-		Draw.fill(left + thickness, top, right - thickness, top + thickness, color);
-		Draw.fill(left + thickness, bottom - thickness, right - thickness, bottom, color);
-	}
-
 	@Override
 	public void onDisable() {
-		players.clear();
+		renderer.clear();
 	}
 
 	@Listen
 	public void onWorldLoad(WorldLoadEvent event) {
-		players.clear();
+		renderer.clear();
 	}
 
 	@Listen
 	public void onRender3D(Render3DEvent event) {
-		players.clear();
+		renderer.clear();
 
 		Minecraft minecraft = Minecraft.getInstance();
 		if (minecraft.world == null || minecraft.player == null) return;
 
-		EntityRenderDispatcher dispatcher = minecraft.getEntityRenderDispatcher();
-		FrustumData data = Frustum.getInstance();
-		FrustumCuller frustum = new FrustumCuller(data);
-		frustum.prepare(dispatcher.cameraX, dispatcher.cameraY, dispatcher.cameraZ);
-
-		float[] clip = data.clipMatrix;
-		float halfWidth = minecraft.width / 2.0F;
-		float halfHeight = minecraft.height / 2.0F;
-
+		renderer.begin();
+		boolean flat = mode.equals("2D");
+		int boxRgb = boxColor.getRGB();
 		float tickDelta = event.partialTicks();
 		for (PlayerEntity player : minecraft.world.players) {
-			if (!valid(minecraft, player) || !frustum.isVisible(player.getShape())) continue;
+			if (!valid(minecraft, player)) continue;
 
-			double x = player.prevX + (player.x - player.prevX) * tickDelta - dispatcher.cameraX;
-			double y = player.prevY + (player.y - player.prevY) * tickDelta - dispatcher.cameraY;
-			double z = player.prevZ + (player.z - player.prevZ) * tickDelta - dispatcher.cameraZ;
+			double x = player.prevX + (player.x - player.prevX) * tickDelta;
+			double y = player.prevY + (player.y - player.prevY) * tickDelta;
+			double z = player.prevZ + (player.z - player.prevZ) * tickDelta;
 			double radius = player.width / 2.0D + 0.1D;
-			double bottom = y - 0.1D;
 			double top = y + player.height + (player.isSneaking() ? -0.2D : 0.1D) + 0.1D;
+			Box box = new Box(x - radius, y - 0.1D, z - radius, x + radius, top, z + radius);
 
-			float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, maxX = -1.0F, maxY = -1.0F;
-			for (int corner = 0; corner < 8; corner++) {
-				float cornerX = (float) (x + ((corner & 1) == 0 ? -radius : radius));
-				float cornerY = (float) ((corner & 2) == 0 ? bottom : top);
-				float cornerZ = (float) (z + ((corner & 4) == 0 ? -radius : radius));
-
-				float w = clip[3] * cornerX + clip[7] * cornerY + clip[11] * cornerZ + clip[15];
-				if (w == 0.0F) continue;
-
-				float depth = (clip[2] * cornerX + clip[6] * cornerY + clip[10] * cornerZ + clip[14]) / w;
-				if (depth < -1.0F || depth >= 1.0F) continue;
-
-				float screenX = ((clip[0] * cornerX + clip[4] * cornerY + clip[8] * cornerZ + clip[12]) / w + 1.0F) * halfWidth;
-				float screenY = (1.0F - (clip[1] * cornerX + clip[5] * cornerY + clip[9] * cornerZ + clip[13]) / w) * halfHeight;
-				minX = Math.min(minX, screenX);
-				minY = Math.min(minY, screenY);
-				maxX = Math.max(maxX, screenX);
-				maxY = Math.max(maxY, screenY);
-			}
-			if (maxX < minX) continue;
-
-			int index = players.size() * 4;
-			if (index == bounds.length) bounds = Arrays.copyOf(bounds, index * 2);
-			bounds[index] = minX;
-			bounds[index + 1] = minY;
-			bounds[index + 2] = maxX;
-			bounds[index + 3] = maxY;
-			players.add(player);
+			if (flat) renderer.add(player, box);
+			else if (this.box) renderer.box3D(box, teamColor ? teamColor(player, boxRgb) : boxRgb);
 		}
+		renderer.end3D();
 	}
 
 	@Listen
 	public void onRender2D(Render2DEvent.Pre event) {
-		if (players.isEmpty()) return;
-
 		float progress = System.currentTimeMillis() % 2000L / 1000.0F;
 		pulseFactor = pulsing ? 1.0F - 0.4F * (progress > 1.0F ? 2.0F - progress : progress) : 1.0F;
 		int boxRgb = boxColor.getRGB();
 
-		GlStateManager.depthMask(false);
-		GlStateManager.pushMatrix();
-		double pixel = 1.0D / event.window().getScale();
-		GlStateManager.scaled(pixel, pixel, 1.0D);
-
-		for (int i = 0; i < players.size(); i++) {
-			PlayerEntity player = players.get(i);
-			int left = Math.round(bounds[i * 4]);
-			int top = Math.round(bounds[i * 4 + 1]);
-			int right = Math.round(bounds[i * 4 + 2]);
-			int bottom = Math.round(bounds[i * 4 + 3]);
-
+		renderer.render2D(event, (player, left, top, right, bottom) -> {
 			if (armorBar) renderArmorBar(player, left, right, bottom);
 			if (healthBar) renderHealthBar(player, left, top, bottom);
-
-			if (box) {
-				outline(left, top, right, bottom, 3.0F, OUTLINE);
-				outline(left + 1, top + 1, right - 1, bottom - 1, 1.0F, teamColor ? teamColor(player, boxRgb) : boxRgb);
-			}
-		}
-		Draw.flush();
-
-		GlStateManager.popMatrix();
-		GlStateManager.depthMask(true);
-		GlStateManager.enableBlend();
+			if (box) EspRenderer.box(left, top, right, bottom, teamColor ? teamColor(player, boxRgb) : boxRgb);
+		});
 	}
 
 	private void renderArmorBar(PlayerEntity player, int left, int right, int bottom) {
 		float armor = Math.min(1.0F, player.getArmorProtection() / 20.0F);
 
-		Draw.fill(left, bottom + 1, right, bottom + 5, OUTLINE);
+		Draw.fill(left, bottom + 1, right, bottom + 5, EspRenderer.OUTLINE);
 
 		int fillRight = left + Math.round((right - left) * armor) - 1;
 		if (fillRight > left + 1) Draw.fill(left + 1, bottom + 2, fillRight, bottom + 4, armorColor.getRGB());
@@ -225,7 +161,7 @@ public class Esp extends Module {
 		int height = bottom - top;
 		float health = Math.clamp(player.getHealth() / player.getMaxHealth(), 0.0F, 1.0F);
 
-		Draw.fill(left - 1, top, right + 1, bottom, OUTLINE);
+		Draw.fill(left - 1, top, right + 1, bottom, EspRenderer.OUTLINE);
 
 		int healthTop = bottom + 1 - Math.round(height * health);
 		if (healthTop < barBottom) {
