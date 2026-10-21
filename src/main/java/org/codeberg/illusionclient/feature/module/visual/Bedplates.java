@@ -60,7 +60,7 @@ import java.awt.*;
 import java.util.List;
 
 @Description("Shows the blocks defending each bed.")
-@ModuleInfo(name = "Bedplates", category = Category.VISUAL)
+@ModuleInfo(name = "Bed Plates", category = Category.VISUAL)
 public class Bedplates extends Module {
 	private static final int FACING_BITS = 3;
 	private static final int OCCUPIED_BIT = 4;
