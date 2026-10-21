@@ -5,7 +5,7 @@ import net.minecraft.client.network.handler.ClientPlayNetworkHandler;
 import net.minecraft.client.network.handler.ClientPlayPacketHandler;
 import net.minecraft.network.PacketUtils;
 import net.minecraft.network.packet.s2c.play.KeepAliveS2CPacket;
-import org.codeberg.illusionclient.feature.module.combat.Backtrack;
+import org.codeberg.illusionclient.IllusionClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ClientPlayNetworkHandlerMixin {
 	@Inject(method = "handleKeepAlive", at = @At("HEAD"))
 	private void illusion$keepAliveOnClientThread(KeepAliveS2CPacket packet, CallbackInfo ci) {
-		if (Backtrack.holdsKeepAlives()) {
+		if (IllusionClient.LAG.holdsKeepAlives()) {
 			PacketUtils.ensureOnSameThread(packet, (ClientPlayPacketHandler) this, Minecraft.getInstance());
 		}
 	}

@@ -16,13 +16,13 @@ import org.codeberg.illusionclient.feature.config.api.Check;
 import org.codeberg.illusionclient.feature.config.api.RangeSlider;
 import org.codeberg.illusionclient.feature.config.api.Requires;
 import org.codeberg.illusionclient.feature.config.api.Slider;
+import org.codeberg.illusionclient.feature.lag.LagManager;
 import org.codeberg.illusionclient.feature.module.api.Category;
 import org.codeberg.illusionclient.feature.module.api.Description;
 import org.codeberg.illusionclient.feature.module.api.Module;
 import org.codeberg.illusionclient.feature.module.api.ModuleInfo;
 import org.codeberg.illusionclient.util.CombatUtils;
 import org.codeberg.illusionclient.util.GhostPlayer;
-import org.codeberg.illusionclient.util.PacketQueue;
 
 @ModuleInfo(name = "Backtrack", category = Category.COMBAT)
 @Description("Lags players leaving your range for extra hits.")
@@ -30,7 +30,7 @@ public class Backtrack extends Module {
 	private static final int MILLIS_PER_TICK = 50;
 	private static final double POSITION_SCALE = 32.0D;
 	private final Minecraft minecraft = Minecraft.getInstance();
-	private final PacketQueue packets = new PacketQueue();
+	private final LagManager.Lag lag = IllusionClient.LAG.create();
 
 	@Description("Only lags players within this distance.")
 	@RangeSlider(value = "Target Distance", min = 0.0F, max = 8.0F)
@@ -70,11 +70,6 @@ public class Backtrack extends Module {
 	private boolean lagging;
 	private long readyAt;
 
-	public static boolean holdsKeepAlives() {
-		Backtrack backtrack = IllusionClient.MODULES.get(Backtrack.class);
-		return backtrack.isEnabled() && !backtrack.pingFix;
-	}
-
 	@Override
 	public String details() {
 		return number(maximumDelay) + " ms";
@@ -95,11 +90,7 @@ public class Backtrack extends Module {
 	@Listen
 	public void onPacketReceive(PacketReceiveEvent event) {
 		if (lagging && disableOnHit && isKnockback(event.packet())) stop();
-		if (!lagging && packets.isEmpty()) return;
-
-		event.cancelled = true;
-		packets.add(event.packet(), event.listener());
-		if (ghost != null) ghost.handle(event.packet());
+		if (lagging && ghost != null) ghost.handle(event.packet());
 	}
 
 	@Listen
@@ -113,7 +104,7 @@ public class Backtrack extends Module {
 			target = null;
 			ghost = null;
 			lagging = false;
-			packets.clear();
+			lag.release();
 			return;
 		}
 
@@ -125,7 +116,8 @@ public class Backtrack extends Module {
 
 		if (lagging && ghost != null && shouldLag(target)) {
 			ghost.tick();
-			packets.release((long) maximumDelay);
+			lag.holdKeepAlives(!pingFix);
+			lag.hold((long) maximumDelay);
 		} else {
 			stop();
 		}
@@ -135,7 +127,7 @@ public class Backtrack extends Module {
 		if (lagging) readyAt = System.currentTimeMillis() + (long) (cooldown * 1000.0F);
 		lagging = false;
 		ghost = null;
-		packets.release(0L);
+		lag.release();
 	}
 
 	private boolean isKnockback(Packet<?> packet) {
