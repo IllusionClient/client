@@ -14,11 +14,13 @@
     "GlStateManagerMixin",
     "KeyboardInputMixin",
     "LocalClientPlayerEntityMixin",
+    "MinecraftAccessor",
     "MinecraftMixin",
     "MouseMixin",
     "PacketUtilsMixin",
     "RemoteClientPlayerEntityAccessor",
     "ScreenInvoker",
+    "TickTimerMixin",
     "WorldChunkMixin",
     "compat.FreelookHandlerMixin"
   ],
